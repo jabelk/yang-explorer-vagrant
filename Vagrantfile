@@ -44,7 +44,7 @@ Vagrant.configure(2) do |config|
   # Run Ansible from the Vagrant VM
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "build-vm.yml"
-    ansible.verbose = "vv"
+    # ansible.verbose = "vv"
   end
 
   config.ssh.forward_agent    = true

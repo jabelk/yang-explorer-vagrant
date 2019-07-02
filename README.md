@@ -11,4 +11,4 @@ cp -R /ntc-data/data server/data
 sh setup.sh
 sh start.sh
 ```
-## open chrome on http://192.168.56.200:8088/static/YangExplorer.html
+## open chrome on http://192.168.56.200:8088/static/YangExplorer.html and login the top right as Guest / Guest to see the models
