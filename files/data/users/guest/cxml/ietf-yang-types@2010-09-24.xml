@@ -1,0 +1,1 @@
+<node name="ietf-yang-types" prefix="yang" type="module"><namespace import="false" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace></node>

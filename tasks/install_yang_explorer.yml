@@ -1,0 +1,54 @@
+---
+  - name: COPY WORKING YANG EXPLORER APP
+    synchronize: 
+      src: "./files/yang-explorer/" 
+      dest: "/home/{{ user }}/yang-explorer/"
+      recursive: yes
+      mode: push
+
+  - name: COPY YANG IETF and OC Modules
+    synchronize: 
+      src: "./files/yang/" 
+      dest: "/home/{{ user }}/yang/"
+      recursive: yes
+      mode: push
+
+  - name: CHMOD THE COPIED DIRS
+    file: 
+      path: "/home/{{ user }}/"
+      group: "{{ user }}"
+      owner: "{{ user }}"
+      recurse: yes
+
+  - name: Install requirements and create venv
+    pip: 
+      requirements: "/home/{{ user }}/yang-explorer/requirements.txt"
+      virtualenv: "/home/{{ user }}/virtualenv_yang"
+      virtualenv_python: "/usr/bin/python"
+    become: "{{ user }}"
+
+  - name: Run a yang explorer setup.sh
+    script: "files/yang-explorer/setup.sh"
+    args:
+      chdir: "/home/{{ user }}/yang-explorer/"
+
+  - name: COPY SEEDED ATABASE
+    synchronize: 
+      src: "./files/data" 
+      dest: "/home/{{ user }}/yang-explorer/server/data"
+      recursive: yes
+      mode: push
+
+  - name: CHMOD THE COPIED DIRS
+    file: 
+      path: "/home/{{ user }}/yang-explorer/server/data"
+      group: "{{ user }}"
+      owner: "{{ user }}"
+      recurse: yes
+
+# source virtualenv_yang/bin/activate
+# cd $HOME/yang-explorer
+# rm -rf server/data/
+# cp -R /ntc-data/data server/data
+# sh setup.sh
+# sh start.sh

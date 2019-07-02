@@ -1,0 +1,1 @@
+<node name="iana-routing-types" prefix="iana-rt-types" type="module"><namespace import="false" module="iana-routing-types" prefix="iana-rt-types">urn:ietf:params:xml:ns:yang:iana-routing-types</namespace></node>

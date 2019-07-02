@@ -1,0 +1,11 @@
+<global>
+    <ncclient>
+        <platforms>
+            <name>csr</name>
+            <name>iosxr</name>
+            <name>nexus</name>
+            <name>junos</name>
+            <name>other</name>
+        </platforms>
+    </ncclient>
+</global>

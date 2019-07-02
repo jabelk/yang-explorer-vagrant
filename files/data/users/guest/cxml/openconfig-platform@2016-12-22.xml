@@ -1,0 +1,202 @@
+<node name="openconfig-platform" prefix="oc-platform" type="module"><namespace import="false" module="openconfig-transport-types" prefix="oc-opt-types">http://openconfig.net/yang/transport-types</namespace><namespace import="true" module="openconfig-platform-types" prefix="oc-platform-types">http://openconfig.net/yang/platform-types</namespace><namespace import="false" module="openconfig-platform-transceiver" prefix="oc-transceiver">http://openconfig.net/yang/platform/transceiver</namespace><namespace import="false" module="ietf-interfaces" prefix="if">urn:ietf:params:xml:ns:yang:ietf-interfaces</namespace><namespace import="false" module="openconfig-transport-line-common" prefix="oc-line-com">http://openconfig.net/yang/transport-line-common</namespace><namespace import="true" module="openconfig-interfaces" prefix="oc-if">http://openconfig.net/yang/interfaces</namespace><namespace import="false" module="openconfig-platform" prefix="oc-platform">http://openconfig.net/yang/platform</namespace><namespace import="false" module="openconfig-terminal-device" prefix="oc-opt-term">http://openconfig.net/yang/terminal-device</namespace><namespace import="false" module="iana-if-type" prefix="ianaift">urn:ietf:params:xml:ns:yang:iana-if-type</namespace><namespace import="true" module="openconfig-extensions" prefix="oc-ext">http://openconfig.net/yang/openconfig-ext</namespace><namespace import="false" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="openconfig-if-ethernet" prefix="oc-eth">http://openconfig.net/yang/interfaces/ethernet</namespace><namespace import="false" module="openconfig-types" prefix="oc-types">http://openconfig.net/yang/openconfig-types</namespace><node access="read-write" name="components" type="container"><description><![CDATA[Enclosing container for the components in the system.]]>None</description><node access="read-write" key="name" name="component" type="list"><description><![CDATA[List of components, keyed by component name.]]>None</description><node access="read-write" datatype="-&gt; ../config/name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[References the component name]]>None</description></node><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for each component]]>None</description><node access="read-write" datatype="string" name="name" type="leaf"><description><![CDATA[Device name for the component -- this will not be a
+configurable parameter on many implementations]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for each component]]>None</description><node access="read-only" datatype="string" name="name" type="leaf"><description><![CDATA[Device name for the component -- this will not be a
+configurable parameter on many implementations]]>None</description></node><node access="read-only" datatype="union" name="type" type="leaf" values="oc-opt-types:OPTICAL_CHANNEL|oc-platform-types:BACKPLANE|oc-platform-types:CHASSIS|oc-platform-types:CPU|oc-platform-types:FAN|oc-platform-types:LINECARD|oc-platform-types:MODULE|oc-platform-types:PORT|oc-platform-types:POWER_SUPPLY|oc-platform-types:SENSOR|oc-platform-types:TRANSCEIVER|oc-platform-types:OPERATING_SYSTEM"><description><![CDATA[Type of component as identified by the system]]>None</description></node><node access="read-only" datatype="string" name="id" type="leaf"><description><![CDATA[Unique identifier assigned by the system for the
+component]]>None</description></node><node access="read-only" datatype="string" name="description" type="leaf"><description><![CDATA[System-supplied description of the component]]>None</description></node><node access="read-only" datatype="string" name="mfg-name" type="leaf"><description><![CDATA[System-supplied identifier for the manufacturer of the
+component.  This data is particularly useful when a
+component manufacturer is different than the overall
+device vendor.]]>None</description></node><node access="read-only" datatype="string" name="version" type="leaf"><description><![CDATA[System-defined version string for a hardware, firmware,
+or software component.]]>None</description></node><node access="read-only" datatype="string" name="serial-no" type="leaf"><description><![CDATA[System-assigned serial number of the component.]]>None</description></node><node access="read-only" datatype="string" name="part-no" type="leaf"><description><![CDATA[System-assigned part number for the component.  This should
+be present in particular if the component is also an FRU
+(field replacable unit)]]>None</description></node><node access="read-only" name="temperature" type="container"><description><![CDATA[Temperature in degrees Celsius of the component. Values include
+the instantaneous, average, minimum, and maximum statistics. If
+avg/min/max statistics are not supported, the target is expected
+to just supply the instant value]]>None</description><node access="read-only" datatype="decimal64" name="instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node></node><node access="read-write" name="properties" type="container"><description><![CDATA[Enclosing container ]]>None</description><node access="read-write" key="name" name="property" type="list"><description><![CDATA[List of system properties for the component]]>None</description><node access="read-write" datatype="-&gt; ../config/name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Reference to the property name.]]>None</description></node><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for each property]]>None</description><node access="read-write" datatype="string" name="name" type="leaf"><description><![CDATA[System-supplied name of the property -- this is typically
+non-configurable]]>None</description></node><node access="read-write" datatype="union" name="value" type="leaf" values="true|false"><description><![CDATA[Property values can take on a variety of types.  Signed and
+unsigned integer types may be provided in smaller sizes,
+e.g., int8, uint16, etc.]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for each property]]>None</description><node access="read-only" datatype="string" name="name" type="leaf"><description><![CDATA[System-supplied name of the property -- this is typically
+non-configurable]]>None</description></node><node access="read-only" datatype="union" name="value" type="leaf" values="true|false"><description><![CDATA[Property values can take on a variety of types.  Signed and
+unsigned integer types may be provided in smaller sizes,
+e.g., int8, uint16, etc.]]>None</description></node><node access="read-only" datatype="boolean" name="configurable" type="leaf" values="true|false"><description><![CDATA[Indication whether the property is user-configurable]]>None</description></node></node></node></node><node access="read-write" name="subcomponents" type="container"><description><![CDATA[Enclosing container for subcomponent references]]>None</description><node access="read-write" key="name" name="subcomponent" type="list"><description><![CDATA[List of subcomponent references]]>None</description><node access="read-write" datatype="-&gt; ../config/name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Reference to the name list key]]>None</description></node><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data ]]>None</description><node access="read-write" datatype="-&gt; ../../../../../component/config/name" name="name" type="leaf"><description><![CDATA[Reference to the name of the subcomponent]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data ]]>None</description><node access="read-only" datatype="-&gt; ../../../../../component/config/name" name="name" type="leaf"><description><![CDATA[Reference to the name of the subcomponent]]>None</description></node></node></node></node><node access="read-write" name="oc-line-com:optical-port" type="container"><description><![CDATA[Top-level container ]]>None</description><node access="read-only" name="oc-line-com:state" type="container"><description><![CDATA[Operational state data for optical line ports]]>None</description><node access="read-only" datatype="identityref:OPTICAL_LINE_PORT_TYPE" name="oc-line-com:optical-port-type" type="leaf"><description><![CDATA[Indicates the type of transport line port.  This is an
+informational field that should be made available by the
+device (e.g., in the openconfig-platform model).]]>None</description></node></node></node><node access="read-write" name="oc-transceiver:transceiver" type="container"><description><![CDATA[Top-level container for client port transceiver data]]>None</description><node access="read-write" name="oc-transceiver:config" type="container"><description><![CDATA[Configuration data for client port transceivers]]>None</description><node access="read-write" datatype="boolean" name="oc-transceiver:enabled" type="leaf" values="true|false"><description><![CDATA[Turns power on / off to the transceiver -- provides a means
+to power on/off the transceiver (in the case of SFP, SFP+,
+QSFP,...) or enable high-power mode (in the case of CFP,
+CFP2, CFP4) and is optionally supported (device can choose to
+always enable).  True = power on / high power, False =
+powered off]]>None</description></node><node access="read-write" datatype="identityref:oc-opt-types:TRANSCEIVER_FORM_FACTOR_TYPE" name="oc-transceiver:form-factor-preconf" type="leaf" values="oc-opt-types:CFP|oc-opt-types:CFP2|oc-opt-types:CFP2_ACO|oc-opt-types:CFP4|oc-opt-types:CPAK|oc-opt-types:NON_PLUGGABLE|oc-opt-types:OTHER|oc-opt-types:QSFP|oc-opt-types:QSFP28|oc-opt-types:QSFP_PLUS|oc-opt-types:SFP|oc-opt-types:SFP_PLUS|oc-opt-types:X2|oc-opt-types:XFP"><description><![CDATA[Indicates the type of optical transceiver used on this
+port.  If the client port is built into the device and not
+pluggable, then non-pluggable is the corresponding state. If
+a device port supports multiple form factors (e.g. QSFP28
+and QSFP+, then the value of the transceiver installed shall
+be reported. If no transceiver is present, then the value of
+the highest rate form factor shall be reported
+(QSFP28, for example).
+
+The form factor is included in configuration data to allow
+pre-configuring a device with the expected type of
+transceiver ahead of deployment.  The corresponding state
+leaf should reflect the actual transceiver type plugged into
+the system.]]>None</description></node><node access="read-write" datatype="identityref:oc-opt-types:ETHERNET_PMD_TYPE" name="oc-transceiver:ethernet-pmd-preconf" type="leaf" values="oc-opt-types:ETH_100GBASE_CLR4|oc-opt-types:ETH_100GBASE_CR4|oc-opt-types:ETH_100GBASE_CWDM4|oc-opt-types:ETH_100GBASE_ER4|oc-opt-types:ETH_100GBASE_LR4|oc-opt-types:ETH_100GBASE_PSM4|oc-opt-types:ETH_100GBASE_SR10|oc-opt-types:ETH_100GBASE_SR4|oc-opt-types:ETH_100G_ACC|oc-opt-types:ETH_100G_AOC|oc-opt-types:ETH_10GBASE_ER|oc-opt-types:ETH_10GBASE_LR|oc-opt-types:ETH_10GBASE_LRM|oc-opt-types:ETH_10GBASE_SR|oc-opt-types:ETH_10GBASE_ZR|oc-opt-types:ETH_40GBASE_CR4|oc-opt-types:ETH_40GBASE_ER4|oc-opt-types:ETH_40GBASE_LR4|oc-opt-types:ETH_40GBASE_PSM4|oc-opt-types:ETH_40GBASE_SR4|oc-opt-types:ETH_4X10GBASE_LR|oc-opt-types:ETH_4X10GBASE_SR|oc-opt-types:ETH_UNDEFINED"><description><![CDATA[The Ethernet PMD is a property of the optical transceiver
+used on the port, indicating the type of physical connection.
+It is included in configuration data to allow pre-configuring
+a port/transceiver with the expected PMD.  The actual PMD is
+indicated by the ethernet-pmd state leaf.]]>None</description></node></node><node access="read-only" name="oc-transceiver:state" type="container"><description><![CDATA[Operational state data for client port transceivers]]>None</description><node access="read-only" datatype="boolean" name="oc-transceiver:enabled" type="leaf" values="true|false"><description><![CDATA[Turns power on / off to the transceiver -- provides a means
+to power on/off the transceiver (in the case of SFP, SFP+,
+QSFP,...) or enable high-power mode (in the case of CFP,
+CFP2, CFP4) and is optionally supported (device can choose to
+always enable).  True = power on / high power, False =
+powered off]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:TRANSCEIVER_FORM_FACTOR_TYPE" name="oc-transceiver:form-factor-preconf" type="leaf" values="oc-opt-types:CFP|oc-opt-types:CFP2|oc-opt-types:CFP2_ACO|oc-opt-types:CFP4|oc-opt-types:CPAK|oc-opt-types:NON_PLUGGABLE|oc-opt-types:OTHER|oc-opt-types:QSFP|oc-opt-types:QSFP28|oc-opt-types:QSFP_PLUS|oc-opt-types:SFP|oc-opt-types:SFP_PLUS|oc-opt-types:X2|oc-opt-types:XFP"><description><![CDATA[Indicates the type of optical transceiver used on this
+port.  If the client port is built into the device and not
+pluggable, then non-pluggable is the corresponding state. If
+a device port supports multiple form factors (e.g. QSFP28
+and QSFP+, then the value of the transceiver installed shall
+be reported. If no transceiver is present, then the value of
+the highest rate form factor shall be reported
+(QSFP28, for example).
+
+The form factor is included in configuration data to allow
+pre-configuring a device with the expected type of
+transceiver ahead of deployment.  The corresponding state
+leaf should reflect the actual transceiver type plugged into
+the system.]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:ETHERNET_PMD_TYPE" name="oc-transceiver:ethernet-pmd-preconf" type="leaf" values="oc-opt-types:ETH_100GBASE_CLR4|oc-opt-types:ETH_100GBASE_CR4|oc-opt-types:ETH_100GBASE_CWDM4|oc-opt-types:ETH_100GBASE_ER4|oc-opt-types:ETH_100GBASE_LR4|oc-opt-types:ETH_100GBASE_PSM4|oc-opt-types:ETH_100GBASE_SR10|oc-opt-types:ETH_100GBASE_SR4|oc-opt-types:ETH_100G_ACC|oc-opt-types:ETH_100G_AOC|oc-opt-types:ETH_10GBASE_ER|oc-opt-types:ETH_10GBASE_LR|oc-opt-types:ETH_10GBASE_LRM|oc-opt-types:ETH_10GBASE_SR|oc-opt-types:ETH_10GBASE_ZR|oc-opt-types:ETH_40GBASE_CR4|oc-opt-types:ETH_40GBASE_ER4|oc-opt-types:ETH_40GBASE_LR4|oc-opt-types:ETH_40GBASE_PSM4|oc-opt-types:ETH_40GBASE_SR4|oc-opt-types:ETH_4X10GBASE_LR|oc-opt-types:ETH_4X10GBASE_SR|oc-opt-types:ETH_UNDEFINED"><description><![CDATA[The Ethernet PMD is a property of the optical transceiver
+used on the port, indicating the type of physical connection.
+It is included in configuration data to allow pre-configuring
+a port/transceiver with the expected PMD.  The actual PMD is
+indicated by the ethernet-pmd state leaf.]]>None</description></node><node access="read-only" datatype="enumeration" name="oc-transceiver:present" type="leaf" values="PRESENT|NOT_PRESENT"><description><![CDATA[Indicates whether a transceiver is present in
+the specified client port.]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:TRANSCEIVER_FORM_FACTOR_TYPE" name="oc-transceiver:form-factor" type="leaf" values="oc-opt-types:CFP|oc-opt-types:CFP2|oc-opt-types:CFP2_ACO|oc-opt-types:CFP4|oc-opt-types:CPAK|oc-opt-types:NON_PLUGGABLE|oc-opt-types:OTHER|oc-opt-types:QSFP|oc-opt-types:QSFP28|oc-opt-types:QSFP_PLUS|oc-opt-types:SFP|oc-opt-types:SFP_PLUS|oc-opt-types:X2|oc-opt-types:XFP"><description><![CDATA[Indicates the type of optical transceiver used on this
+port.  If the client port is built into the device and not
+pluggable, then non-pluggable is the corresponding state. If
+a device port supports multiple form factors (e.g. QSFP28
+and QSFP+, then the value of the transceiver installed shall
+be reported. If no transceiver is present, then the value of
+the highest rate form factor shall be reported
+(QSFP28, for example).]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:FIBER_CONNECTOR_TYPE" name="oc-transceiver:connector-type" type="leaf" values="oc-opt-types:LC_CONNECTOR|oc-opt-types:MPO_CONNECTOR|oc-opt-types:SC_CONNECTOR"><description><![CDATA[Connector type used on this port]]>None</description></node><node access="read-only" datatype="int16" name="oc-transceiver:internal-temp" type="leaf"><description><![CDATA[Internally measured temperature in degrees Celsius. MSA
+valid range is between -40 and +125C. Accuracy shall be
+better than +/- 3 degC over the whole temperature range.]]>None</description></node><node access="read-only" datatype="string" name="oc-transceiver:vendor" type="leaf"><description><![CDATA[Full name of transceiver vendor. 16-octet field that
+contains ASCII characters, left-aligned and padded on the
+right with ASCII spaces (20h)]]>None</description></node><node access="read-only" datatype="string" name="oc-transceiver:vendor-part" type="leaf"><description><![CDATA[Transceiver vendor's part number. 16-octet field that
+contains ASCII characters, left-aligned and padded on the
+right with ASCII spaces (20h). If part number is undefined,
+all 16 octets = 0h]]>None</description></node><node access="read-only" datatype="string" name="oc-transceiver:vendor-rev" type="leaf"><description><![CDATA[Transceiver vendor's revision number. 2-octet field that
+contains ASCII characters, left-aligned and padded on the
+right with ASCII spaces (20h)]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:ETHERNET_PMD_TYPE" name="oc-transceiver:ethernet-pmd" type="leaf" values="oc-opt-types:ETH_100GBASE_CLR4|oc-opt-types:ETH_100GBASE_CR4|oc-opt-types:ETH_100GBASE_CWDM4|oc-opt-types:ETH_100GBASE_ER4|oc-opt-types:ETH_100GBASE_LR4|oc-opt-types:ETH_100GBASE_PSM4|oc-opt-types:ETH_100GBASE_SR10|oc-opt-types:ETH_100GBASE_SR4|oc-opt-types:ETH_100G_ACC|oc-opt-types:ETH_100G_AOC|oc-opt-types:ETH_10GBASE_ER|oc-opt-types:ETH_10GBASE_LR|oc-opt-types:ETH_10GBASE_LRM|oc-opt-types:ETH_10GBASE_SR|oc-opt-types:ETH_10GBASE_ZR|oc-opt-types:ETH_40GBASE_CR4|oc-opt-types:ETH_40GBASE_ER4|oc-opt-types:ETH_40GBASE_LR4|oc-opt-types:ETH_40GBASE_PSM4|oc-opt-types:ETH_40GBASE_SR4|oc-opt-types:ETH_4X10GBASE_LR|oc-opt-types:ETH_4X10GBASE_SR|oc-opt-types:ETH_UNDEFINED"><description><![CDATA[Ethernet PMD (physical medium dependent sublayer) that the
+transceiver supports. The SFF/QSFP MSAs have registers for
+this and CFP MSA has similar.]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:SONET_APPLICATION_CODE" name="oc-transceiver:sonet-sdh-compliance-code" type="leaf" values="oc-opt-types:SONET_UNDEFINED|oc-opt-types:VSR2000_3R2|oc-opt-types:VSR2000_3R3|oc-opt-types:VSR2000_3R5"><description><![CDATA[SONET/SDH application code supported by the port]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:OTN_APPLICATION_CODE" name="oc-transceiver:otn-compliance-code" type="leaf" values="oc-opt-types:OTN_UNDEFINED|oc-opt-types:P1L1_2D1|oc-opt-types:P1L1_2D2|oc-opt-types:P1S1_2D2"><description><![CDATA[OTN application code supported by the port]]>None</description></node><node access="read-only" datatype="string" name="oc-transceiver:serial-no" type="leaf"><description><![CDATA[Transceiver serial number. 16-octet field that contains
+ASCII characters, left-aligned and padded on the right with
+ASCII spaces (20h). If part serial number is undefined, all
+16 octets = 0h]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="oc-transceiver:date-code" type="leaf"><description><![CDATA[Representation of the transceiver date code, typically
+stored as YYMMDD.  The time portion of the value is
+undefined and not intended to be read.]]>None</description></node><node access="read-only" datatype="boolean" name="oc-transceiver:fault-condition" type="leaf" values="true|false"><description><![CDATA[Indicates if a fault condition exists in the transceiver]]>None</description></node></node><node access="read-write" name="oc-transceiver:physical-channels" type="container"><description><![CDATA[Enclosing container for client channels]]>None</description><node access="read-write" key="index" name="oc-transceiver:channel" type="list"><description><![CDATA[List of client channels, keyed by index within a physical
+client port.  A physical port with a single channel would
+have a single zero-indexed element]]>None</description><node access="read-write" datatype="-&gt; ../config/index" is_key="true" mandatory="true" name="oc-transceiver:index" type="leaf"><description><![CDATA[Reference to the index number of the channel]]>None</description></node><node access="read-write" name="oc-transceiver:config" type="container"><description><![CDATA[Configuration data for physical channels]]>None</description><node access="read-write" datatype="uint16" name="oc-transceiver:index" type="leaf"><description><![CDATA[Index of the physical channnel or lane within a physical
+client port]]>None</description></node><node access="read-write" datatype="string" name="oc-transceiver:description" type="leaf"><description><![CDATA[Text description for the client physical channel]]>None</description></node><node access="read-write" datatype="boolean" name="oc-transceiver:tx-laser" type="leaf" values="true|false"><description><![CDATA[Enable (true) or disable (false) the transmit label for the
+channel]]>None</description></node><node access="read-write" datatype="decimal64" name="oc-transceiver:target-output-power" type="leaf"><description><![CDATA[Target output optical power level of the optical channel,
+expressed in increments of 0.01 dBm (decibel-milliwats)]]>None</description></node></node><node access="read-only" name="oc-transceiver:state" type="container"><description><![CDATA[Operational state data for channels]]>None</description><node access="read-only" datatype="uint16" name="oc-transceiver:index" type="leaf"><description><![CDATA[Index of the physical channnel or lane within a physical
+client port]]>None</description></node><node access="read-only" datatype="string" name="oc-transceiver:description" type="leaf"><description><![CDATA[Text description for the client physical channel]]>None</description></node><node access="read-only" datatype="boolean" name="oc-transceiver:tx-laser" type="leaf" values="true|false"><description><![CDATA[Enable (true) or disable (false) the transmit label for the
+channel]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:target-output-power" type="leaf"><description><![CDATA[Target output optical power level of the optical channel,
+expressed in increments of 0.01 dBm (decibel-milliwats)]]>None</description></node><node access="read-only" datatype="oc-opt-types:frequency-type" name="oc-transceiver:output-frequency" type="leaf"><description><![CDATA[The frequency in MHz of the individual physical channel
+(e.g. ITU C50 - 195.0THz and would be reported as
+195,000,000 MHz in this model). This attribute is not
+configurable on most client ports.]]>None</description></node><node access="read-only" name="oc-transceiver:output-power" type="container"><description><![CDATA[The output optical power of this port in units of 0.01dBm.
+If the port is an aggregate of multiple physical channels,
+this attribute is the total power or sum of all channels.
+Values include the instantaneous, average, minimum, and
+maximum statistics. If avg/min/max statistics are not
+supported, the target is expected to just supply the
+instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-transceiver:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="oc-transceiver:input-power" type="container"><description><![CDATA[The input optical power of this port in units of 0.01dBm.
+If the port is an aggregate of multiple physical channels,
+this attribute is the total power or sum of all channels.
+Values include the instantaneous, average, minimum, and
+maximum statistics. If avg/min/max statistics are not
+supported, the target is expected to just supply the
+instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-transceiver:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="oc-transceiver:laser-bias-current" type="container"><description><![CDATA[The current applied by the system to the transmit laser to
+achieve the output power. The current is expressed in mA
+with up to two decimal precision. Values include the
+instantaneous, average, minimum, and maximum statistics.
+If avg/min/max statistics are not supported, the target is
+expected to just supply the instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-transceiver:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-transceiver:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node></node></node></node></node><node access="read-write" name="oc-opt-term:optical-channel" type="container"><description><![CDATA[Enclosing container for the list of optical channels]]>None</description><node access="read-write" name="oc-opt-term:config" type="container"><description><![CDATA[Configuration data for optical channels]]>None</description><node access="read-write" datatype="oc-opt-types:frequency-type" name="oc-opt-term:frequency" type="leaf"><description><![CDATA[Frequency of the optical channel, expressed in MHz]]>None</description></node><node access="read-write" datatype="decimal64" name="oc-opt-term:target-output-power" type="leaf"><description><![CDATA[Target output optical power level of the optical channel,
+expressed in increments of 0.01 dBm (decibel-milliwats)]]>None</description></node><node access="read-write" datatype="uint16" name="oc-opt-term:operational-mode" type="leaf"><description><![CDATA[Vendor-specific mode identifier -- sets the operational
+mode for the channel.  The specified operational mode must
+exist in the list of supported operational modes supplied
+by the device]]>None</description></node><node access="read-write" datatype="-&gt; /oc-platform:components/component/name" name="oc-opt-term:line-port" type="leaf"><description><![CDATA[Reference to the line-side physical port that carries
+this optical channel.  The target port should be
+a component in the physical inventory data model.]]>None</description></node></node><node access="read-only" name="oc-opt-term:state" type="container"><description><![CDATA[Operational state data for optical channels]]>None</description><node access="read-only" datatype="oc-opt-types:frequency-type" name="oc-opt-term:frequency" type="leaf"><description><![CDATA[Frequency of the optical channel, expressed in MHz]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:target-output-power" type="leaf"><description><![CDATA[Target output optical power level of the optical channel,
+expressed in increments of 0.01 dBm (decibel-milliwats)]]>None</description></node><node access="read-only" datatype="uint16" name="oc-opt-term:operational-mode" type="leaf"><description><![CDATA[Vendor-specific mode identifier -- sets the operational
+mode for the channel.  The specified operational mode must
+exist in the list of supported operational modes supplied
+by the device]]>None</description></node><node access="read-only" datatype="-&gt; /oc-platform:components/component/name" name="oc-opt-term:line-port" type="leaf"><description><![CDATA[Reference to the line-side physical port that carries
+this optical channel.  The target port should be
+a component in the physical inventory data model.]]>None</description></node><node access="read-only" datatype="uint32" name="oc-opt-term:group-id" type="leaf"><description><![CDATA[If the device places constraints on which optical
+channels must be managed together (e.g., transmitted on the
+same line port), it can indicate that by setting the group-id
+to the same value across related optical channels.]]>None</description></node><node access="read-only" name="oc-opt-term:output-power" type="container"><description><![CDATA[The output optical power of this port in units of 0.01dBm.
+If the port is an aggregate of multiple physical channels,
+this attribute is the total power or sum of all channels.
+Values include the instantaneous, average, minimum, and
+maximum statistics. If avg/min/max statistics are not
+supported, the target is expected to just supply the
+instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-opt-term:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="oc-opt-term:input-power" type="container"><description><![CDATA[The input optical power of this port in units of 0.01dBm.
+If the port is an aggregate of multiple physical channels,
+this attribute is the total power or sum of all channels.
+Values include the instantaneous, average, minimum, and
+maximum statistics. If avg/min/max statistics are not
+supported, the target is expected to just supply the
+instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-opt-term:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="oc-opt-term:laser-bias-current" type="container"><description><![CDATA[The current applied by the system to the transmit laser to
+achieve the output power. The current is expressed in mA
+with up to two decimal precision. Values include the
+instantaneous, average, minimum, and maximum statistics.
+If avg/min/max statistics are not supported, the target is
+expected to just supply the instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-opt-term:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="oc-opt-term:chromatic-dispersion" type="container"><description><![CDATA[Chromatic Dispersion of an optical channel in
+picoseconds / nanometer (ps/nm) as reported by receiver
+with two decimal precision. Values include the instantaneous,
+average, minimum, and maximum statistics. If avg/min/max
+statistics are not supported, the target is expected to just
+supply the instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-opt-term:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="oc-opt-term:polarization-mode-dispersion" type="container"><description><![CDATA[Polarization Mode Dispersion of an optical channel
+in picosends (ps) as reported by receiver with two decimal
+precision. Values include the instantaneous, average,
+minimum, and maximum statistics. If avg/min/max statistics
+are not supported, the target is expected to just supply the
+instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-opt-term:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="oc-opt-term:second-order-polarization-mode-dispersion" type="container"><description><![CDATA[Second Order Polarization Mode Dispersion of an optical
+channel in picoseconds squared (ps^2) as reported by
+receiver with two decimal precision. Values include the
+instantaneous, average, minimum, and maximum statistics.
+If avg/min/max statistics are not supported, the target
+is expected to just supply the instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-opt-term:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="oc-opt-term:polarization-dependent-loss" type="container"><description><![CDATA[Polarization Dependent Loss of an optical channel
+in dB as reported by receiver with two decimal precision.
+Values include the instantaneous, average, minimum, and
+maximum statistics. If avg/min/max statistics are not
+supported, the target is expected to just supply the
+instant value]]>None</description><node access="read-only" datatype="decimal64" name="oc-opt-term:instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="oc-opt-term:max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node></node></node></node></node></node>

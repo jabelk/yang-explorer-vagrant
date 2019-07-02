@@ -1,0 +1,71 @@
+<node name="ietf-netconf-notifications" prefix="ncn" type="module"><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-netconf" prefix="nc">urn:ietf:params:xml:ns:netconf:base:1.0</namespace><namespace import="false" module="ietf-netconf-notifications" prefix="ncn">urn:ietf:params:xml:ns:yang:ietf-netconf-notifications</namespace><node access="read-only" name="netconf-config-change" type="notification"><description><![CDATA[Generated when the NETCONF server detects that the
+&ltrunning&gt or &ltstartup&gt configuration datastore
+has been changed by a management session.
+The notification summarizes the edits that
+have been detected.
+
+The server MAY choose to also generate this
+notification while loading a datastore during the
+boot process for the device.]]>None</description><node access="read-only" name="changed-by" type="container"><description><![CDATA[Indicates the source of the change.
+If caused by internal action, then the
+empty leaf 'server' will be present.
+If caused by a management session, then
+the name, remote host address, and session ID
+of the session that made the change will be reported.]]>None</description><node access="read-only" name="server-or-user" type="choice" values="by-user"><node access="read-only" name="server" type="case"><node access="read-only" datatype="empty" name="server" type="leaf"><description><![CDATA[If present, the change was caused
+by the server.]]>None</description></node></node><node access="read-only" name="by-user" type="case"><node access="read-only" datatype="string" mandatory="true" name="username" type="leaf"><description><![CDATA[Name of the user for the session.]]>None</description></node><node access="read-only" datatype="nc:session-id-or-zero-type" mandatory="true" name="session-id" type="leaf"><description><![CDATA[Identifier of the session.
+A NETCONF session MUST be identified by a non-zero value.
+A non-NETCONF session MAY be identified by the value zero.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="source-host" type="leaf"><description><![CDATA[Address of the remote host for the session.]]>None</description></node></node></node></node><node access="read-only" datatype="enumeration" default="running" name="datastore" type="leaf" values="running|startup"><description><![CDATA[Indicates which configuration datastore has changed.]]>None</description></node><node access="read-only" name="edit" type="list"><description><![CDATA[An edit record SHOULD be present for each distinct
+edit operation that the server has detected on
+the target datastore.  This list MAY be omitted
+if the detailed edit operations are not known.
+The server MAY report entries in this list for
+changes not made by a NETCONF session (e.g., CLI).]]>None</description><node access="read-only" datatype="instance-identifier" name="target" type="leaf"><description><![CDATA[Topmost node associated with the configuration change.
+A server SHOULD set this object to the node within
+the datastore that is being altered.  A server MAY
+set this object to one of the ancestors of the actual
+node that was changed, or omit this object, if the
+exact node is not known.]]>None</description></node><node access="read-only" datatype="nc:edit-operation-type" name="operation" type="leaf" values="merge|replace|create|delete|remove"><description><![CDATA[Type of edit operation performed.
+A server MUST set this object to the NETCONF edit
+operation performed on the target datastore.]]>None</description></node></node></node><node access="read-only" name="netconf-capability-change" type="notification"><description><![CDATA[Generated when the NETCONF server detects that
+the server capabilities have changed.
+Indicates which capabilities have been added, deleted,
+and/or modified.  The manner in which a server
+capability is changed is outside the scope of this
+document.]]>None</description><node access="read-only" name="changed-by" type="container"><description><![CDATA[Indicates the source of the change.
+If caused by internal action, then the
+empty leaf 'server' will be present.
+If caused by a management session, then
+the name, remote host address, and session ID
+of the session that made the change will be reported.]]>None</description><node access="read-only" name="server-or-user" type="choice" values="by-user"><node access="read-only" name="server" type="case"><node access="read-only" datatype="empty" name="server" type="leaf"><description><![CDATA[If present, the change was caused
+by the server.]]>None</description></node></node><node access="read-only" name="by-user" type="case"><node access="read-only" datatype="string" mandatory="true" name="username" type="leaf"><description><![CDATA[Name of the user for the session.]]>None</description></node><node access="read-only" datatype="nc:session-id-or-zero-type" mandatory="true" name="session-id" type="leaf"><description><![CDATA[Identifier of the session.
+A NETCONF session MUST be identified by a non-zero value.
+A non-NETCONF session MAY be identified by the value zero.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="source-host" type="leaf"><description><![CDATA[Address of the remote host for the session.]]>None</description></node></node></node></node><node access="read-only" datatype="inet:uri" name="added-capability" type="leaf-list"><description><![CDATA[List of capabilities that have just been added.]]>None</description></node><node access="read-only" datatype="inet:uri" name="deleted-capability" type="leaf-list"><description><![CDATA[List of capabilities that have just been deleted.]]>None</description></node><node access="read-only" datatype="inet:uri" name="modified-capability" type="leaf-list"><description><![CDATA[List of capabilities that have just been modified.
+A capability is considered to be modified if the
+base URI for the capability has not changed, but
+one or more of the parameters encoded at the end of
+the capability URI have changed.
+The new modified value of the complete URI is returned.]]>None</description></node></node><node access="read-only" name="netconf-session-start" type="notification"><description><![CDATA[Generated when a NETCONF server detects that a
+NETCONF session has started.  A server MAY generate
+this event for non-NETCONF management sessions.
+Indicates the identity of the user that started
+the session.]]>None</description><node access="read-only" datatype="string" mandatory="true" name="username" type="leaf"><description><![CDATA[Name of the user for the session.]]>None</description></node><node access="read-only" datatype="nc:session-id-or-zero-type" mandatory="true" name="session-id" type="leaf"><description><![CDATA[Identifier of the session.
+A NETCONF session MUST be identified by a non-zero value.
+A non-NETCONF session MAY be identified by the value zero.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="source-host" type="leaf"><description><![CDATA[Address of the remote host for the session.]]>None</description></node></node><node access="read-only" name="netconf-session-end" type="notification"><description><![CDATA[Generated when a NETCONF server detects that a
+NETCONF session has terminated.
+A server MAY optionally generate this event for
+non-NETCONF management sessions.  Indicates the
+identity of the user that owned the session,
+and why the session was terminated.]]>None</description><node access="read-only" datatype="string" mandatory="true" name="username" type="leaf"><description><![CDATA[Name of the user for the session.]]>None</description></node><node access="read-only" datatype="nc:session-id-or-zero-type" mandatory="true" name="session-id" type="leaf"><description><![CDATA[Identifier of the session.
+A NETCONF session MUST be identified by a non-zero value.
+A non-NETCONF session MAY be identified by the value zero.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="source-host" type="leaf"><description><![CDATA[Address of the remote host for the session.]]>None</description></node><node access="read-only" datatype="nc:session-id-type" name="killed-by" type="leaf"><description><![CDATA[The ID of the session that directly caused this session
+to be abnormally terminated.  If this session was abnormally
+terminated by a non-NETCONF session unknown to the server,
+then this leaf will not be present.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="termination-reason" type="leaf" values="closed|killed|dropped|timeout|bad-hello|other"><description><![CDATA[Reason the session was terminated.]]>None</description></node></node><node access="read-only" name="netconf-confirmed-commit" type="notification"><description><![CDATA[Generated when a NETCONF server detects that a
+confirmed-commit event has occurred.  Indicates the event
+and the current state of the confirmed-commit procedure
+in progress.]]>None</description><node access="read-only" datatype="string" mandatory="true" name="username" type="leaf"><description><![CDATA[Name of the user for the session.]]>None</description></node><node access="read-only" datatype="nc:session-id-or-zero-type" mandatory="true" name="session-id" type="leaf"><description><![CDATA[Identifier of the session.
+A NETCONF session MUST be identified by a non-zero value.
+A non-NETCONF session MAY be identified by the value zero.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="source-host" type="leaf"><description><![CDATA[Address of the remote host for the session.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="confirm-event" type="leaf" values="start|cancel|timeout|extend|complete"><description><![CDATA[Indicates the event that caused the notification.]]>None</description></node><node access="read-only" datatype="uint32" name="timeout" type="leaf"><description><![CDATA[The configured timeout value if the event type
+is 'start' or 'extend'.  This value represents
+the approximate number of seconds from the event
+time when the 'timeout' event might occur.]]>None</description></node></node></node>

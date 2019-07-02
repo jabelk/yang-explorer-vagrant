@@ -1,0 +1,438 @@
+<node name="ietf-nat" prefix="nat" type="module"><namespace import="false" module="ietf-dslite" prefix="dslite">urn:ietf:params:xml:ns:yang:ietf-dslite</namespace><namespace import="true" module="ietf-interfaces" prefix="if">urn:ietf:params:xml:ns:yang:ietf-interfaces</namespace><namespace import="false" module="ietf-nat" prefix="nat">urn:ietf:params:xml:ns:yang:ietf-nat</namespace><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="false" module="iana-if-type" prefix="ianaift">urn:ietf:params:xml:ns:yang:iana-if-type</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><node access="read-write" name="nat" type="container"><description><![CDATA[NAT module]]>None</description><node access="read-write" name="instances" type="container"><description><![CDATA[NAT instances]]>None</description><node access="read-write" key="id" name="instance" type="list"><description><![CDATA[A NAT instance.  This identifier can be automatically
+assigned or explicitly configured.]]>None</description><node access="read-write" datatype="uint32" is_key="true" mandatory="true" name="id" type="leaf"><description><![CDATA[NAT instance identifier.
+
+The identifier must be greater than zero.]]>None</description></node><node access="read-write" datatype="string" name="name" type="leaf"><description><![CDATA[A name associated with the NAT instance.]]>None</description></node><node access="read-write" datatype="boolean" name="enable" type="leaf" values="true|false"><description><![CDATA[Status of the NAT instance.]]>None</description></node><node access="read-only" name="capabilities" type="container"><description><![CDATA[NAT capabilities.]]>None</description><node access="read-only" datatype="identityref:nat-type" name="nat-flavor" type="leaf-list"><description><![CDATA[Supported translation type(s).]]>None</description></node><node access="read-only" datatype="enumeration" name="per-interface-binding" type="leaf-list" values="unsupported|layer-2|dslite"><description><![CDATA[Indicates the capability of a NAT to associate a
+particular NAT session not only with the five
+tuples used for the transport connection on both
+sides of the NAT but also with the internal
+interface on which the user device is
+connected to the NAT.]]>None</description></node><node access="read-only" key="protocol-id" name="transport-protocols" type="list"><description><![CDATA[List of supported protocols.]]>None</description><node access="read-only" datatype="uint8" is_key="true" mandatory="true" name="protocol-id" type="leaf"><description><![CDATA[The upper-layer protocol associated with a mapping.
+
+Values are taken from the IANA Protocol Numbers
+registry.
+
+For example, this field contains 6 for TCP,
+17 for UDP, 33 for DCCP, or 132 for SCTP.]]>None</description></node><node access="read-only" datatype="string" name="protocol-name" type="leaf"><description><![CDATA[The name of the upper-layer protocol associated
+with this mapping.
+
+For example, TCP, UDP, DCCP, and SCTP.]]>None</description></node></node><node access="read-only" datatype="boolean" name="restricted-port-support" type="leaf" values="true|false"><description><![CDATA[Indicates source port NAT restriction support.]]>None</description></node><node access="read-only" datatype="boolean" name="static-mapping-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether static mappings are supported.]]>None</description></node><node access="read-only" datatype="boolean" name="port-randomization-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether port randomization is supported.]]>None</description></node><node access="read-only" datatype="boolean" name="port-range-allocation-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether port range allocation is supported.]]>None</description></node><node access="read-only" datatype="boolean" name="port-preservation-suport" type="leaf" values="true|false"><description><![CDATA[Indicates whether port preservation is supported.]]>None</description></node><node access="read-only" datatype="boolean" name="port-parity-preservation-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether port parity preservation is
+supported.]]>None</description></node><node access="read-only" datatype="boolean" name="address-roundrobin-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether address allocation round robin is
+supported.]]>None</description></node><node access="read-only" datatype="boolean" name="paired-address-pooling-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether paired-address-pooling is
+supported]]>None</description></node><node access="read-only" datatype="boolean" name="endpoint-independent-mapping-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether endpoint-independent-
+mapping is supported.]]>None</description></node><node access="read-only" datatype="boolean" name="address-dependent-mapping-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether address-dependent-mapping is
+supported.]]>None</description></node><node access="read-only" datatype="boolean" name="address-and-port-dependent-mapping-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether address-and-port-dependent-mapping is
+supported.]]>None</description></node><node access="read-only" datatype="boolean" name="endpoint-independent-filtering-support" type="leaf" values="true|false"><description><![CDATA[Indicates whether endpoint-independent-filtering is
+supported.]]>None</description></node><node access="read-only" datatype="boolean" name="address-dependent-filtering" type="leaf" values="true|false"><description><![CDATA[Indicates whether address-dependent-filtering is
+supported.]]>None</description></node><node access="read-only" datatype="boolean" name="address-and-port-dependent-filtering" type="leaf" values="true|false"><description><![CDATA[Indicates whether address-and-port-dependent is
+supported.]]>None</description></node><node access="read-only" datatype="enumeration" name="fragment-behavior" type="leaf" values="unsupported|in-order|out-of-order"><description><![CDATA[The fragment behavior is the NAT instance's capability to
+translate fragments received on the external interface of
+the NAT.]]>None</description></node></node><node access="read-write" datatype="identityref:nat-type" name="type" type="leaf"><description><![CDATA[Specify the translation type.  Particularly useful when
+multiple translation flavors are supported.
+
+If one type is supported by a NAT, this parameter is by
+default set to that type.]]>None</description></node><node access="read-write" datatype="enumeration" name="per-interface-binding" type="leaf" values="disabled|layer-2|dslite"><description><![CDATA[A NAT that associates a particular NAT session not
+only with the five tuples used for the transport
+connection on both sides of the NAT but also with
+the internal interface on which the user device is
+connected to the NAT.
+
+If supported, this mode of operation should be
+configurable, and it should be disabled by default in
+general-purpose NAT devices.
+If one single per-interface binding behavior is
+supported by a NAT, this parameter is by default set to
+that behavior.]]>None</description></node><node access="read-write" key="id" name="nat-pass-through" type="list"><description><![CDATA[IP prefix NAT pass-through.]]>None</description><node access="read-write" datatype="uint32" is_key="true" mandatory="true" name="id" type="leaf"><description><![CDATA[An identifier of the IP prefix pass-through.]]>None</description></node><node access="read-write" datatype="inet:ip-prefix" mandatory="true" name="prefix" type="leaf"><description><![CDATA[The IP addresses that match should not be translated.
+
+It must be possible to administratively turn
+off translation for specific destination addresses
+and/or ports.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="port" type="leaf"><description><![CDATA[It must be possible to administratively turn off
+translation for specific destination addresses
+and/or ports.
+
+If no prefix is defined, the NAT pass-through bound
+to a given port applies for any destination address.]]>None</description></node></node><node access="read-write" key="id" name="policy" type="list"><description><![CDATA[NAT parameters for a given instance]]>None</description><node access="read-write" datatype="uint32" is_key="true" mandatory="true" name="id" type="leaf"><description><![CDATA[An identifier of the NAT policy.  It must be unique
+within the NAT instance.]]>None</description></node><node access="read-write" name="clat-parameters" type="container"><description><![CDATA[CLAT parameters.]]>None</description><node access="read-write" key="ipv6-prefix" name="clat-ipv6-prefixes" type="list"><description><![CDATA[464XLAT double-translation treatment is stateless
+when a dedicated /64 is available for translation
+on the CLAT.  Otherwise, the CLAT will have both
+stateful and stateless translation since it requires
+NAT44 from the LAN to a single IPv4 address and then
+stateless translation to a single IPv6 address.]]>None</description><node access="read-write" datatype="inet:ipv6-prefix" is_key="true" mandatory="true" name="ipv6-prefix" type="leaf"><description><![CDATA[An IPv6 prefix used for CLAT.]]>None</description></node></node><node access="read-write" key="ipv4-prefix" name="ipv4-prefixes" type="list"><description><![CDATA[Pool of IPv4 addresses used for CLAT.
+192.0.0.0/29 is the IPv4 service continuity prefix.]]>None</description><node access="read-write" datatype="inet:ipv4-prefix" is_key="true" mandatory="true" name="ipv4-prefix" type="leaf"><description><![CDATA[464XLAT double-translation treatment is
+stateless when a dedicated /64 is available
+for translation on the CLAT.  Otherwise, the
+CLAT will have both stateful and stateless
+translation since it requires NAT44 from the
+LAN to a single IPv4 address and then stateless
+translation to a single IPv6 address.
+The CLAT performs NAT44 for all IPv4 LAN
+packets so that all the LAN-originated IPv4
+packets appear from a single IPv4 address
+and are then statelessly translated to one
+interface IPv6 address that is claimed by
+the CLAT.
+
+An IPv4 address from this pool is also
+provided to an application that makes
+use of literals.]]>None</description></node></node></node><node access="read-write" key="internal-ipv6-prefix" name="nptv6-prefixes" type="list"><description><![CDATA[Provides one or a list of (internal IPv6 prefix,
+external IPv6 prefix) required for NPTv6.
+
+In its simplest form, NPTv6 interconnects two
+network links: one is an 'internal' network
+link attached to a leaf network within a single
+administrative domain, and the other is an
+'external' network with connectivity to the
+global Internet.]]>None</description><node access="read-write" datatype="inet:ipv6-prefix" is_key="true" mandatory="true" name="internal-ipv6-prefix" type="leaf"><description><![CDATA[An IPv6 prefix used by an internal interface of
+NPTv6.]]>None</description></node><node access="read-write" datatype="inet:ipv6-prefix" mandatory="true" name="external-ipv6-prefix" type="leaf"><description><![CDATA[An IPv6 prefix used by the external interface of
+NPTv6.]]>None</description></node></node><node access="read-write" key="ipv4-prefix" name="eam" type="list"><description><![CDATA[The Explicit Address Mapping Table is a conceptual
+table in which each row represents an EAM.
+
+Each EAM describes a mapping between IPv4 and IPv6
+prefixes/addresses.]]>None</description><node access="read-write" datatype="inet:ipv4-prefix" is_key="true" mandatory="true" name="ipv4-prefix" type="leaf"><description><![CDATA[The IPv4 prefix of an EAM.]]>None</description></node><node access="read-write" datatype="inet:ipv6-prefix" mandatory="true" name="ipv6-prefix" type="leaf"><description><![CDATA[The IPv6 prefix of an EAM.]]>None</description></node></node><node access="read-write" key="nat64-prefix" name="nat64-prefixes" type="list"><description><![CDATA[Provides one or a list of NAT64 prefixes
+with or without a list of destination IPv4 prefixes.
+It allows mapping IPv4 address ranges to IPv6 prefixes.
+For example:
+192.0.2.0/24 is mapped to 2001:db8:122:300::/56.
+198.51.100.0/24 is mapped to 2001:db8:122::/48.]]>None</description><node access="read-write" datatype="inet:ipv6-prefix" is_key="true" mandatory="true" name="nat64-prefix" type="leaf"><description><![CDATA[A NAT64 prefix.  Can be a Network-Specific Prefix (NSP)
+or a Well-Known Prefix (WKP).
+
+Organizations deploying stateless IPv4/IPv6 translation
+should assign an NSP to their IPv4/IPv6 translation
+service.
+For stateless NAT64, IPv4-translatable IPv6 addresses
+must use the selected NSP.
+
+Both IPv4-translatable IPv6 addresses and
+IPv4-converted IPv6 addresses should use
+the same prefix.]]>None</description></node><node access="read-write" key="ipv4-prefix" name="destination-ipv4-prefix" type="list"><description><![CDATA[An IPv4 prefix/address.]]>None</description><node access="read-write" datatype="inet:ipv4-prefix" is_key="true" mandatory="true" name="ipv4-prefix" type="leaf"><description><![CDATA[An IPv4 address/prefix.]]>None</description></node></node><node access="read-write" datatype="boolean" default="false" name="stateless-enable" type="leaf" values="true|false"><description><![CDATA[Enable explicitly stateless NAT64.]]>None</description></node></node><node access="read-write" key="pool-id" name="external-ip-address-pool" type="list"><description><![CDATA[Pool of external IP addresses used to service internal
+hosts.
+
+A pool is a set of IP prefixes.]]>None</description><node access="read-write" datatype="uint32" is_key="true" mandatory="true" name="pool-id" type="leaf"><description><![CDATA[An identifier that uniquely identifies the address pool
+within a NAT instance.
+
+The identifier must be greater than zero.]]>None</description></node><node access="read-write" datatype="inet:ipv4-prefix" mandatory="true" name="external-ip-pool" type="leaf"><description><![CDATA[An IPv4 prefix used for NAT purposes.]]>None</description></node></node><node access="read-write" name="port-set-restrict" type="container"><description><![CDATA[Configures contiguous and non-contiguous port ranges.
+
+The port set is used to restrict the external source
+port numbers used by the translator.]]>None</description><node access="read-write" default="port-range" mandatory="true" name="port-type" type="choice" values="port-range|port-set-algo"><description><![CDATA[Port type: port-range or port-set-algo.]]>None</description><node access="read-write" name="port-range" type="case"><node access="read-write" datatype="inet:port-number" name="start-port-number" type="leaf"><description><![CDATA[Beginning of the port range.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="end-port-number" type="leaf"><description><![CDATA[End of the port range.]]>None</description></node></node><node access="read-write" name="port-set-algo" type="case"><node access="read-write" datatype="uint8" name="psid-offset" type="leaf"><description><![CDATA[The number of offset bits (a.k.a., 'a' bits).
+Specifies the numeric value for the excluded port
+range/offset bits.
+
+Allowed values are between 0 and 15.]]>None</description></node><node access="read-write" datatype="uint8" mandatory="true" name="psid-len" type="leaf"><description><![CDATA[The length of PSID, representing the sharing
+ratio for an IPv4 address.
+
+(also known as 'k').
+
+The address-sharing ratio would be 2^k.]]>None</description></node><node access="read-write" datatype="uint16" mandatory="true" name="psid" type="leaf"><description><![CDATA[PSID value, which identifies a set
+of ports algorithmically.]]>None</description></node></node></node></node><node access="read-write" datatype="boolean" default="false" name="dst-nat-enable" type="leaf" values="true|false"><description><![CDATA[Enable/disable Destination NAT.
+
+A NAT44 may be configured to enable Destination
+NAT, too.]]>None</description></node><node access="read-write" key="pool-id" name="dst-ip-address-pool" type="list"><description><![CDATA[Pool of IP addresses used for Destination NAT.]]>None</description><node access="read-write" datatype="uint32" is_key="true" mandatory="true" name="pool-id" type="leaf"><description><![CDATA[An identifier of the address pool.]]>None</description></node><node access="read-write" datatype="inet:ip-prefix" name="dst-in-ip-pool" type="leaf"><description><![CDATA[Is used to identify an internal destination
+IP prefix/address to be translated.]]>None</description></node><node access="read-write" datatype="inet:ip-prefix" mandatory="true" name="dst-out-ip-pool" type="leaf"><description><![CDATA[IP address/prefix used for Destination NAT.]]>None</description></node></node><node access="read-write" key="protocol-id" name="transport-protocols" type="list"><description><![CDATA[Configure the transport protocols to be handled by
+the translator.
+
+TCP and UDP are supported by default.]]>None</description><node access="read-write" datatype="uint8" is_key="true" mandatory="true" name="protocol-id" type="leaf"><description><![CDATA[The upper-layer protocol associated with this
+mapping.
+
+Values are taken from the IANA Protocol Numbers
+registry.
+
+For example, this field contains 6 for TCP,
+17 for UDP, 33 for DCCP, or 132 for SCTP.]]>None</description></node><node access="read-write" datatype="string" name="protocol-name" type="leaf"><description><![CDATA[The name of the upper-layer protocol associated
+with this mapping.
+
+For example, TCP, UDP, DCCP, and SCTP.]]>None</description></node></node><node access="read-write" datatype="uint8" name="subscriber-mask-v6" type="leaf"><description><![CDATA[The subscriber mask is an integer that indicates
+the length of significant bits to be applied on
+the source IPv6 address (internal side) to
+unambiguously identify a user device (e.g., CPE).
+
+Subscriber mask is a system-wide configuration
+parameter that is used to enforce generic
+per-subscriber policies (e.g., port-quota).
+
+The enforcement of these generic policies does not
+require the configuration of every subscriber's
+prefix.
+
+Example: suppose the 2001:db8:100:100::/56 prefix
+is assigned to a NAT64-serviced CPE.  Suppose also
+that 2001:db8:100:100::1 is the IPv6 address used
+by the client that resides in that CPE.  When the
+NAT64 receives a packet from this client,
+it applies the subscriber-mask-v6 (e.g., 56) on
+the source IPv6 address to compute the associated
+prefix for this client (2001:db8:100:100::/56).
+Then, the NAT64 enforces policies based on that
+prefix (2001:db8:100:100::/56), not on the exact
+source IPv6 address.]]>None</description></node><node access="read-write" key="match-id" name="subscriber-match" type="list"><description><![CDATA[IP prefix match.
+A subscriber is identified by a subnet.]]>None</description><node access="read-write" datatype="uint32" is_key="true" mandatory="true" name="match-id" type="leaf"><description><![CDATA[An identifier of the subscriber match.]]>None</description></node><node access="read-write" datatype="inet:ip-prefix" mandatory="true" name="subnet" type="leaf"><description><![CDATA[The IP address subnets that match
+should be translated.  For example, all addresses
+that belong to the 192.0.2.0/24 prefix must
+be processed by the NAT.]]>None</description></node></node><node access="read-write" datatype="enumeration" name="address-allocation-type" type="leaf" values="arbitrary|roundrobin|paired"><description><![CDATA[Specifies how external IP addresses are allocated.]]>None</description></node><node access="read-write" datatype="enumeration" name="port-allocation-type" type="leaf" values="random|port-preservation|port-parity-preservation|port-range-allocation"><description><![CDATA[Indicates the type of port allocation.]]>None</description></node><node access="read-write" datatype="enumeration" name="mapping-type" type="leaf" values="eim|adm|edm"><description><![CDATA[Indicates the type of NAT mapping.]]>None</description></node><node access="read-write" datatype="enumeration" name="filtering-type" type="leaf" values="eif|adf|edf"><description><![CDATA[Indicates the type of NAT filtering.]]>None</description></node><node access="read-write" datatype="enumeration" name="fragment-behavior" type="leaf" values="drop-all|in-order|out-of-order"><description><![CDATA[The fragment behavior instructs the NAT about the
+behavior to follow to translate fragments received
+on the external interface of the NAT.]]>None</description></node><node access="read-write" key="quota-type" name="port-quota" type="list"><description><![CDATA[Configures a port quota to be assigned per subscriber.
+It corresponds to the maximum number of ports to be
+used by a subscriber.]]>None</description><node access="read-write" datatype="uint16" name="port-limit" type="leaf"><description><![CDATA[Configures a port quota to be assigned per subscriber.
+It corresponds to the maximum number of ports to be
+used by a subscriber.]]>None</description></node><node access="read-write" datatype="uint8" is_key="true" mandatory="true" name="quota-type" type="leaf"><description><![CDATA[Indicates whether the port quota applies to
+all protocols (0) or to a specific protocol.]]>None</description></node></node><node access="read-write" name="port-set" type="container"><description><![CDATA[Manages port-set assignments.]]>None</description><node access="read-write" datatype="uint16" mandatory="true" name="port-set-size" type="leaf"><description><![CDATA[Indicates the size of assigned port sets.]]>None</description></node><node access="read-write" datatype="uint32" name="port-set-timeout" type="leaf"><description><![CDATA[inactivity timeout for port sets.]]>None</description></node></node><node access="read-write" name="timers" type="container"><description><![CDATA[Configure values of various timeouts.]]>None</description><node access="read-write" datatype="uint32" default="300" name="udp-timeout" type="leaf"><description><![CDATA[UDP inactivity timeout.  That is the time a mapping
+will stay active without packets traversing the NAT.]]>None</description></node><node access="read-write" datatype="uint32" default="7440" name="tcp-idle-timeout" type="leaf"><description><![CDATA[TCP idle timeout should be 2 hours and 4 minutes.]]>None</description></node><node access="read-write" datatype="uint32" default="240" name="tcp-trans-open-timeout" type="leaf"><description><![CDATA[The value of the transitory open connection
+idle-timeout.
+
+A NAT should provide different configurable
+parameters for configuring the open and
+closing idle timeouts.
+
+To accommodate deployments that consider
+a partially open timeout of 4 minutes as being
+excessive from a security standpoint, a NAT may
+allow the configured timeout to be less than
+4 minutes.
+
+However, a minimum default transitory connection
+idle-timeout of 4 minutes is recommended.]]>None</description></node><node access="read-write" datatype="uint32" default="240" name="tcp-trans-close-timeout" type="leaf"><description><![CDATA[The value of the transitory close connection
+idle-timeout.
+
+A NAT should provide different configurable
+parameters for configuring the open and
+closing idle timeouts.]]>None</description></node><node access="read-write" datatype="uint32" default="6" name="tcp-in-syn-timeout" type="leaf"><description><![CDATA[A NAT must not respond to an unsolicited
+inbound SYN packet for at least 6 seconds
+after the packet is received.  If during
+this interval the NAT receives and translates
+an outbound SYN for the connection the NAT
+must silently drop the original unsolicited
+inbound SYN packet.]]>None</description></node><node access="read-write" datatype="uint32" default="2" name="fragment-min-timeout" type="leaf"><description><![CDATA[As long as the NAT has available resources,
+the NAT allows the fragments to arrive
+over the fragment-min-timeout interval.
+The default value is inspired from RFC 6146.]]>None</description></node><node access="read-write" datatype="uint32" default="60" name="icmp-timeout" type="leaf"><description><![CDATA[An ICMP Query session timer must not expire
+in less than 60 seconds.  It is recommended
+that the ICMP Query session timer be made
+configurable]]>None</description></node><node access="read-write" key="port-number" name="per-port-timeout" type="list"><description><![CDATA[Some NATs are configurable with short timeouts
+for some ports, e.g., as 10 seconds on
+port 53 (DNS) and 123 (NTP), and longer timeouts
+on other ports.]]>None</description><node access="read-write" datatype="inet:port-number" is_key="true" mandatory="true" name="port-number" type="leaf"><description><![CDATA[A port number.]]>None</description></node><node access="read-write" datatype="uint8" name="protocol" type="leaf"><description><![CDATA[The upper-layer protocol associated with this port.
+
+Values are taken from the IANA Protocol Numbers
+registry.
+
+If no protocol is indicated, it means 'any
+protocol'.]]>None</description></node><node access="read-write" datatype="uint32" mandatory="true" name="timeout" type="leaf"><description><![CDATA[Timeout for this port number]]>None</description></node></node><node access="read-write" datatype="uint32" default="120" name="hold-down-timeout" type="leaf"><description><![CDATA[Hold-down timer.
+
+Ports in the hold-down pool are not reassigned until
+hold-down-timeout expires.
+
+The length of time and the maximum number of ports in
+this state must be configurable by the administrator.
+
+This is necessary in order to prevent collisions
+between old and new mappings and sessions.  It ensures
+that all established sessions are broken instead of
+redirected to a different peer.]]>None</description></node><node access="read-write" datatype="uint32" name="hold-down-max" type="leaf"><description><![CDATA[Maximum ports in the hold-down port pool.]]>None</description></node></node><node access="read-write" datatype="uint32" name="fragments-limit" type="leaf"><description><![CDATA[Limits the number of out-of-order fragments that can
+be handled.]]>None</description></node><node access="read-write" key="name" name="algs" type="list"><description><![CDATA[Features related to the Application Layer
+Gateway (ALG).]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of the ALG.]]>None</description></node><node access="read-write" datatype="uint32" name="transport-protocol" type="leaf"><description><![CDATA[The transport protocol used by the ALG
+(e.g., TCP and UDP).]]>None</description></node><node access="read-write" name="dst-transport-port" type="container"><description><![CDATA[The destination port number(s) used by the ALG.
+For example,
+  - 21 for the FTP ALG
+  - 53 for the DNS ALG.]]>None</description><node access="read-write" datatype="inet:port-number" name="start-port-number" type="leaf"><description><![CDATA[Beginning of the port range.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="end-port-number" type="leaf"><description><![CDATA[End of the port range.]]>None</description></node></node><node access="read-write" name="src-transport-port" type="container"><description><![CDATA[The source port number(s) used by the ALG.]]>None</description><node access="read-write" datatype="inet:port-number" name="start-port-number" type="leaf"><description><![CDATA[Beginning of the port range.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="end-port-number" type="leaf"><description><![CDATA[End of the port range.]]>None</description></node></node><node access="read-write" datatype="boolean" name="status" type="leaf" values="true|false"><description><![CDATA[Enable/disable the ALG.]]>None</description></node></node><node access="read-write" datatype="boolean" name="all-algs-enable" type="leaf" values="true|false"><description><![CDATA[Disable/enable all ALGs.
+
+When specified, this parameter overrides the one
+that may be indicated, eventually, by the 'status'
+of an individual ALG.]]>None</description></node><node access="read-write" name="notify-pool-usage" type="container"><description><![CDATA[Notification of pool usage when certain criteria
+are met.]]>None</description><node access="read-write" datatype="uint32" name="pool-id" type="leaf"><description><![CDATA[Pool-ID for which the notification criteria
+is defined]]>None</description></node><node access="read-write" datatype="percent" name="low-threshold" type="leaf"><description><![CDATA[Notification must be generated when the defined low
+threshold is reached.
+
+For example, if a notification is required when the
+pool utilization reaches below 10%, this
+configuration parameter must be set to 10.
+
+0% indicates that low-threshold notification is
+disabled.]]>None</description></node><node access="read-write" datatype="percent" name="high-threshold" type="leaf"><description><![CDATA[Notification must be generated when the defined high
+threshold is reached.
+
+For example, if a notification is required when the
+pool utilization reaches 90%, this configuration
+parameter must be set to 90.
+
+Setting the same value as low-threshold is equivalent
+to disabling high-threshold notification.]]>None</description></node><node access="read-write" datatype="uint32" default="20" name="notify-interval" type="leaf"><description><![CDATA[Minimum number of seconds between successive
+notifications for this pool.]]>None</description></node></node><node access="read-write" name="external-realm" type="container"><description><![CDATA[Identifies the external realm of the NAT instance.]]>None</description><node access="read-write" mandatory="true" name="realm-type" type="choice" values="interface"><description><![CDATA[Can be an interface, VRF instance, etc.]]>None</description><node access="read-write" name="interface" type="case"><description><![CDATA[External interface.]]>None</description><node access="read-write" datatype="if:interface-ref" name="external-interface" type="leaf"><description><![CDATA[Name of the external interface.]]>None</description></node></node></node></node><node access="read-write" datatype="uint8" default="1" name="dslite:max-softwires-per-subscriber" type="leaf"><description><![CDATA[Configures the maximum softwires per subscriber feature.
+
+A subscriber is uniquely identified by means
+of a subscriber-mask (subscriber-mask-v6).
+
+This policy aims to prevent a misbehaving subscriber from
+mounting several DS-Lite softwires that would consume
+additional AFTR resources (e.g., get more external ports
+if the quota was enforced on a per-softwire basis and
+consume extra processing due to a large number of active
+softwires).]]>None</description></node><node access="read-write" datatype="boolean" default="true" name="dslite:state-migrate" type="leaf" values="true|false"><description><![CDATA[State migration is enabled by default.
+
+In the event a new IPv6 address is assigned to the B4 element,
+the AFTR should migrate existing state to be bound to the new
+IPv6 address.  This operation ensures that traffic destined to
+the previous B4's IPv6 address will be redirected to the newer
+B4's IPv6 address.  The destination IPv6 address for tunneling
+return traffic from the AFTR should be the last seen as the
+B4's IPv6 source address from the user device (e.g., CPE).
+
+The AFTR uses the subscriber-mask-v6 to determine whether two
+IPv6 addresses belong to the same CPE (e.g., if the
+subscriber-mask-v6 is set to 56, the AFTR concludes that
+2001:db8:100:100::1 and 2001:db8:100:100::2 belong to the same
+CPE assigned with 2001:db8:100:100::/56).]]>None</description></node><node access="read-write" datatype="uint32" default="1800" name="dslite:b4-address-change-limit" type="leaf"><description><![CDATA[Minimum number of seconds between a successive B4's IPv6
+address change from the same prefix.
+
+Changing the source B4's IPv6 address may be used as an attack
+vector.  Packets with a new B4's IPv6 address from the same
+prefix should be rate-limited.
+
+It is recommended that this rate limit be set to 30 minutes;
+other values can be set on a per-deployment basis.]]>None</description></node><node access="read-write" name="dslite:mss-clamping" type="container"><description><![CDATA[MSS rewriting configuration to avoid IPv6 fragmentation.]]>None</description><node access="read-write" datatype="boolean" name="dslite:enable" type="leaf" values="true|false"><description><![CDATA[Enable/disable MSS rewriting feature.]]>None</description></node><node access="read-write" datatype="uint16" name="dslite:mss-value" type="leaf"><description><![CDATA[Sets the MSS value to be used for MSS rewriting.]]>None</description></node></node></node><node access="read-write" name="mapping-limits" type="container"><description><![CDATA[Information about the configuration parameters that
+limits the mappings based upon various criteria.]]>None</description><node access="read-write" datatype="uint32" name="limit-subscribers" type="leaf"><description><![CDATA[Maximum number of subscribers that can be serviced
+by a NAT instance.
+
+A subscriber is identified by a given prefix.]]>None</description></node><node access="read-write" datatype="uint32" name="limit-address-mappings" type="leaf"><description><![CDATA[Maximum number of address mappings that can be
+handled by a NAT instance.
+
+When this limit is reached, packets that would
+normally trigger translation will be dropped.]]>None</description></node><node access="read-write" datatype="uint32" name="limit-port-mappings" type="leaf"><description><![CDATA[Maximum number of port mappings that can be handled
+by a NAT instance.
+
+When this limit is reached, packets that would
+normally trigger translation will be dropped.]]>None</description></node><node access="read-write" key="protocol-id" name="limit-per-protocol" type="list"><description><![CDATA[Configure limits per transport protocol]]>None</description><node access="read-write" datatype="uint8" is_key="true" mandatory="true" name="protocol-id" type="leaf"><description><![CDATA[The upper-layer protocol.
+
+Values are taken from the IANA Protocol Numbers
+registry.
+
+For example, this field contains 6 for TCP,
+17 for UDP, 33 for DCCP, or 132 for SCTP.]]>None</description></node><node access="read-write" datatype="uint32" name="limit" type="leaf"><description><![CDATA[Maximum number of protocol-specific NAT mappings
+per instance.]]>None</description></node></node></node><node access="read-write" name="connection-limits" type="container"><description><![CDATA[Information about the configuration parameters that
+rate-limit the translation based upon various criteria.]]>None</description><node access="read-write" datatype="uint32" name="limit-per-subscriber" type="leaf"><description><![CDATA[Rate-limit the number of new mappings and sessions
+per subscriber.]]>None</description></node><node access="read-write" datatype="uint32" name="limit-per-instance" type="leaf"><description><![CDATA[Rate-limit the number of new mappings and sessions
+per instance.]]>None</description></node><node access="read-write" key="protocol-id" name="limit-per-protocol" type="list"><description><![CDATA[Configure limits per transport protocol]]>None</description><node access="read-write" datatype="uint8" is_key="true" mandatory="true" name="protocol-id" type="leaf"><description><![CDATA[The upper-layer protocol.
+
+Values are taken from the IANA Protocol Numbers
+registry.
+
+For example, this field contains 6 for TCP,
+17 for UDP, 33 for DCCP, or 132 for SCTP.]]>None</description></node><node access="read-write" datatype="uint32" name="limit" type="leaf"><description><![CDATA[Limit the number of protocol-specific mappings
+and sessions per instance.]]>None</description></node></node></node><node access="read-write" name="notification-limits" type="container"><description><![CDATA[Sets notification limits.]]>None</description><node access="read-write" datatype="uint32" default="10" name="notify-interval" type="leaf"><description><![CDATA[Minimum number of seconds between successive
+notifications for this NAT instance.]]>None</description></node><node access="read-write" datatype="percent" name="notify-addresses-usage" type="leaf"><description><![CDATA[Notification of address mappings usage over
+the whole NAT instance.
+
+Notification must be generated when the defined
+threshold is reached.
+
+For example, if a notification is required when
+the address mappings utilization reaches 90%,
+this configuration parameter must be set
+to 90.]]>None</description></node><node access="read-write" datatype="percent" name="notify-ports-usage" type="leaf"><description><![CDATA[Notification of port mappings usage over the
+whole NAT instance.
+
+Notification must be generated when the defined
+threshold is reached.
+
+For example, if a notification is required when
+the port mappings utilization reaches 90%, this
+configuration parameter must be set to 90.]]>None</description></node><node access="read-write" datatype="uint32" name="notify-subscribers-limit" type="leaf"><description><![CDATA[Notification of active subscribers per NAT
+instance.
+
+Notification must be generated when the defined
+threshold is reached.]]>None</description></node></node><node access="read-write" name="mapping-table" type="container"><description><![CDATA[NAT mapping table.  Applicable for functions that maintain
+static and/or dynamic mappings, such as NAT44, Destination
+NAT, NAT64, or CLAT.]]>None</description><node access="read-write" key="index" name="mapping-entry" type="list"><description><![CDATA[NAT mapping entry.]]>None</description><node access="read-write" datatype="uint32" is_key="true" mandatory="true" name="index" type="leaf"><description><![CDATA[A unique identifier of a mapping entry.  This identifier
+can be automatically assigned by the NAT instance or be
+explicitly configured.]]>None</description></node><node access="read-write" datatype="enumeration" name="type" type="leaf" values="static|dynamic-implicit|dynamic-explicit"><description><![CDATA[Indicates the type of a mapping entry.  For example,
+a mapping can be: static, implicit dynamic,
+or explicit dynamic.]]>None</description></node><node access="read-write" datatype="uint8" name="transport-protocol" type="leaf"><description><![CDATA[The upper-layer protocol associated with this mapping.
+Values are taken from the IANA Protocol Numbers registry:
+&lthttps://www.iana.org/assignments/protocol-numbers/&gt.
+
+For example, this field contains 6 for TCP,
+17 for UDP, 33 for DCCP, or 132 for SCTP.
+
+If this leaf is not instantiated, then the mapping
+applies to any protocol.]]>None</description></node><node access="read-write" datatype="inet:ip-prefix" name="internal-src-address" type="leaf"><description><![CDATA[Corresponds to the source IPv4/IPv6 address/prefix
+of the packet received on an internal interface.]]>None</description></node><node access="read-write" name="internal-src-port" type="container"><description><![CDATA[Corresponds to the source port of the packet received
+on an internal interface.
+
+It is also used to indicate the internal source ICMP
+identifier.
+
+As a reminder, all the ICMP Query messages contain
+an 'Identifier' field, which is referred to in this
+document as the 'ICMP Identifier'.]]>None</description><node access="read-write" datatype="inet:port-number" name="start-port-number" type="leaf"><description><![CDATA[Beginning of the port range.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="end-port-number" type="leaf"><description><![CDATA[End of the port range.]]>None</description></node></node><node access="read-write" datatype="inet:ip-prefix" name="external-src-address" type="leaf"><description><![CDATA[Source IP address/prefix of the packet sent on an
+external interface of the NAT.]]>None</description></node><node access="read-write" name="external-src-port" type="container"><description><![CDATA[Source port of the packet sent on an external
+interface of the NAT.
+
+It is also used to indicate the external source ICMP
+identifier.]]>None</description><node access="read-write" datatype="inet:port-number" name="start-port-number" type="leaf"><description><![CDATA[Beginning of the port range.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="end-port-number" type="leaf"><description><![CDATA[End of the port range.]]>None</description></node></node><node access="read-write" datatype="inet:ip-prefix" name="internal-dst-address" type="leaf"><description><![CDATA[Corresponds to the destination IP address/prefix
+of the packet received on an internal interface
+of the NAT.
+
+For example, some NAT implementations support
+the translation of both source and destination
+addresses and port numbers, sometimes referred to
+as 'Twice NAT'.]]>None</description></node><node access="read-write" name="internal-dst-port" type="container"><description><![CDATA[Corresponds to the destination port of the
+IP packet received on the internal interface.
+
+It is also used to include the internal
+destination ICMP identifier.]]>None</description><node access="read-write" datatype="inet:port-number" name="start-port-number" type="leaf"><description><![CDATA[Beginning of the port range.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="end-port-number" type="leaf"><description><![CDATA[End of the port range.]]>None</description></node></node><node access="read-write" datatype="inet:ip-prefix" name="external-dst-address" type="leaf"><description><![CDATA[Corresponds to the destination IP address/prefix
+of the packet sent on an external interface
+of the NAT.]]>None</description></node><node access="read-write" name="external-dst-port" type="container"><description><![CDATA[Corresponds to the destination port number of
+the packet sent on the external interface
+of the NAT.
+
+It is also used to include the external
+destination ICMP identifier.]]>None</description><node access="read-write" datatype="inet:port-number" name="start-port-number" type="leaf"><description><![CDATA[Beginning of the port range.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="end-port-number" type="leaf"><description><![CDATA[End of the port range.]]>None</description></node></node><node access="read-write" datatype="uint32" name="lifetime" type="leaf"><description><![CDATA[When specified, it is used to track the connection that is
+fully formed (e.g., once the three-way handshake
+TCP is completed) or the duration for maintaining
+an explicit mapping alive.  The mapping entry will be
+removed by the NAT instance once this lifetime is expired.
+
+When reported in a get operation, the lifetime indicates
+the remaining validity lifetime.
+
+Static mappings may not be associated with a
+lifetime.  If no lifetime is associated with a
+static mapping, an explicit action is required to
+remove that mapping.]]>None</description></node><node access="read-write" name="dslite:b4-ipv6-address" type="container"><description><![CDATA[Records the IPv6 address used by a B4 element and the last
+time that address changed.]]>None</description><node access="read-write" datatype="inet:ipv6-address" name="dslite:address" type="leaf"><description><![CDATA[Corresponds to the IPv6 address used by a B4 element.]]>None</description></node><node access="read-write" datatype="yang:date-and-time" name="dslite:last-address-change" type="leaf"><description><![CDATA[Records the last time that the address changed.]]>None</description></node></node><node access="read-write" datatype="inet:dscp" name="dslite:v6-dscp" type="leaf"><description><![CDATA[DSCP value used at the softwire level (i.e., IPv6 header).]]>None</description></node><node access="read-write" datatype="inet:dscp" name="dslite:internal-v4-dscp" type="leaf"><description><![CDATA[DSCP value of the encapsulated IPv4 packet.]]>None</description></node><node access="read-write" datatype="inet:dscp" name="dslite:external-v4-dscp" type="leaf"><description><![CDATA[DSCP value of the translated IPv4 packet as marked by
+the AFTR.]]>None</description></node></node></node><node access="read-only" name="statistics" type="container"><description><![CDATA[Statistics related to the NAT instance.]]>None</description><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="discontinuity-time" type="leaf"><description><![CDATA[The time on the most recent occasion at which the NAT
+instance suffered a discontinuity.  This must be
+initialized when the NAT instance is configured
+or rebooted.]]>None</description></node><node access="read-only" name="traffic-statistics" type="container"><description><![CDATA[Generic traffic statistics.]]>None</description><node access="read-only" datatype="yang:zero-based-counter64" name="sent-packets" type="leaf"><description><![CDATA[Number of packets sent.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="sent-bytes" type="leaf"><description><![CDATA[Counter for sent traffic in bytes.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="rcvd-packets" type="leaf"><description><![CDATA[Number of received packets.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="rcvd-bytes" type="leaf"><description><![CDATA[Counter for received traffic in bytes.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-packets" type="leaf"><description><![CDATA[Number of dropped packets.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-bytes" type="leaf"><description><![CDATA[Counter for dropped traffic in bytes.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-fragments" type="leaf"><description><![CDATA[Number of dropped fragments on the external realm.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-address-limit-packets" type="leaf"><description><![CDATA[Number of dropped packets because an address limit
+ is reached.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-address-limit-bytes" type="leaf"><description><![CDATA[Counter of dropped packets because an address limit
+ is reached, in bytes.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-address-packets" type="leaf"><description><![CDATA[Number of dropped packets because no address is
+available for allocation.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-address-bytes" type="leaf"><description><![CDATA[Counter of dropped packets because no address is
+available for allocation, in bytes.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-port-limit-packets" type="leaf"><description><![CDATA[Number of dropped packets because a port limit
+is reached.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-port-limit-bytes" type="leaf"><description><![CDATA[Counter of dropped packets because a port limit
+is reached, in bytes.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-port-packets" type="leaf"><description><![CDATA[Number of dropped packets because no port is
+available for allocation.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-port-bytes" type="leaf"><description><![CDATA[Counter of dropped packets because no port is
+available for allocation, in bytes.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-subscriber-limit-packets" type="leaf"><description><![CDATA[Number of dropped packets because the subscriber
+limit per instance is reached.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter64" name="dropped-subscriber-limit-bytes" type="leaf"><description><![CDATA[Counter of dropped packets because the subscriber
+ limit per instance is reached, in bytes.]]>None</description></node></node><node access="read-only" name="mappings-statistics" type="container"><description><![CDATA[Mappings statistics.]]>None</description><node access="read-only" datatype="yang:gauge32" name="total-active-subscribers" type="leaf"><description><![CDATA[Total number of active subscribers (that is,
+subscribers for which the NAT maintains active
+mappings).
+
+A subscriber is identified by a subnet,
+subscriber-mask, etc.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="total-address-mappings" type="leaf"><description><![CDATA[Total number of address mappings present at a given
+time.  It includes both static and dynamic mappings.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="total-port-mappings" type="leaf"><description><![CDATA[Total number of NAT port mappings present at
+a given time.  It includes both static and dynamic
+mappings.]]>None</description></node><node access="read-only" key="protocol-id" name="total-per-protocol" type="list"><description><![CDATA[Total mappings for each enabled/supported protocol.]]>None</description><node access="read-only" datatype="uint8" is_key="true" mandatory="true" name="protocol-id" type="leaf"><description><![CDATA[The upper-layer protocol.
+For example, this field contains 6 for TCP,
+17 for UDP, 33 for DCCP, or 132 for SCTP.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="total" type="leaf"><description><![CDATA[Total number of a protocol-specific mappings present
+at a given time.  The protocol is identified by
+protocol-id.]]>None</description></node></node><node access="read-only" datatype="yang:gauge32" name="dslite:active-softwires" type="leaf"><description><![CDATA[The number of currently active softwires on the AFTR
+instance.]]>None</description></node></node><node access="read-only" name="pools-stats" type="container"><description><![CDATA[Statistics related to address/prefix pools
+usage]]>None</description><node access="read-only" datatype="yang:gauge32" name="addresses-allocated" type="leaf"><description><![CDATA[Number of all allocated addresses.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="addresses-free" type="leaf"><description><![CDATA[Number of unallocated addresses of all pools at
+a given time.  The sum of unallocated and allocated
+addresses is the total number of addresses of
+the pools.]]>None</description></node><node access="read-only" name="ports-stats" type="container"><description><![CDATA[Statistics related to port numbers usage.]]>None</description><node access="read-only" datatype="yang:gauge32" name="ports-allocated" type="leaf"><description><![CDATA[Number of allocated ports from all pools.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="ports-free" type="leaf"><description><![CDATA[Number of unallocated addresses from all pools.]]>None</description></node></node><node access="read-only" key="pool-id" name="per-pool-stats" type="list"><description><![CDATA[Statistics related to address/prefix pool usage]]>None</description><node access="read-only" datatype="uint32" is_key="true" mandatory="true" name="pool-id" type="leaf"><description><![CDATA[Unique identifier that represents a pool of
+addresses/prefixes.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="discontinuity-time" type="leaf"><description><![CDATA[The time on the most recent occasion at which this
+pool counter suffered a discontinuity.  This must
+be initialized when the address pool is
+configured.]]>None</description></node><node access="read-only" name="pool-stats" type="container"><description><![CDATA[Statistics related to address/prefix pool usage]]>None</description><node access="read-only" datatype="yang:gauge32" name="addresses-allocated" type="leaf"><description><![CDATA[Number of allocated addresses from this pool.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="addresses-free" type="leaf"><description><![CDATA[Number of unallocated addresses in this pool.]]>None</description></node></node><node access="read-only" name="port-stats" type="container"><description><![CDATA[Statistics related to port numbers usage.]]>None</description><node access="read-only" datatype="yang:gauge32" name="ports-allocated" type="leaf"><description><![CDATA[Number of allocated ports from this pool.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="ports-free" type="leaf"><description><![CDATA[Number of unallocated addresses from this pool.]]>None</description></node></node></node></node></node></node></node></node><node access="read-only" name="nat-pool-event" type="notification"><description><![CDATA[Notifications must be generated when the defined high/low
+threshold is reached.  Related configuration parameters
+must be provided to trigger the notifications.]]>None</description><node access="read-only" datatype="-&gt; /nat/instances/instance/id" mandatory="true" name="id" type="leaf"><description><![CDATA[NAT instance identifier.]]>None</description></node><node access="read-only" datatype="-&gt; /nat/instances/instance/policy/id" name="policy-id" type="leaf"><description><![CDATA[Policy identifier.]]>None</description></node><node access="read-only" datatype="-&gt; /nat/instances/instance/policy/external-ip-address-pool/pool-id" mandatory="true" name="pool-id" type="leaf"><description><![CDATA[Pool Identifier.]]>None</description></node><node access="read-only" datatype="percent" mandatory="true" name="notify-pool-threshold" type="leaf"><description><![CDATA[A threshold (high threshold or low threshold) has
+been fired.]]>None</description></node></node><node access="read-only" name="nat-instance-event" type="notification"><description><![CDATA[Notifications must be generated when notify-addresses-usage
+and/or notify-ports-usage thresholds are reached.]]>None</description><node access="read-only" datatype="-&gt; /nat/instances/instance/id" mandatory="true" name="id" type="leaf"><description><![CDATA[NAT instance identifier.]]>None</description></node><node access="read-only" datatype="uint32" name="notify-subscribers-threshold" type="leaf"><description><![CDATA[The notify-subscribers-limit threshold has been fired.]]>None</description></node><node access="read-only" datatype="percent" name="notify-addresses-threshold" type="leaf"><description><![CDATA[The notify-addresses-usage threshold has been fired.]]>None</description></node><node access="read-only" datatype="percent" name="notify-ports-threshold" type="leaf"><description><![CDATA[The notify-ports-usage threshold has been fired.]]>None</description></node></node></node>

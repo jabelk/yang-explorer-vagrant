@@ -1,0 +1,191 @@
+<node name="openconfig-terminal-device" prefix="oc-opt-term" type="module"><namespace import="true" module="openconfig-transport-types" prefix="oc-opt-types">http://openconfig.net/yang/transport-types</namespace><namespace import="false" module="openconfig-platform-types" prefix="oc-platform-types">http://openconfig.net/yang/platform-types</namespace><namespace import="true" module="openconfig-platform-transceiver" prefix="oc-transceiver">http://openconfig.net/yang/platform/transceiver</namespace><namespace import="false" module="ietf-interfaces" prefix="if">urn:ietf:params:xml:ns:yang:ietf-interfaces</namespace><namespace import="false" module="openconfig-terminal-device" prefix="oc-opt-term">http://openconfig.net/yang/terminal-device</namespace><namespace import="true" module="openconfig-types" prefix="oc-types">http://openconfig.net/yang/openconfig-types</namespace><namespace import="true" module="openconfig-platform" prefix="oc-platform">http://openconfig.net/yang/platform</namespace><namespace import="false" module="iana-if-type" prefix="ianaift">urn:ietf:params:xml:ns:yang:iana-if-type</namespace><namespace import="true" module="openconfig-extensions" prefix="oc-ext">http://openconfig.net/yang/openconfig-ext</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="true" module="openconfig-if-ethernet" prefix="oc-eth">http://openconfig.net/yang/interfaces/ethernet</namespace><namespace import="false" module="openconfig-interfaces" prefix="oc-if">http://openconfig.net/yang/interfaces</namespace><node access="read-write" name="terminal-device" type="container"><description><![CDATA[Top-level container for the terminal device]]>None</description><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for global terminal-device]]>None</description></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for global terminal device]]>None</description></node><node access="read-write" name="logical-channels" type="container"><description><![CDATA[Enclosing container the list of logical channels]]>None</description><node access="read-write" key="index" name="channel" type="list"><description><![CDATA[List of logical channels]]>None</description><node access="read-write" datatype="-&gt; ../config/index" is_key="true" mandatory="true" name="index" type="leaf"><description><![CDATA[Reference to the index of the logical channel]]>None</description></node><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for logical channels]]>None</description><node access="read-write" datatype="uint32" name="index" type="leaf"><description><![CDATA[Index of the current logical channel]]>None</description></node><node access="read-write" datatype="string" name="description" type="leaf"><description><![CDATA[Description of the logical channel]]>None</description></node><node access="read-write" datatype="oc-opt-types:admin-state-type" name="admin-state" type="leaf" values="ENABLED|DISABLED|MAINT"><description><![CDATA[Sets the admin state of the logical channel]]>None</description></node><node access="read-write" datatype="identityref:oc-opt-types:TRIBUTARY_RATE_CLASS_TYPE" name="rate-class" type="leaf" values="oc-opt-types:TRIB_RATE_100G|oc-opt-types:TRIB_RATE_10G|oc-opt-types:TRIB_RATE_1G|oc-opt-types:TRIB_RATE_2.5G|oc-opt-types:TRIB_RATE_40G"><description><![CDATA[Rounded bit rate of the tributary signal. Exact bit rate
+will be refined by protocol selection.]]>None</description></node><node access="read-write" datatype="identityref:oc-opt-types:TRIBUTARY_PROTOCOL_TYPE" name="trib-protocol" type="leaf" values="oc-opt-types:PROT_100GE|oc-opt-types:PROT_100G_MLG|oc-opt-types:PROT_10GE_LAN|oc-opt-types:PROT_10GE_WAN|oc-opt-types:PROT_1GE|oc-opt-types:PROT_40GE|oc-opt-types:PROT_OC192|oc-opt-types:PROT_OC48|oc-opt-types:PROT_OC768|oc-opt-types:PROT_ODU2|oc-opt-types:PROT_ODU2E|oc-opt-types:PROT_ODU3|oc-opt-types:PROT_ODU4|oc-opt-types:PROT_OTU1E|oc-opt-types:PROT_OTU2|oc-opt-types:PROT_OTU2E|oc-opt-types:PROT_OTU3|oc-opt-types:PROT_OTU4|oc-opt-types:PROT_OTUCN|oc-opt-types:PROT_STM16|oc-opt-types:PROT_STM256|oc-opt-types:PROT_STM64"><description><![CDATA[Protocol framing of the tributary signal. If this
+LogicalChannel is directly connected to a Client-Port or
+Optical-Channel, this is the protocol of the associated port.
+If the LogicalChannel is connected to other LogicalChannels,
+the TributaryProtocol of the LogicalChannels will define a
+specific mapping/demapping or multiplexing/demultiplexing
+function.
+
+Not all protocols are valid, depending on the value
+of trib-rate-class.  The expectation is that the NMS
+will validate that a correct combination of rate class
+and protocol are specfied.  Basic combinations are:
+
+rate class: 1G
+protocols: 1GE
+
+rate class: 2.5G
+protocols: OC48, STM16
+
+rate class: 10G
+protocols:  10GE LAN, 10GE WAN, OC192, STM64, OTU2, OTU2e,
+           OTU1e, ODU2, ODU2e, ODU1e
+
+rate class: 40G
+protocols:  40GE, OC768, STM256, OTU3, ODU3
+
+rate class: 100G
+protocols:  100GE, 100G MLG, OTU4, OTUCn, ODU4]]>None</description></node><node access="read-write" datatype="identityref:oc-opt-types:LOGICAL_ELEMENT_PROTOCOL_TYPE" name="logical-channel-type" type="leaf" values="oc-opt-types:PROT_ETHERNET|oc-opt-types:PROT_OTN"><description><![CDATA[The type / stage of the logical element determines the
+configuration and operational state parameters (PMs)
+available for the logical element]]>None</description></node><node access="read-write" datatype="oc-opt-types:loopback-mode-type" name="loopback-mode" type="leaf" values="NONE|FACILITY|TERMINAL"><description><![CDATA[Sets the loopback type on the logical channel. Setting the
+mode to something besides NONE activates the loopback in
+the specified mode.]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for logical channels]]>None</description><node access="read-only" datatype="uint32" name="index" type="leaf"><description><![CDATA[Index of the current logical channel]]>None</description></node><node access="read-only" datatype="string" name="description" type="leaf"><description><![CDATA[Description of the logical channel]]>None</description></node><node access="read-only" datatype="oc-opt-types:admin-state-type" name="admin-state" type="leaf" values="ENABLED|DISABLED|MAINT"><description><![CDATA[Sets the admin state of the logical channel]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:TRIBUTARY_RATE_CLASS_TYPE" name="rate-class" type="leaf" values="oc-opt-types:TRIB_RATE_100G|oc-opt-types:TRIB_RATE_10G|oc-opt-types:TRIB_RATE_1G|oc-opt-types:TRIB_RATE_2.5G|oc-opt-types:TRIB_RATE_40G"><description><![CDATA[Rounded bit rate of the tributary signal. Exact bit rate
+will be refined by protocol selection.]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:TRIBUTARY_PROTOCOL_TYPE" name="trib-protocol" type="leaf" values="oc-opt-types:PROT_100GE|oc-opt-types:PROT_100G_MLG|oc-opt-types:PROT_10GE_LAN|oc-opt-types:PROT_10GE_WAN|oc-opt-types:PROT_1GE|oc-opt-types:PROT_40GE|oc-opt-types:PROT_OC192|oc-opt-types:PROT_OC48|oc-opt-types:PROT_OC768|oc-opt-types:PROT_ODU2|oc-opt-types:PROT_ODU2E|oc-opt-types:PROT_ODU3|oc-opt-types:PROT_ODU4|oc-opt-types:PROT_OTU1E|oc-opt-types:PROT_OTU2|oc-opt-types:PROT_OTU2E|oc-opt-types:PROT_OTU3|oc-opt-types:PROT_OTU4|oc-opt-types:PROT_OTUCN|oc-opt-types:PROT_STM16|oc-opt-types:PROT_STM256|oc-opt-types:PROT_STM64"><description><![CDATA[Protocol framing of the tributary signal. If this
+LogicalChannel is directly connected to a Client-Port or
+Optical-Channel, this is the protocol of the associated port.
+If the LogicalChannel is connected to other LogicalChannels,
+the TributaryProtocol of the LogicalChannels will define a
+specific mapping/demapping or multiplexing/demultiplexing
+function.
+
+Not all protocols are valid, depending on the value
+of trib-rate-class.  The expectation is that the NMS
+will validate that a correct combination of rate class
+and protocol are specfied.  Basic combinations are:
+
+rate class: 1G
+protocols: 1GE
+
+rate class: 2.5G
+protocols: OC48, STM16
+
+rate class: 10G
+protocols:  10GE LAN, 10GE WAN, OC192, STM64, OTU2, OTU2e,
+           OTU1e, ODU2, ODU2e, ODU1e
+
+rate class: 40G
+protocols:  40GE, OC768, STM256, OTU3, ODU3
+
+rate class: 100G
+protocols:  100GE, 100G MLG, OTU4, OTUCn, ODU4]]>None</description></node><node access="read-only" datatype="identityref:oc-opt-types:LOGICAL_ELEMENT_PROTOCOL_TYPE" name="logical-channel-type" type="leaf" values="oc-opt-types:PROT_ETHERNET|oc-opt-types:PROT_OTN"><description><![CDATA[The type / stage of the logical element determines the
+configuration and operational state parameters (PMs)
+available for the logical element]]>None</description></node><node access="read-only" datatype="oc-opt-types:loopback-mode-type" name="loopback-mode" type="leaf" values="NONE|FACILITY|TERMINAL"><description><![CDATA[Sets the loopback type on the logical channel. Setting the
+mode to something besides NONE activates the loopback in
+the specified mode.]]>None</description></node><node access="read-only" datatype="enumeration" name="link-state" type="leaf" values="UP|DOWN"><description><![CDATA[Link-state of the Ethernet protocol on the logical channel,
+SONET / SDH framed signal, etc.]]>None</description></node></node><node access="read-write" name="otn" type="container"><description><![CDATA[Top level container for OTU configuration when logical
+channel framing is using an OTU protocol, e.g., OTU1, OTU3,
+etc.]]>None</description><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for OTN protocol framing]]>None</description><node access="read-write" datatype="string" name="tti-msg-transmit" type="leaf"><description><![CDATA[Trail trace identifier (TTI) message transmitted]]>None</description></node><node access="read-write" datatype="string" name="tti-msg-expected" type="leaf"><description><![CDATA[Trail trace identifier (TTI) message expected]]>None</description></node><node access="read-write" datatype="boolean" name="tti-msg-auto" type="leaf" values="true|false"><description><![CDATA[Trail trace identifier (TTI) transmit message automatically
+created.  If true, then setting a custom transmit message
+would be invalid.]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for OTN protocol PMs, statistics,
+etc.]]>None</description><node access="read-only" datatype="string" name="tti-msg-transmit" type="leaf"><description><![CDATA[Trail trace identifier (TTI) message transmitted]]>None</description></node><node access="read-only" datatype="string" name="tti-msg-expected" type="leaf"><description><![CDATA[Trail trace identifier (TTI) message expected]]>None</description></node><node access="read-only" datatype="boolean" name="tti-msg-auto" type="leaf" values="true|false"><description><![CDATA[Trail trace identifier (TTI) transmit message automatically
+created.  If true, then setting a custom transmit message
+would be invalid.]]>None</description></node><node access="read-only" datatype="string" name="tti-msg-recv" type="leaf"><description><![CDATA[Trail trace identifier (TTI) message received]]>None</description></node><node access="read-only" datatype="string" name="rdi-msg" type="leaf"><description><![CDATA[Remote defect indication (RDI) message received]]>None</description></node><node access="read-only" datatype="yang:counter64" name="errored-seconds" type="leaf"><description><![CDATA[The number of seconds that at least one errored blocks
+occurs, at least one code violation occurs, loss of sync is
+detected or loss of signal is detected]]>None</description></node><node access="read-only" datatype="yang:counter64" name="severely-errored-seconds" type="leaf"><description><![CDATA[The number of seconds that loss of frame is detected OR
+the number of errored blocks, code violations, loss of sync
+or loss of signal is detected exceeds a predefined
+threshold]]>None</description></node><node access="read-only" datatype="yang:counter64" name="unavailable-seconds" type="leaf"><description><![CDATA[The number of seconds during which the link is unavailable]]>None</description></node><node access="read-only" datatype="yang:counter64" name="code-violations" type="leaf"><description><![CDATA[For ethernet or fiberchannel links, the number of 8b/10b
+coding violations. For SONET/SDH, the number of BIP (bit
+interleaved parity) errors]]>None</description></node><node access="read-only" datatype="yang:counter64" name="fec-uncorrectable-words" type="leaf"><description><![CDATA[The number words that were uncorrectable by the FEC]]>None</description></node><node access="read-only" datatype="yang:counter64" name="fec-corrected-bytes" type="leaf"><description><![CDATA[The number of bytes that were corrected by the FEC]]>None</description></node><node access="read-only" datatype="yang:counter64" name="fec-corrected-bits" type="leaf"><description><![CDATA[The number of bits that were corrected by the FEC]]>None</description></node><node access="read-only" datatype="yang:counter64" name="background-block-errors" type="leaf"><description><![CDATA[The number of background block errors]]>None</description></node><node access="read-only" name="pre-fec-ber" type="container"><description><![CDATA[Bit error rate before forward error correction -- computed
+value with 18 decimal precision. Note that decimal64
+supports values as small as i x 10^-18 where i is an
+integer. Values smaller than this should be reported as 0
+to inidicate error free or near error free performance.
+Values include the instantaneous, average, minimum, and
+maximum statistics. If avg/min/max statistics are not
+supported, the target is expected to just supply the
+instant value]]>None</description><node access="read-only" datatype="decimal64" name="instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="post-fec-ber" type="container"><description><![CDATA[Bit error rate after forward error correction -- computed
+value with 18 decimal precision. Note that decimal64
+supports values as small as i x 10^-18 where i is an
+integer. Values smaller than this should be reported as 0
+to inidicate error free or near error free performance.
+Values include the instantaneous, average, minimum, and
+maximum statistics. If avg/min/max statistics are not
+supported, the target is expected to just supply the
+instant value]]>None</description><node access="read-only" datatype="decimal64" name="instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="q-value" type="container"><description><![CDATA[Quality value (factor) in dB of a channel with two
+decimal precision. Values include the instantaneous,
+average, minimum, and maximum statistics. If avg/min/max
+statistics are not supported, the target is expected
+to just supply the instant value]]>None</description><node access="read-only" datatype="decimal64" name="instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node><node access="read-only" name="esnr" type="container"><description><![CDATA[Electrical signal to noise ratio. Baud rate
+normalized signal to noise ratio based on
+error vector magnitude in dB with two decimal
+precision. Values include the instantaneous, average,
+minimum, and maximum statistics. If avg/min/max
+statistics are not supported, the target is expected
+to just supply the instant value]]>None</description><node access="read-only" datatype="decimal64" name="instant" type="leaf"><description><![CDATA[The instantaneous value of the statistic.]]>None</description></node><node access="read-only" datatype="decimal64" name="avg" type="leaf"><description><![CDATA[The arithmetic mean value of the statistic over the
+sampling period.]]>None</description></node><node access="read-only" datatype="decimal64" name="min" type="leaf"><description><![CDATA[The minimum value of the statistic over the sampling
+period]]>None</description></node><node access="read-only" datatype="decimal64" name="max" type="leaf"><description><![CDATA[The maximum value of the statistic over the sampling
+period]]>None</description></node></node></node></node><node access="read-write" name="ethernet" type="container"><description><![CDATA[Top level container for data related to Ethernet framing
+for the logical channel]]>None</description><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for Ethernet protocol framing on
+logical channels]]>None</description></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for Ethernet protocol framing
+on logical channels]]>None</description><node access="read-only" datatype="yang:counter64" name="in-mac-control-frames" type="leaf"><description><![CDATA[MAC layer control frames received on the interface]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-mac-pause-frames" type="leaf"><description><![CDATA[MAC layer PAUSE frames received on the interface]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-oversize-frames" type="leaf"><description><![CDATA[Number of oversize frames received on the interface]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-jabber-frames" type="leaf"><description><![CDATA[Number of jabber frames received on the
+interface.  Jabber frames are typically defined as oversize
+frames which also have a bad CRC.  Implementations may use
+slightly different definitions of what constitutes a jabber
+frame.  Often indicative of a NIC hardware problem.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-fragment-frames" type="leaf"><description><![CDATA[Number of fragment frames received on the interface.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-8021q-frames" type="leaf"><description><![CDATA[Number of 802.1q tagged frames received on the interface]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-crc-errors" type="leaf"><description><![CDATA[Number of receive error events due to FCS/CRC check
+failure]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-mac-control-frames" type="leaf"><description><![CDATA[MAC layer control frames sent on the interface]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-mac-pause-frames" type="leaf"><description><![CDATA[MAC layer PAUSE frames sent on the interface]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-8021q-frames" type="leaf"><description><![CDATA[Number of 802.1q tagged frames sent on the interface]]>None</description></node></node></node><node access="read-write" name="ingress" type="container"><description><![CDATA[Top-level container for specifying references to the
+source of signal for the logical channel, either a
+transceiver or individual physical channels]]>None</description><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for the signal source for the
+logical channel]]>None</description><node access="read-write" datatype="-&gt; /oc-platform:components/component/name" name="transceiver" type="leaf"><description><![CDATA[Reference to the transceiver carrying the input signal
+for the logical channel.  If specific physical channels
+are mapped to the logical channel (as opposed to all
+physical channels carried by the transceiver), they can be
+specified in the list of physical channel references.]]>None</description></node><node access="read-write" datatype="-&gt; /oc-platform:components/component/oc-transceiver:transceiver/physical-channels/channel/index" name="physical-channel" type="leaf-list"><description><![CDATA[This list should be populated with references
+to the client physical channels that feed this logical
+channel from the transceiver specified in the 'transceiver'
+leaf, which must be specified.  If this leaf-list is empty,
+all physical channels in the transceiver are assumed to be
+mapped to the logical channel.]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for the signal source for the
+logical channel]]>None</description><node access="read-only" datatype="-&gt; /oc-platform:components/component/name" name="transceiver" type="leaf"><description><![CDATA[Reference to the transceiver carrying the input signal
+for the logical channel.  If specific physical channels
+are mapped to the logical channel (as opposed to all
+physical channels carried by the transceiver), they can be
+specified in the list of physical channel references.]]>None</description></node><node access="read-only" datatype="-&gt; /oc-platform:components/component/oc-transceiver:transceiver/physical-channels/channel/index" name="physical-channel" type="leaf-list"><description><![CDATA[This list should be populated with references
+to the client physical channels that feed this logical
+channel from the transceiver specified in the 'transceiver'
+leaf, which must be specified.  If this leaf-list is empty,
+all physical channels in the transceiver are assumed to be
+mapped to the logical channel.]]>None</description></node></node></node><node access="read-write" name="logical-channel-assignments" type="container"><description><![CDATA[Enclosing container for tributary assignments]]>None</description><node access="read-write" key="index" name="assignment" type="list"><description><![CDATA[Logical channel elements may be assigned directly to
+optical channels for line-side transmission, or can be
+further groomed into additional stages of logical channel
+elements.  The grooming can multiplex (i.e., split the
+current element into multiple elements in the subsequent
+stage) or de-multiplex (i.e., combine the current element
+with other elements into the same element in the subsequent
+stage) logical elements in each stage.
+
+Note that to support the ability to groom the logical
+elements, the list of logical channel elements should be
+populated with an entry for the logical elements at
+each stage, starting with the initial assignment from the
+respective client physical port.
+
+Each logical element assignment consists of a pointer to
+an element in the next stage, or to an optical channel,
+along with a bandwidth allocation for the corresponding
+assignment (e.g., to split or combine signal).]]>None</description><node access="read-write" datatype="-&gt; ../config/index" is_key="true" mandatory="true" name="index" type="leaf"><description><![CDATA[Reference to the index for the current tributary
+assignment]]>None</description></node><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for tributary assignments]]>None</description><node access="read-write" datatype="uint32" name="index" type="leaf"><description><![CDATA[Index of the current logical client channel to tributary
+mapping]]>None</description></node><node access="read-write" datatype="string" name="description" type="leaf"><description><![CDATA[Name assigned to the logical client channel]]>None</description></node><node access="read-write" datatype="enumeration" name="assignment-type" type="leaf" values="LOGICAL_CHANNEL|OPTICAL_CHANNEL"><description><![CDATA[Each logical channel element may be assigned to subsequent
+stages of logical elements to implement further grooming, or
+can be assigned to a line-side optical channel for
+transmission.  Each assignment also has an associated
+bandwidth allocation.]]>None</description></node><node access="read-write" datatype="-&gt; /terminal-device/logical-channels/channel/index" name="logical-channel" type="leaf"><description><![CDATA[Reference to another stage of logical channel elements.]]>None</description></node><node access="read-write" datatype="-&gt; /oc-platform:components/component/name" name="optical-channel" type="leaf"><description><![CDATA[Reference to the line-side optical channel that should
+carry the current logical channel element.  Use this
+reference to exit the logical element stage.]]>None</description></node><node access="read-write" datatype="decimal64" name="allocation" type="leaf"><description><![CDATA[Allocation of the logical client channel to the tributary
+or sub-channel, expressed in Gbps]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for tributary assignments]]>None</description><node access="read-only" datatype="uint32" name="index" type="leaf"><description><![CDATA[Index of the current logical client channel to tributary
+mapping]]>None</description></node><node access="read-only" datatype="string" name="description" type="leaf"><description><![CDATA[Name assigned to the logical client channel]]>None</description></node><node access="read-only" datatype="enumeration" name="assignment-type" type="leaf" values="LOGICAL_CHANNEL|OPTICAL_CHANNEL"><description><![CDATA[Each logical channel element may be assigned to subsequent
+stages of logical elements to implement further grooming, or
+can be assigned to a line-side optical channel for
+transmission.  Each assignment also has an associated
+bandwidth allocation.]]>None</description></node><node access="read-only" datatype="-&gt; /terminal-device/logical-channels/channel/index" name="logical-channel" type="leaf"><description><![CDATA[Reference to another stage of logical channel elements.]]>None</description></node><node access="read-only" datatype="-&gt; /oc-platform:components/component/name" name="optical-channel" type="leaf"><description><![CDATA[Reference to the line-side optical channel that should
+carry the current logical channel element.  Use this
+reference to exit the logical element stage.]]>None</description></node><node access="read-only" datatype="decimal64" name="allocation" type="leaf"><description><![CDATA[Allocation of the logical client channel to the tributary
+or sub-channel, expressed in Gbps]]>None</description></node></node></node></node></node></node><node access="read-write" name="operational-modes" type="container"><description><![CDATA[Enclosing container for list of operational modes]]>None</description><node access="read-only" key="mode-id" name="mode" type="list"><description><![CDATA[List of operational modes supported by the platform.
+The operational mode provides a platform-defined summary
+of information such as symbol rate, modulation, pulse
+shaping, etc.]]>None</description><node access="read-only" datatype="-&gt; ../state/mode-id" is_key="true" mandatory="true" name="mode-id" type="leaf"><description><![CDATA[Reference to mode-id]]>None</description></node><node access="read-only" name="config" type="container"><description><![CDATA[Configuration data for operational mode]]>None</description></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for the platform-defined
+operational mode]]>None</description><node access="read-only" datatype="uint16" name="mode-id" type="leaf"><description><![CDATA[Two-octet encoding of the vendor-defined operational
+mode]]>None</description></node><node access="read-only" datatype="string" name="description" type="leaf"><description><![CDATA[Vendor-supplied textual description of the characteristics
+of this operational mode to enable operators to select the
+appropriate mode for the application.]]>None</description></node><node access="read-only" datatype="string" name="vendor-id" type="leaf"><description><![CDATA[Identifier to represent the vendor / supplier of the
+platform and the associated operational mode information]]>None</description></node></node></node></node></node></node>

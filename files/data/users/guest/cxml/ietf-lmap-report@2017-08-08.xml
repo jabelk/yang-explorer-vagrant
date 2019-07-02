@@ -1,0 +1,41 @@
+<node name="ietf-lmap-report" prefix="lmapr" type="module"><namespace import="false" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="ietf-lmap-report" prefix="lmapr">urn:ietf:params:xml:ns:yang:ietf-lmap-report</namespace><namespace import="true" module="ietf-lmap-common" prefix="lmap">urn:ietf:params:xml:ns:yang:ietf-lmap-common</namespace><node access="write" name="report" type="rpc"><description><![CDATA[The report operation is used by a Measurement Agent to
+submit measurement results produced by Measurement Tasks to
+a Collector.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="yang:date-and-time" mandatory="true" name="date" type="leaf"><description><![CDATA[The date and time when this result report was sent to
+a Collector.]]>None</description></node><node access="write" datatype="yang:uuid" name="agent-id" type="leaf"><description><![CDATA[The agent-id of the agent from which this
+report originates.]]>None</description></node><node access="write" datatype="string" name="group-id" type="leaf"><description><![CDATA[The group-id of the agent from which this
+report originates.]]>None</description></node><node access="write" datatype="string" name="measurement-point" type="leaf"><description><![CDATA[The measurement-point of the agent from which this
+report originates.]]>None</description></node><node access="write" name="result" type="list"><description><![CDATA[The list of Tasks for which results are reported.]]>None</description><node access="write" datatype="lmap:identifier" name="schedule" type="leaf"><description><![CDATA[The name of the Schedule that produced the result.]]>None</description></node><node access="write" datatype="lmap:identifier" name="action" type="leaf"><description><![CDATA[The name of the Action in the Schedule that produced
+the result.]]>None</description></node><node access="write" datatype="lmap:identifier" name="task" type="leaf"><description><![CDATA[The name of the Task that produced the result.]]>None</description></node><node access="write" name="parameters" type="container"><description><![CDATA[This container is a placeholder for runtime
+parameters defined in Task-specific data models
+augmenting the base LMAP report data model.]]>None</description><node access="write" mandatory="true" name="extension" type="choice"><description><![CDATA[This choice is provided to augment in different
+sets of parameters.]]>None</description></node></node><node access="write" key="id" name="option" type="list"><description><![CDATA[A list of options passed to the Task.  It is a list of
+key/value pairs and may be used to model options.
+Options may be used to identify the role of a Task
+or to pass a Channel name to a Task.]]>None</description><node access="write" datatype="lmap:identifier" is_key="true" mandatory="true" name="id" type="leaf"><description><![CDATA[An identifier uniquely identifying an option.  This
+identifier is required by YANG to uniquely identify
+a name/value pair, but it otherwise has no semantic
+value]]>None</description></node><node access="write" datatype="string" name="name" type="leaf"><description><![CDATA[The name of the option.]]>None</description></node><node access="write" datatype="string" name="value" type="leaf"><description><![CDATA[The value of the option.]]>None</description></node></node><node access="write" datatype="lmap:tag" name="tag" type="leaf-list"><description><![CDATA[A tag contains additional information that is passed
+with the result record to the Collector.  This is the
+joined set of tags defined for the Task object, the
+Schedule object, and the Action object.  A tag can be
+used to carry the Measurement Cycle ID.]]>None</description></node><node access="write" datatype="yang:date-and-time" name="event" type="leaf"><description><![CDATA[The date and time of the event that triggered the
+Schedule of the Action that produced the reported
+result values.  The date and time does not include
+any added randomization.]]>None</description></node><node access="write" datatype="yang:date-and-time" mandatory="true" name="start" type="leaf"><description><![CDATA[The date and time when the Task producing
+this result started.]]>None</description></node><node access="write" datatype="yang:date-and-time" name="end" type="leaf"><description><![CDATA[The date and time when the Task producing
+this result finished.]]>None</description></node><node access="write" datatype="lmap:cycle-number" name="cycle-number" type="leaf"><description><![CDATA[The optional cycle number is the time closest to
+the time reported in the event leaf that is a multiple
+of the cycle-interval of the event that triggered the
+execution of the Schedule.  The value is only present
+if the event that triggered the execution of the
+Schedule has a defined cycle-interval.]]>None</description></node><node access="write" datatype="lmap:status-code" mandatory="true" name="status" type="leaf"><description><![CDATA[The status code returned by the execution of this
+Action.]]>None</description></node><node access="write" name="conflict" type="list"><description><![CDATA[The names of Tasks overlapping with the execution
+of the Task that has produced this result.]]>None</description><node access="write" datatype="lmap:identifier" name="schedule-name" type="leaf"><description><![CDATA[The name of a Schedule that might have impacted
+the execution of the Task that has produced this
+result.]]>None</description></node><node access="write" datatype="lmap:identifier" name="action-name" type="leaf"><description><![CDATA[The name of an Action within the Schedule that
+might have impacted the execution of the Task that
+has produced this result.]]>None</description></node><node access="write" datatype="lmap:identifier" name="task-name" type="leaf"><description><![CDATA[The name of the Task executed by an Action within
+the Schedule that might have impacted the execution
+of the Task that has produced this result.]]>None</description></node></node><node access="write" name="table" type="list"><description><![CDATA[A list of result tables.]]>None</description><node access="write" key="uri" name="function" type="list"><description><![CDATA[A list of entries in a registry identifying functions.]]>None</description><node access="write" datatype="inet:uri" is_key="true" mandatory="true" name="uri" type="leaf"><description><![CDATA[A URI identifying an entry in a registry.]]>None</description></node><node access="write" datatype="string" name="role" type="leaf-list"><description><![CDATA[A set of roles for the identified registry entry.]]>None</description></node></node><node access="write" datatype="string" name="column" type="leaf-list"><description><![CDATA[An ordered list of column labels.  The order is
+determined by the system and must match the order
+of the columns in the result rows.]]>None</description></node><node access="write" name="row" type="list"><description><![CDATA[The rows of a result table.]]>None</description><node access="write" datatype="string" name="value" type="leaf-list"><description><![CDATA[The value of a cell in the result row.]]>None</description></node></node></node></node></node></node></node>

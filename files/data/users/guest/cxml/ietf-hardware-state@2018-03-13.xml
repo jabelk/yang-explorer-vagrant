@@ -1,0 +1,202 @@
+<node name="ietf-hardware-state" prefix="hw-state" type="module"><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="true" module="ietf-hardware" prefix="hw">urn:ietf:params:xml:ns:yang:ietf-hardware</namespace><namespace import="false" module="ietf-hardware-state" prefix="hw-state">urn:ietf:params:xml:ns:yang:ietf-hardware-state</namespace><namespace import="true" module="iana-hardware" prefix="ianahw">urn:ietf:params:xml:ns:yang:iana-hardware</namespace><node access="read-only" name="hardware" type="container"><description><![CDATA[Data nodes representing components.]]>None</description><node access="read-only" datatype="yang:date-and-time" name="last-change" type="leaf"><description><![CDATA[The time the '/hardware/component' list changed in the
+operational state.]]>None</description></node><node access="read-only" key="name" name="component" type="list"><description><![CDATA[List of components.
+When the server detects a new hardware component, it
+initializes a list entry in the operational state.
+
+If the server does not support configuration of hardware
+components, list entries in the operational state are
+initialized with values for all nodes as detected by the
+implementation.
+
+Otherwise, this procedure is followed:
+
+  1. If there is an entry in the '/hardware/component' list
+     in the intended configuration with values for the nodes
+     'class', 'parent', and 'parent-rel-pos' that are equal
+     to the detected values, then:
+
+  1a. If the configured entry has a value for 'mfg-name'
+      that is equal to the detected value or if the
+      'mfg-name' value cannot be detected, then the list
+      entry in the operational state is initialized with the
+      configured values for all configured nodes, including
+      the 'name'.
+
+      Otherwise, the list entry in the operational state is
+      initialized with values for all nodes as detected by
+      the implementation.  The implementation may raise an
+      alarm that informs about the 'mfg-name' mismatch
+      condition.  How this is done is outside the scope of
+      this document.
+
+  1b. Otherwise (i.e., there is no matching configuration
+      entry), the list entry in the operational state is
+      initialized with values for all nodes as detected by
+      the implementation.
+
+If the '/hardware/component' list in the intended
+configuration is modified, then the system MUST behave as if
+it re-initializes itself and follow the procedure in (1).]]>None</description><node access="read-only" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name assigned to this component.
+
+This name is not required to be the same as
+entPhysicalName.]]>None</description></node><node access="read-only" datatype="identityref:ianahw:hardware-class" mandatory="true" name="class" type="leaf"><description><![CDATA[An indication of the general hardware type of the
+component.]]>None</description></node><node access="read-only" datatype="int32" name="physical-index" type="leaf"><description><![CDATA[The entPhysicalIndex for the entPhysicalEntry represented
+by this list entry.]]>None</description></node><node access="read-only" datatype="string" name="description" type="leaf"><description><![CDATA[A textual description of the component.  This node should
+contain a string that identifies the manufacturer's name
+for the component and should be set to a distinct value
+for each version or model of the component.]]>None</description></node><node access="read-only" datatype="-&gt; ../../component/name" name="parent" type="leaf"><description><![CDATA[The name of the component that physically contains this
+component.
+
+If this leaf is not instantiated, it indicates that this
+component is not contained in any other component.
+
+In the event that a physical component is contained by
+more than one physical component (e.g., double-wide
+modules), this node contains the name of one of these
+components.  An implementation MUST use the same name
+every time this node is instantiated.]]>None</description></node><node access="read-only" datatype="int32" name="parent-rel-pos" type="leaf"><description><![CDATA[An indication of the relative position of this child
+component among all its sibling components.  Sibling
+components are defined as components that:
+
+  o share the same value of the 'parent' node and
+
+  o share a common base identity for the 'class' node.
+
+Note that the last rule gives implementations flexibility
+in how components are numbered.  For example, some
+implementations might have a single number series for all
+components derived from 'ianahw:port', while some others
+might have different number series for different
+components with identities derived from 'ianahw:port' (for
+example, one for RJ45 and one for SFP).]]>None</description></node><node access="read-only" datatype="-&gt; ../../component/name" name="contains-child" type="leaf-list"><description><![CDATA[The name of the contained component.]]>None</description></node><node access="read-only" datatype="string" name="hardware-rev" type="leaf"><description><![CDATA[The vendor-specific hardware revision string for the
+component.  The preferred value is the hardware revision
+identifier actually printed on the component itself (if
+present).]]>None</description></node><node access="read-only" datatype="string" name="firmware-rev" type="leaf"><description><![CDATA[The vendor-specific firmware revision string for the
+component.]]>None</description></node><node access="read-only" datatype="string" name="software-rev" type="leaf"><description><![CDATA[The vendor-specific software revision string for the
+component.]]>None</description></node><node access="read-only" datatype="string" name="serial-num" type="leaf"><description><![CDATA[The vendor-specific serial number string for the
+component.  The preferred value is the serial number
+string actually printed on the component itself (if
+present).]]>None</description></node><node access="read-only" datatype="string" name="mfg-name" type="leaf"><description><![CDATA[The name of the manufacturer of this physical component.
+The preferred value is the manufacturer name string
+actually printed on the component itself (if present).
+
+Note that comparisons between instances of the
+'model-name', 'firmware-rev', 'software-rev', and
+'serial-num' nodes are only meaningful amongst components
+with the same value of 'mfg-name'.
+
+If the manufacturer name string associated with the
+physical component is unknown to the server, then this
+node is not instantiated.]]>None</description></node><node access="read-only" datatype="string" name="model-name" type="leaf"><description><![CDATA[The vendor-specific model name identifier string
+associated with this physical component.  The preferred
+value is the customer-visible part number, which may be
+printed on the component itself.
+
+If the model name string associated with the physical
+component is unknown to the server, then this node is not
+instantiated.]]>None</description></node><node access="read-only" datatype="string" name="alias" type="leaf"><description><![CDATA[An 'alias' name for the component, as specified by a
+network manager, that provides a non-volatile 'handle' for
+the component.
+
+If no configured value exists, the server MAY set the
+value of this node to a locally unique value in the
+operational state.
+
+A server implementation MAY map this leaf to the
+entPhysicalAlias MIB object.  Such an implementation needs
+to use some mechanism to handle the differences in size
+and characters allowed between this leaf and
+entPhysicalAlias.  The definition of such a mechanism is
+outside the scope of this document.]]>None</description></node><node access="read-only" datatype="string" name="asset-id" type="leaf"><description><![CDATA[This node is a user-assigned asset tracking identifier for
+the component.
+
+A server implementation MAY map this leaf to the
+entPhysicalAssetID MIB object.  Such an implementation
+needs to use some mechanism to handle the differences in
+size and characters allowed between this leaf and
+entPhysicalAssetID.  The definition of such a mechanism is
+outside the scope of this document.]]>None</description></node><node access="read-only" datatype="boolean" name="is-fru" type="leaf" values="true|false"><description><![CDATA[This node indicates whether or not this component is
+considered a 'field-replaceable unit' by the vendor.  If
+this node contains the value 'true', then this component
+identifies a field-replaceable unit.  For all components
+that are permanently contained within a field-replaceable
+unit, the value 'false' should be returned for this
+node.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="mfg-date" type="leaf"><description><![CDATA[The date of manufacturing of the managed component.]]>None</description></node><node access="read-only" datatype="inet:uri" name="uri" type="leaf-list"><description><![CDATA[This node contains identification information about the
+component.]]>None</description></node><node access="read-only" datatype="yang:uuid" name="uuid" type="leaf"><description><![CDATA[A Universally Unique Identifier of the component.]]>None</description></node><node access="read-only" name="state" type="container"><description><![CDATA[State-related nodes]]>None</description><node access="read-only" datatype="yang:date-and-time" name="state-last-changed" type="leaf"><description><![CDATA[The date and time when the value of any of the
+admin-state, oper-state, usage-state, alarm-state, or
+standby-state changed for this component.
+
+If there has been no change since the last
+re-initialization of the local system, this node
+contains the date and time of local system
+initialization.  If there has been no change since the
+component was added to the local system, this node
+contains the date and time of the insertion.]]>None</description></node><node access="read-only" datatype="hw:admin-state" name="admin-state" type="leaf" values="unknown|locked|shutting-down|unlocked"><description><![CDATA[The administrative state for this component.
+
+This node refers to a component's administrative
+permission to service both other components within its
+containment hierarchy as well as other users of its
+services defined by means outside the scope of this
+module.
+
+Some components exhibit only a subset of the remaining
+administrative state values.  Some components cannot be
+locked; hence, this node exhibits only the 'unlocked'
+state.  Other components cannot be shut down gracefully;
+hence, this node does not exhibit the 'shutting-down'
+state.]]>None</description></node><node access="read-only" datatype="hw:oper-state" name="oper-state" type="leaf" values="unknown|disabled|enabled|testing"><description><![CDATA[The operational state for this component.
+
+Note that this node does not follow the administrative
+state.  An administrative state of 'down' does not
+predict an operational state of 'disabled'.
+
+Note that some implementations may not be able to
+accurately report oper-state while the admin-state node
+has a value other than 'unlocked'.  In these cases, this
+node MUST have a value of 'unknown'.]]>None</description></node><node access="read-only" datatype="hw:usage-state" name="usage-state" type="leaf" values="unknown|idle|active|busy"><description><![CDATA[The usage state for this component.
+
+This node refers to a component's ability to service
+more components in a containment hierarchy.
+
+Some components will exhibit only a subset of the usage
+state values.  Components that are unable to ever
+service any components within a containment hierarchy
+will always have a usage state of 'busy'.  In some
+cases, a component will be able to support only one
+other component within its containment hierarchy and
+will therefore only exhibit values of 'idle' and
+'busy'.]]>None</description></node><node access="read-only" datatype="hw:alarm-state" name="alarm-state" type="leaf"><description><![CDATA[The alarm state for this component.  It does not
+include the alarms raised on child components within its
+containment hierarchy.]]>None</description></node><node access="read-only" datatype="hw:standby-state" name="standby-state" type="leaf" values="unknown|hot-standby|cold-standby|providing-service"><description><![CDATA[The standby state for this component.
+
+Some components will exhibit only a subset of the
+remaining standby state values.  If this component
+cannot operate in a standby role, the value of this node
+will always be 'providing-service'.]]>None</description></node></node><node access="read-only" name="sensor-data" type="container"><description><![CDATA[Sensor-related nodes.]]>None</description><node access="read-only" datatype="hw:sensor-value" name="value" type="leaf"><description><![CDATA[The most recent measurement obtained by the server
+for this sensor.
+
+A client that periodically fetches this node should also
+fetch the nodes 'value-type', 'value-scale', and
+'value-precision', since they may change when the value
+is changed.]]>None</description></node><node access="read-only" datatype="hw:sensor-value-type" name="value-type" type="leaf" values="other|unknown|volts-AC|volts-DC|amperes|watts|hertz|celsius|percent-RH|rpm|cmm|truth-value"><description><![CDATA[The type of data units associated with the
+sensor value]]>None</description></node><node access="read-only" datatype="hw:sensor-value-scale" name="value-scale" type="leaf" values="yocto|zepto|atto|femto|pico|nano|micro|milli|units|kilo|mega|giga|tera|peta|exa|zetta|yotta"><description><![CDATA[The (power of 10) scaling factor associated
+with the sensor value]]>None</description></node><node access="read-only" datatype="hw:sensor-value-precision" name="value-precision" type="leaf"><description><![CDATA[The number of decimal places of precision
+associated with the sensor value]]>None</description></node><node access="read-only" datatype="hw:sensor-status" name="oper-status" type="leaf" values="ok|unavailable|nonoperational"><description><![CDATA[The operational status of the sensor.]]>None</description></node><node access="read-only" datatype="string" name="units-display" type="leaf"><description><![CDATA[A textual description of the data units that should be
+used in the display of the sensor value.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="value-timestamp" type="leaf"><description><![CDATA[The time the status and/or value of this sensor was last
+obtained by the server.]]>None</description></node><node access="read-only" datatype="uint32" name="value-update-rate" type="leaf"><description><![CDATA[An indication of the frequency that the server updates
+the associated 'value' node, represented in
+milliseconds.  The value zero indicates:
+
+ - the sensor value is updated on demand (e.g.,
+   when polled by the server for a get-request),
+
+ - the sensor value is updated when the sensor
+   value changes (event-driven), or
+
+ - the server does not know the update rate.]]>None</description></node></node></node></node><node access="read-only" name="hardware-state-change" type="notification"><description><![CDATA[A hardware-state-change notification is generated when the
+value of /hardware/last-change changes in the operational
+state.]]>None</description></node><node access="read-only" name="hardware-state-oper-enabled" type="notification"><description><![CDATA[A hardware-state-oper-enabled notification signifies that a
+component has transitioned into the 'enabled' state.]]>None</description><node access="read-only" datatype="-&gt; /hardware/component/name" name="name" type="leaf"><description><![CDATA[The name of the component that has transitioned into the
+'enabled' state.]]>None</description></node><node access="read-only" datatype="-&gt; /hardware/component/state/admin-state" name="admin-state" type="leaf"><description><![CDATA[The administrative state for the component.]]>None</description></node><node access="read-only" datatype="-&gt; /hardware/component/state/alarm-state" name="alarm-state" type="leaf"><description><![CDATA[The alarm state for the component.]]>None</description></node></node><node access="read-only" name="hardware-state-oper-disabled" type="notification"><description><![CDATA[A hardware-state-oper-disabled notification signifies that a
+component has transitioned into the 'disabled' state.]]>None</description><node access="read-only" datatype="-&gt; /hardware/component/name" name="name" type="leaf"><description><![CDATA[The name of the component that has transitioned into the
+'disabled' state.]]>None</description></node><node access="read-only" datatype="-&gt; /hardware/component/state/admin-state" name="admin-state" type="leaf"><description><![CDATA[The administrative state for the component.]]>None</description></node><node access="read-only" datatype="-&gt; /hardware/component/state/alarm-state" name="alarm-state" type="leaf"><description><![CDATA[The alarm state for the component.]]>None</description></node></node></node>

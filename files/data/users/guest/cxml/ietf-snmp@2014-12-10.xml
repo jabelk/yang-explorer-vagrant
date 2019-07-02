@@ -1,0 +1,208 @@
+<node name="ietf-snmp" prefix="snmp" type="module"><namespace import="false" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="false" module="ietf-x509-cert-to-name" prefix="x509c2n">urn:ietf:params:xml:ns:yang:ietf-x509-cert-to-name</namespace><namespace import="false" module="ietf-netconf-acm" prefix="nacm">urn:ietf:params:xml:ns:yang:ietf-netconf-acm</namespace><namespace import="false" module="ietf-snmp" prefix="snmp">urn:ietf:params:xml:ns:yang:ietf-snmp</namespace><namespace import="false" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><node access="read-write" name="snmp" type="container"><description><![CDATA[Top-level container for SNMP-related configuration and
+status objects.]]>None</description><node access="read-write" name="engine" type="container"><description><![CDATA[Configuration of the SNMP engine.]]>None</description><node access="read-write" datatype="boolean" default="false" name="enabled" type="leaf" values="true|false"><description><![CDATA[Enables the SNMP engine.]]>None</description></node><node access="read-write" key="name" name="listen" type="list"><description><![CDATA[Configuration of the transport endpoints on which the
+engine listens.]]>None</description><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[An arbitrary name for the list entry.]]>None</description></node><node access="read-write" name="transport" type="choice" values="udp"><description><![CDATA[The transport-protocol-specific parameters for this
+endpoint.  Submodules providing configuration for
+additional transports are expected to augment this
+choice.]]>None</description><node access="read-write" name="udp" type="case"><node access="read-write" name="udp" type="container"><node access="read-write" datatype="inet:ip-address" mandatory="true" name="ip" type="leaf"><description><![CDATA[The IPv4 or IPv6 address on which the engine
+listens.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="port" type="leaf"><description><![CDATA[The UDP port on which the engine listens.
+
+If the port is not configured, an engine that
+acts as a Command Responder uses port 161, and
+an engine that acts as a Notification Receiver
+uses port 162.]]>None</description></node></node></node><node access="read-write" name="tls" type="case"><node access="read-write" name="tls" type="container"><description><![CDATA[A list of IPv4 and IPv6 addresses and ports to which the
+engine listens for SNMP messages over TLS.]]>None</description><node access="read-write" datatype="inet:ip-address" mandatory="true" name="ip" type="leaf"><description><![CDATA[The IPv4 or IPv6 address on which the engine listens
+for SNMP messages over TLS.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="port" type="leaf"><description><![CDATA[The TCP port on which the engine listens for SNMP
+messages over TLS.
+
+If the port is not configured, an engine that
+acts as a Command Responder uses port 10161, and
+an engine that acts as a Notification Receiver
+uses port 10162.]]>None</description></node></node></node><node access="read-write" name="dtls" type="case"><node access="read-write" name="dtls" type="container"><description><![CDATA[A list of IPv4 and IPv6 addresses and ports to which the
+engine listens for SNMP messages over DTLS.]]>None</description><node access="read-write" datatype="inet:ip-address" mandatory="true" name="ip" type="leaf"><description><![CDATA[The IPv4 or IPv6 address on which the engine listens
+for SNMP messages over DTLS.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="port" type="leaf"><description><![CDATA[The UDP port on which the engine listens for SNMP
+messages over DTLS.
+
+If the port is not configured, an engine that
+acts as a Command Responder uses port 10161, and
+an engine that acts as a Notification Receiver
+uses port 10162.]]>None</description></node></node></node><node access="read-write" name="ssh" type="case"><node access="read-write" name="ssh" type="container"><description><![CDATA[The IPv4 or IPv6 address and port to which the
+engine listens for SNMP messages over SSH.]]>None</description><node access="read-write" datatype="inet:ip-address" mandatory="true" name="ip" type="leaf"><description><![CDATA[The IPv4 or IPv6 address on which the engine listens
+for SNMP messages over SSH.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="port" type="leaf"><description><![CDATA[The TCP port on which the engine listens for SNMP
+messages over SSH.
+
+If the port is not configured, an engine that
+acts as a Command Responder uses port 5161, and
+an engine that acts as a Notification Receiver
+uses port 5162.]]>None</description></node></node></node></node></node><node access="read-write" name="version" type="container"><description><![CDATA[SNMP version used by the engine.]]>None</description><node access="read-write" datatype="empty" name="v1" type="leaf" /><node access="read-write" datatype="empty" name="v2c" type="leaf" /><node access="read-write" datatype="empty" name="v3" type="leaf" /></node><node access="read-write" datatype="snmp:engine-id" name="engine-id" type="leaf"><description><![CDATA[The local SNMP engine's administratively assigned unique
+identifier.
+
+If this leaf is not set, the device automatically
+calculates an engine ID, as described in RFC 3411.  A
+server MAY initialize this leaf with the automatically
+created value.]]>None</description></node><node access="read-write" datatype="boolean" name="enable-authen-traps" type="leaf" values="true|false"><description><![CDATA[Indicates whether the SNMP entity is permitted to
+generate authenticationFailure traps.]]>None</description></node></node><node access="read-write" key="name" name="target" type="list"><description><![CDATA[List of targets.]]>None</description><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Identifies the target.]]>None</description></node><node access="read-write" name="transport" type="choice" values="udp"><description><![CDATA[Transport address of the target.
+
+The snmpTargetAddrTDomain and snmpTargetAddrTAddress
+objects are mapped to transport-specific YANG nodes.  Each
+transport is configured as a separate case in this
+choice.  Submodules providing configuration for additional
+transports are expected to augment this choice.]]>None</description><node access="read-write" name="udp" type="case"><node access="read-write" name="udp" type="container"><node access="read-write" datatype="inet:ip-address" mandatory="true" name="ip" type="leaf" /><node access="read-write" datatype="inet:port-number" default="162" name="port" type="leaf"><description><![CDATA[UDP port number.]]>None</description></node><node access="read-write" datatype="uint8" name="prefix-length" type="leaf"><description><![CDATA[The value of this leaf must match the value of
+../snmp:ip.  If ../snmp:ip contains an IPv4 address,
+this leaf must be less than or equal to 32.  If it
+contains an IPv6 address, it must be less than or
+equal to 128.
+
+Note that the prefix-length is currently only used
+by the Community-based Security Model to filter
+incoming messages.  Furthermore, the prefix-length
+filtering does not cover all possible filters
+supported by the corresponding MIB object.]]>None</description></node></node></node><node access="read-write" name="tls" type="case"><node access="read-write" name="tls" type="container"><node access="read-write" datatype="inet:host" mandatory="true" name="ip" type="leaf" /><node access="read-write" datatype="inet:port-number" default="10161" name="port" type="leaf" /><node access="read-write" datatype="x509c2n:tls-fingerprint" name="client-fingerprint" type="leaf" /><node access="read-write" datatype="x509c2n:tls-fingerprint" name="server-fingerprint" type="leaf" /><node access="read-write" datatype="snmp:admin-string" name="server-identity" type="leaf" /></node></node><node access="read-write" name="dtls" type="case"><node access="read-write" name="dtls" type="container"><node access="read-write" datatype="inet:host" mandatory="true" name="ip" type="leaf" /><node access="read-write" datatype="inet:port-number" default="10161" name="port" type="leaf" /><node access="read-write" datatype="x509c2n:tls-fingerprint" name="client-fingerprint" type="leaf" /><node access="read-write" datatype="x509c2n:tls-fingerprint" name="server-fingerprint" type="leaf" /><node access="read-write" datatype="snmp:admin-string" name="server-identity" type="leaf" /></node></node><node access="read-write" name="ssh" type="case"><node access="read-write" name="ssh" type="container"><node access="read-write" datatype="inet:host" mandatory="true" name="ip" type="leaf" /><node access="read-write" datatype="inet:port-number" default="5161" name="port" type="leaf" /><node access="read-write" datatype="string" name="username" type="leaf" /></node></node></node><node access="read-write" datatype="snmp:tag-value" name="tag" type="leaf-list"><description><![CDATA[List of tag values used to select target addresses.]]>None</description></node><node access="read-write" datatype="uint32" default="1500" name="timeout" type="leaf"><description><![CDATA[Needed only if this target can receive
+InformRequest-PDUs.]]>None</description></node><node access="read-write" datatype="uint8" default="3" name="retries" type="leaf"><description><![CDATA[Needed only if this target can receive
+InformRequest-PDUs.]]>None</description></node><node access="read-write" datatype="snmp:identifier" mandatory="true" name="target-params" type="leaf" /><node access="read-write" datatype="union" default="484" name="mms" type="leaf" values="unknown"><description><![CDATA[The maximum message size.]]>None</description></node></node><node access="read-write" key="name" name="target-params" type="list"><description><![CDATA[List of target parameters.]]>None</description><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="name" type="leaf" /><node access="read-write" mandatory="true" name="params" type="choice"><description><![CDATA[This choice is augmented with case nodes containing
+configuration parameters specific to the security model.]]>None</description><node access="read-write" name="usm" type="case"><node access="read-write" name="usm" type="container"><description><![CDATA[User-based SNMPv3 parameters type.
+
+Represents snmpTargetParamsMPModel '3' and
+snmpTargetParamsSecurityModel '3'.]]>None</description><node access="read-write" datatype="snmp:security-name" mandatory="true" name="user-name" type="leaf" /><node access="read-write" datatype="snmp:security-level" mandatory="true" name="security-level" type="leaf" values="no-auth-no-priv|auth-no-priv|auth-priv" /></node></node><node access="read-write" name="tsm" type="case"><node access="read-write" name="tsm" type="container"><description><![CDATA[Transport-based security SNMPv3 parameters type.
+
+Represents snmpTargetParamsMPModel '3' and
+snmpTargetParamsSecurityModel '4'.]]>None</description><node access="read-write" datatype="snmp:security-name" mandatory="true" name="security-name" type="leaf" /><node access="read-write" datatype="snmp:security-level" mandatory="true" name="security-level" type="leaf" values="no-auth-no-priv|auth-no-priv|auth-priv" /></node></node><node access="read-write" name="v1" type="case"><node access="read-write" name="v1" type="container"><description><![CDATA[SNMPv1 parameters type.
+Represents snmpTargetParamsMPModel '0',
+snmpTargetParamsSecurityModel '1', and
+snmpTargetParamsSecurityLevel 'noAuthNoPriv'.]]>None</description><node access="read-write" datatype="snmp:security-name" mandatory="true" name="security-name" type="leaf"><description><![CDATA[Implementations MAY restrict the values of this leaf
+to be one of the available values of
+/snmp/community/security-name in a valid configuration.]]>None</description></node></node></node><node access="read-write" name="v2c" type="case"><node access="read-write" name="v2c" type="container"><description><![CDATA[SNMPv2 community parameters type.
+Represents snmpTargetParamsMPModel '1',
+snmpTargetParamsSecurityModel '2', and
+snmpTargetParamsSecurityLevel 'noAuthNoPriv'.]]>None</description><node access="read-write" datatype="snmp:security-name" mandatory="true" name="security-name" type="leaf"><description><![CDATA[Implementations MAY restrict the values of this leaf
+to be one of the available values of
+/snmp/community/security-name in a valid configuration.]]>None</description></node></node></node></node><node access="read-write" datatype="-&gt; /snmp/notify-filter-profile/name" name="notify-filter-profile" type="leaf"><description><![CDATA[This leafref leaf is used to represent the sparse
+relationship between the /snmp/target-params list and the
+/snmp/notify-filter-profile list.]]>None</description></node></node><node access="read-write" name="tlstm" type="container"><node access="read-write" key="id" name="cert-to-name" type="list"><description><![CDATA[This list defines how certificates are mapped to names.
+The name is derived by considering each cert-to-name
+list entry in order.  The cert-to-name entry's fingerprint
+determines whether the list entry is a match:
+
+1) If the cert-to-name list entry's fingerprint value
+   matches that of the presented certificate, then consider
+   the list entry a successful match.
+
+2) If the cert-to-name list entry's fingerprint value
+   matches that of a locally held copy of a trusted CA
+   certificate, and that CA certificate was part of the CA
+   certificate chain to the presented certificate, then
+   consider the list entry a successful match.
+
+Once a matching cert-to-name list entry has been found, the
+map-type is used to determine how the name associated with
+the certificate should be determined.  See the map-type
+leaf's description for details on determining the name value.
+If it is impossible to determine a name from the cert-to-name
+list entry's data combined with the data presented in the
+certificate, then additional cert-to-name list entries MUST
+be searched to look for another potential match.
+
+Security administrators are encouraged to make use of
+certificates with subjectAltName fields that can be mapped to
+names so that a single root CA certificate can allow all
+child certificates' subjectAltName fields to map directly to
+a name via a 1:1 transformation.]]>None</description><node access="read-write" datatype="uint32" is_key="true" mandatory="true" name="id" type="leaf"><description><![CDATA[The id specifies the order in which the entries in the
+cert-to-name list are searched.  Entries with lower
+numbers are searched first.]]>None</description></node><node access="read-write" datatype="x509c2n:tls-fingerprint" mandatory="true" name="fingerprint" type="leaf"><description><![CDATA[Specifies a value with which the fingerprint of the
+full certificate presented by the peer is compared.  If
+the fingerprint of the full certificate presented by the
+peer does not match the fingerprint configured, then the
+entry is skipped, and the search for a match continues.]]>None</description></node><node access="read-write" datatype="identityref:cert-to-name" mandatory="true" name="map-type" type="leaf"><description><![CDATA[Mappings that use the snmpTlstmCertToTSNData column
+need to augment the cert-to-name list with
+additional configuration objects corresponding
+to the snmpTlstmCertToTSNData value.  Such objects
+should use the 'when' statement to make them
+conditional based on the map-type.]]>None</description></node><node access="read-write" datatype="string" mandatory="true" name="name" type="leaf"><description><![CDATA[Directly specifies the NETCONF username when the
+map-type is 'specified'.]]>None</description></node></node></node><node access="read-write" key="name" name="proxy" type="list"><description><![CDATA[List of proxy parameters.]]>None</description><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Identifies the proxy parameter entry.]]>None</description></node><node access="read-write" datatype="enumeration" mandatory="true" name="type" type="leaf" values="read|write|trap|inform" /><node access="read-write" datatype="snmp:engine-id" mandatory="true" name="context-engine-id" type="leaf" /><node access="read-write" datatype="snmp:context-name" name="context-name" type="leaf" /><node access="read-write" datatype="snmp:identifier" name="target-params-in" type="leaf"><description><![CDATA[The name of a target parameters list entry.
+
+Implementations MAY restrict the values of this
+leaf to be one of the available values of
+/snmp/target-params/name in a valid configuration.]]>None</description></node><node access="read-write" datatype="snmp:identifier" name="single-target-out" type="leaf"><description><![CDATA[Implementations MAY restrict the values of this leaf
+to be one of the available values of /snmp/target/name in
+a valid configuration.]]>None</description></node><node access="read-write" datatype="snmp:tag-value" name="multiple-target-out" type="leaf"><description><![CDATA[Implementations MAY restrict the values of this leaf
+to be one of the available values of /snmp/target/tag in
+a valid configuration.]]>None</description></node></node><node access="read-write" name="usm" type="container"><description><![CDATA[Configuration of the User-based Security Model.]]>None</description><node access="read-write" name="local" type="container"><node access="read-write" key="name" name="user" type="list"><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="name" type="leaf" /><node access="read-write" name="auth" presence="true" type="container"><description><![CDATA[Enables authentication of the user.]]>None</description><node access="read-write" name="protocol" type="choice"><node access="read-write" name="md5" type="case"><node access="read-write" name="md5" type="container"><node access="read-write" datatype="yang:hex-string" mandatory="true" name="key" type="leaf"><description><![CDATA[Localized key specified as a list of colon-specified
+hexadecimal octets.]]>None</description></node></node></node><node access="read-write" name="sha" type="case"><node access="read-write" name="sha" type="container"><node access="read-write" datatype="yang:hex-string" mandatory="true" name="key" type="leaf"><description><![CDATA[Localized key specified as a list of colon-specified
+hexadecimal octets.]]>None</description></node></node></node></node></node><node access="read-write" name="priv" presence="true" type="container"><description><![CDATA[Enables encryption of SNMP messages.]]>None</description><node access="read-write" name="protocol" type="choice"><node access="read-write" name="des" type="case"><node access="read-write" name="des" type="container"><node access="read-write" datatype="yang:hex-string" mandatory="true" name="key" type="leaf"><description><![CDATA[Localized key specified as a list of colon-specified
+hexadecimal octets.]]>None</description></node></node></node><node access="read-write" name="aes" type="case"><node access="read-write" name="aes" type="container"><node access="read-write" datatype="yang:hex-string" mandatory="true" name="key" type="leaf"><description><![CDATA[Localized key specified as a list of colon-specified
+hexadecimal octets.]]>None</description></node></node></node></node></node></node></node><node access="read-write" key="engine-id" name="remote" type="list"><node access="read-write" datatype="snmp:engine-id" is_key="true" mandatory="true" name="engine-id" type="leaf" /><node access="read-write" key="name" name="user" type="list"><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="name" type="leaf" /><node access="read-write" name="auth" presence="true" type="container"><description><![CDATA[Enables authentication of the user.]]>None</description><node access="read-write" name="protocol" type="choice"><node access="read-write" name="md5" type="case"><node access="read-write" name="md5" type="container"><node access="read-write" datatype="yang:hex-string" mandatory="true" name="key" type="leaf"><description><![CDATA[Localized key specified as a list of colon-specified
+hexadecimal octets.]]>None</description></node></node></node><node access="read-write" name="sha" type="case"><node access="read-write" name="sha" type="container"><node access="read-write" datatype="yang:hex-string" mandatory="true" name="key" type="leaf"><description><![CDATA[Localized key specified as a list of colon-specified
+hexadecimal octets.]]>None</description></node></node></node></node></node><node access="read-write" name="priv" presence="true" type="container"><description><![CDATA[Enables encryption of SNMP messages.]]>None</description><node access="read-write" name="protocol" type="choice"><node access="read-write" name="des" type="case"><node access="read-write" name="des" type="container"><node access="read-write" datatype="yang:hex-string" mandatory="true" name="key" type="leaf"><description><![CDATA[Localized key specified as a list of colon-specified
+hexadecimal octets.]]>None</description></node></node></node><node access="read-write" name="aes" type="case"><node access="read-write" name="aes" type="container"><node access="read-write" datatype="yang:hex-string" mandatory="true" name="key" type="leaf"><description><![CDATA[Localized key specified as a list of colon-specified
+hexadecimal octets.]]>None</description></node></node></node></node></node></node></node></node><node access="read-write" key="name" name="notify" type="list"><description><![CDATA[Targets that will receive notifications.
+
+Entries in this list are mapped 1-1 to entries in
+snmpNotifyTable, except that if an entry in snmpNotifyTable
+has an snmpNotifyTag for which no snmpTargetAddrEntry
+exists, then the snmpNotifyTable entry is not mapped to an
+entry in this list.]]>None</description><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[An arbitrary name for the list entry.]]>None</description></node><node access="read-write" datatype="snmp:tag-value" mandatory="true" name="tag" type="leaf"><description><![CDATA[Target tag, selects a set of notification targets.
+
+Implementations MAY restrict the values of this leaf
+to be one of the available values of /snmp/target/tag in
+a valid configuration.]]>None</description></node><node access="read-write" datatype="enumeration" default="trap" name="type" type="leaf" values="trap|inform"><description><![CDATA[Defines the notification type to be generated.]]>None</description></node></node><node access="read-write" key="name" name="notify-filter-profile" type="list"><description><![CDATA[Notification filter profiles.
+
+The leaf /snmp/target/notify-filter-profile is used
+to associate a filter profile with a target.
+
+If an entry in this list is referred to by one or more
+/snmp/target/notify-filter-profile items, each such
+notify-filter-profile is represented by one
+snmpNotifyFilterProfileEntry.
+
+If an entry in this list is not referred to by any
+/snmp/target/notify-filter-profile, the entry is not mapped
+to snmpNotifyFilterProfileTable.]]>None</description><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Name of the filter profile.]]>None</description></node><node access="read-write" datatype="snmp:wildcard-object-identifier" name="include" type="leaf-list"><description><![CDATA[A family of subtrees included in this filter.]]>None</description></node><node access="read-write" datatype="snmp:wildcard-object-identifier" name="exclude" type="leaf-list"><description><![CDATA[A family of subtrees excluded from this filter.]]>None</description></node></node><node access="read-write" name="vacm" type="container"><description><![CDATA[Configuration of the View-based Access Control Model.]]>None</description><node access="read-write" key="name" name="group" type="list"><description><![CDATA[VACM groups.
+
+This data model has a different structure than the MIB.
+Groups are explicitly defined in this list, and group
+members are defined in the 'member' list (mapped to
+vacmSecurityToGroupTable), and access for the group is
+defined in the 'access' list (mapped to
+vacmAccessTable).]]>None</description><node access="read-write" datatype="group-name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of this VACM group.]]>None</description></node><node access="read-write" key="security-name" name="member" type="list"><description><![CDATA[A member of this VACM group.
+
+A specific combination of security-name and
+security-model MUST NOT be present in more than
+one group.]]>None</description><node access="read-write" datatype="snmp:security-name" is_key="true" mandatory="true" name="security-name" type="leaf"><description><![CDATA[The securityName of a group member.]]>None</description></node><node access="read-write" datatype="snmp:security-model" name="security-model" type="leaf-list" values="v1|v2c|usm|tsm"><description><![CDATA[The security models under which this security-name
+is a member of this group.]]>None</description></node></node><node access="read-write" key="context security-model security-level" name="access" type="list"><description><![CDATA[Definition of access right for groups.]]>None</description><node access="read-write" datatype="snmp:context-name" is_key="true" mandatory="true" name="context" type="leaf"><description><![CDATA[The context (prefix) under which the access rights
+apply.]]>None</description></node><node access="read-write" datatype="enumeration" default="exact" name="context-match" type="leaf" values="exact|prefix" /><node access="read-write" datatype="snmp:security-model-or-any" is_key="true" mandatory="true" name="security-model" type="leaf" values="any|v1|v2c|usm|tsm"><description><![CDATA[The security model under which the access rights
+apply.]]>None</description></node><node access="read-write" datatype="snmp:security-level" is_key="true" mandatory="true" name="security-level" type="leaf" values="no-auth-no-priv|auth-no-priv|auth-priv"><description><![CDATA[The minimum security level under which the access
+rights apply.]]>None</description></node><node access="read-write" datatype="view-name" name="read-view" type="leaf"><description><![CDATA[The name of the MIB view of the SNMP context
+authorizing read access.  If this leaf does not
+exist in a configuration, it maps to a zero-length
+vacmAccessReadViewName.
+
+Implementations MAY restrict the values of this
+leaf to be one of the available values of
+/snmp/vacm/view/name in a valid configuration.]]>None</description></node><node access="read-write" datatype="view-name" name="write-view" type="leaf"><description><![CDATA[The name of the MIB view of the SNMP context
+authorizing write access.  If this leaf does not
+exist in a configuration, it maps to a zero-length
+vacmAccessWriteViewName.
+
+Implementations MAY restrict the values of this
+leaf to be one of the available values of
+/snmp/vacm/view/name in a valid configuration.]]>None</description></node><node access="read-write" datatype="view-name" name="notify-view" type="leaf"><description><![CDATA[The name of the MIB view of the SNMP context
+authorizing notify access.  If this leaf does not
+exist in a configuration, it maps to a zero-length
+vacmAccessNotifyViewName.
+
+Implementations MAY restrict the values of this
+leaf to be one of the available values of
+/snmp/vacm/view/name in a valid configuration.]]>None</description></node></node></node><node access="read-write" key="name" name="view" type="list"><description><![CDATA[Definition of MIB views.]]>None</description><node access="read-write" datatype="view-name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of this VACM MIB view.]]>None</description></node><node access="read-write" datatype="snmp:wildcard-object-identifier" name="include" type="leaf-list"><description><![CDATA[A family of subtrees included in this MIB view.]]>None</description></node><node access="read-write" datatype="snmp:wildcard-object-identifier" name="exclude" type="leaf-list"><description><![CDATA[A family of subtrees excluded from this MIB view.]]>None</description></node></node></node><node access="read-write" name="tsm" type="container"><description><![CDATA[Configuration of the Transport Security Model.]]>None</description><node access="read-write" datatype="boolean" default="false" name="use-prefix" type="leaf" values="true|false" /></node><node access="read-write" key="index" name="community" type="list"><description><![CDATA[List of communities.]]>None</description><node access="read-write" datatype="snmp:identifier" is_key="true" mandatory="true" name="index" type="leaf"><description><![CDATA[Index into the community list.]]>None</description></node><node access="read-write" mandatory="true" name="name" type="choice"><description><![CDATA[The community name, specified as either a string or
+a binary value.  The binary name is used when the
+community name contains characters that are not legal
+in a string.
+
+If not set, the value of 'security-name' is operationally
+used as the snmpCommunityName.]]>None</description><node access="read-write" name="text-name" type="case"><node access="read-write" datatype="string" name="text-name" type="leaf"><description><![CDATA[A community name that can be represented as a
+YANG string.]]>None</description></node></node><node access="read-write" name="binary-name" type="case"><node access="read-write" datatype="binary" name="binary-name" type="leaf"><description><![CDATA[A community name represented as a binary value.]]>None</description></node></node></node><node access="read-write" datatype="snmp:security-name" mandatory="true" name="security-name" type="leaf"><description><![CDATA[The snmpCommunitySecurityName of this entry.]]>None</description></node><node access="read-write" datatype="snmp:engine-id" name="engine-id" type="leaf"><description><![CDATA[If not set, the value of the local SNMP engine is
+operationally used by the device.]]>None</description></node><node access="read-write" datatype="snmp:context-name" default="" name="context" type="leaf"><description><![CDATA[The context in which management information is accessed
+when using the community string specified by this entry.]]>None</description></node><node access="read-write" datatype="snmp:tag-value" name="target-tag" type="leaf"><description><![CDATA[Used to limit access for this community to the specified
+targets.
+
+Implementations MAY restrict the values of this leaf
+to be one of the available values of /snmp/target/tag in
+a valid configuration.]]>None</description></node></node></node></node>

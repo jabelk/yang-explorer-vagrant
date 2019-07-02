@@ -1,0 +1,1 @@
+<node name="ietf-yang-smiv2" prefix="smiv2" type="module"><namespace import="false" module="ietf-yang-smiv2" prefix="smiv2">urn:ietf:params:xml:ns:yang:ietf-yang-smiv2</namespace></node>

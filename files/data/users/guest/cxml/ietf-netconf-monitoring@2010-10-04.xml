@@ -1,0 +1,128 @@
+<node name="ietf-netconf-monitoring" prefix="ncm" type="module"><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="ietf-netconf" prefix="nc">urn:ietf:params:xml:ns:netconf:base:1.0</namespace><namespace import="false" module="ietf-netconf-monitoring" prefix="ncm">urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring</namespace><namespace import="false" module="ietf-netconf-time" prefix="nct">urn:ietf:params:xml:ns:yang:ietf-netconf-time</namespace><node access="read-only" name="netconf-state" type="container"><description><![CDATA[The netconf-state container is the root of the monitoring
+data model.]]>None</description><node access="read-only" name="capabilities" type="container"><description><![CDATA[Contains the list of NETCONF capabilities supported by the
+server.]]>None</description><node access="read-only" datatype="inet:uri" name="capability" type="leaf-list"><description><![CDATA[List of NETCONF capabilities supported by the server.]]>None</description></node></node><node access="read-only" name="datastores" type="container"><description><![CDATA[Contains the list of NETCONF configuration datastores.]]>None</description><node access="read-only" key="name" name="datastore" type="list"><description><![CDATA[List of NETCONF configuration datastores supported by
+the NETCONF server and related information.]]>None</description><node access="read-only" datatype="netconf-datastore-type" is_key="true" mandatory="true" name="name" type="leaf" values="running|candidate|startup"><description><![CDATA[Name of the datastore associated with this list entry.]]>None</description></node><node access="read-only" name="locks" presence="true" type="container"><description><![CDATA[The NETCONF &ltlock&gt and &ltpartial-lock&gt operations allow
+a client to lock specific resources in a datastore.  The
+NETCONF server will prevent changes to the locked
+resources by all sessions except the one that acquired
+the lock(s).
+
+Monitoring information is provided for each datastore
+entry including details such as the session that acquired
+the lock, the type of lock (global or partial) and the
+list of locked resources.  Multiple locks per datastore
+are supported.]]>None</description><node access="read-only" mandatory="true" name="lock-type" type="choice"><description><![CDATA[Indicates if a global lock or a set of partial locks
+are set.]]>None</description><node access="read-only" name="global-lock" type="case"><node access="read-only" name="global-lock" type="container"><description><![CDATA[Present if the global lock is set.]]>None</description><node access="read-only" datatype="uint32" mandatory="true" name="locked-by-session" type="leaf"><description><![CDATA[The session ID of the session that has locked
+this resource.  Both a global lock and a partial
+lock MUST contain the NETCONF session-id.
+
+If the lock is held by a session that is not managed
+by the NETCONF server (e.g., a CLI session), a session
+id of 0 (zero) is reported.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="locked-time" type="leaf"><description><![CDATA[The date and time of when the resource was
+locked.]]>None</description></node></node></node><node access="read-only" name="partial-lock" type="case"><node access="read-only" key="lock-id" name="partial-lock" type="list"><description><![CDATA[List of partial locks.]]>None</description><node access="read-only" datatype="uint32" is_key="true" mandatory="true" name="lock-id" type="leaf"><description><![CDATA[This is the lock id returned in the &ltpartial-lock&gt
+response.]]>None</description></node><node access="read-only" datatype="uint32" mandatory="true" name="locked-by-session" type="leaf"><description><![CDATA[The session ID of the session that has locked
+this resource.  Both a global lock and a partial
+lock MUST contain the NETCONF session-id.
+
+If the lock is held by a session that is not managed
+by the NETCONF server (e.g., a CLI session), a session
+id of 0 (zero) is reported.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="locked-time" type="leaf"><description><![CDATA[The date and time of when the resource was
+locked.]]>None</description></node><node access="read-only" datatype="yang:xpath1.0" name="select" type="leaf-list"><description><![CDATA[The xpath expression that was used to request
+the lock.  The select expression indicates the
+original intended scope of the lock.]]>None</description></node><node access="read-only" datatype="instance-identifier" name="locked-node" type="leaf-list"><description><![CDATA[The list of instance-identifiers (i.e., the
+locked nodes).
+
+The scope of the partial lock is defined by the list
+of locked nodes.]]>None</description></node></node></node></node></node></node></node><node access="read-only" name="schemas" type="container"><description><![CDATA[Contains the list of data model schemas supported by the
+server.]]>None</description><node access="read-only" key="identifier version format" name="schema" type="list"><description><![CDATA[List of data model schemas supported by the server.]]>None</description><node access="read-only" datatype="string" is_key="true" mandatory="true" name="identifier" type="leaf"><description><![CDATA[Identifier to uniquely reference the schema.  The
+identifier is used in the &ltget-schema&gt operation and may
+be used for other purposes such as file retrieval.
+
+For modeling languages that support or require a data
+model name (e.g., YANG module name) the identifier MUST
+match that name.  For YANG data models, the identifier is
+the name of the module or submodule.  In other cases, an
+identifier such as a filename MAY be used instead.]]>None</description></node><node access="read-only" datatype="string" is_key="true" mandatory="true" name="version" type="leaf"><description><![CDATA[Version of the schema supported.  Multiple versions MAY be
+supported simultaneously by a NETCONF server.  Each
+version MUST be reported individually in the schema list,
+i.e., with same identifier, possibly different location,
+but different version.
+
+For YANG data models, version is the value of the most
+recent YANG 'revision' statement in the module or
+submodule, or the empty string if no 'revision' statement
+is present.]]>None</description></node><node access="read-only" datatype="identityref:schema-format" is_key="true" mandatory="true" name="format" type="leaf" values="ncm:rnc|ncm:rng|ncm:xsd|ncm:yang|ncm:yin"><description><![CDATA[The data modeling language the schema is written
+in (currently xsd, yang, yin, rng, or rnc).
+
+For YANG data models, 'yang' format MUST be supported and
+'yin' format MAY also be provided.]]>None</description></node><node access="read-only" datatype="inet:uri" mandatory="true" name="namespace" type="leaf"><description><![CDATA[The XML namespace defined by the data model.
+
+For YANG data models, this is the module's namespace.
+If the list entry describes a submodule, this field
+contains the namespace of the module to which the
+submodule belongs.]]>None</description></node><node access="read-only" datatype="union" name="location" type="leaf-list" values="NETCONF"><description><![CDATA[One or more locations from which the schema can be
+retrieved.  This list SHOULD contain at least one
+entry per schema.
+
+A schema entry may be located on a remote file system
+(e.g., reference to file system for ftp retrieval) or
+retrieved directly from a server supporting the
+&ltget-schema&gt operation (denoted by the value 'NETCONF').]]>None</description></node></node></node><node access="read-only" name="sessions" type="container"><description><![CDATA[The sessions container includes session-specific data for
+NETCONF management sessions.  The session list MUST include
+all currently active NETCONF sessions.]]>None</description><node access="read-only" key="session-id" name="session" type="list"><description><![CDATA[All NETCONF sessions managed by the NETCONF server
+MUST be reported in this list.]]>None</description><node access="read-only" datatype="uint32" is_key="true" mandatory="true" name="session-id" type="leaf"><description><![CDATA[Unique identifier for the session.  This value is the
+NETCONF session identifier, as defined in RFC 4741.]]>None</description></node><node access="read-only" datatype="identityref:transport" mandatory="true" name="transport" type="leaf" values="ncm:netconf-beep|ncm:netconf-soap-over-beep|ncm:netconf-soap-over-https|ncm:netconf-ssh|ncm:netconf-tls"><description><![CDATA[Identifies the transport for each session, e.g.,
+'netconf-ssh', 'netconf-soap', etc.]]>None</description></node><node access="read-only" datatype="string" mandatory="true" name="username" type="leaf"><description><![CDATA[The username is the client identity that was authenticated
+by the NETCONF transport protocol.  The algorithm used to
+derive the username is NETCONF transport protocol specific
+and in addition specific to the authentication mechanism
+used by the NETCONF transport protocol.]]>None</description></node><node access="read-only" datatype="inet:host" name="source-host" type="leaf"><description><![CDATA[Host identifier of the NETCONF client.  The value
+returned is implementation specific (e.g., hostname,
+IPv4 address, IPv6 address)]]>None</description></node><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="login-time" type="leaf"><description><![CDATA[Time at the server at which the session was established.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="in-rpcs" type="leaf"><description><![CDATA[Number of correct &ltrpc&gt messages received.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="in-bad-rpcs" type="leaf"><description><![CDATA[Number of messages received when an &ltrpc&gt message was expected,
+that were not correct &ltrpc&gt messages.  This includes XML parse
+errors and errors on the rpc layer.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="out-rpc-errors" type="leaf"><description><![CDATA[Number of &ltrpc-reply&gt messages sent that contained an
+&ltrpc-error&gt element.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="out-notifications" type="leaf"><description><![CDATA[Number of &ltnotification&gt messages sent.]]>None</description></node></node></node><node access="read-only" name="statistics" type="container"><description><![CDATA[Statistical data pertaining to the NETCONF server.]]>None</description><node access="read-only" datatype="yang:date-and-time" name="netconf-start-time" type="leaf"><description><![CDATA[Date and time at which the management subsystem was
+started.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="in-bad-hellos" type="leaf"><description><![CDATA[Number of sessions silently dropped because an
+invalid &lthello&gt message was received.  This includes &lthello&gt
+messages with a 'session-id' attribute, bad namespace, and
+bad capability declarations.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="in-sessions" type="leaf"><description><![CDATA[Number of sessions started.  This counter is incremented
+when a &lthello&gt message with a &ltsession-id&gt is sent.
+
+'in-sessions' - 'in-bad-hellos' =
+   'number of correctly started netconf sessions']]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="dropped-sessions" type="leaf"><description><![CDATA[Number of sessions that were abnormally terminated, e.g.,
+due to idle timeout or transport close.  This counter is not
+incremented when a session is properly closed by a
+&ltclose-session&gt operation, or killed by a &ltkill-session&gt
+operation.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="in-rpcs" type="leaf"><description><![CDATA[Number of correct &ltrpc&gt messages received.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="in-bad-rpcs" type="leaf"><description><![CDATA[Number of messages received when an &ltrpc&gt message was expected,
+that were not correct &ltrpc&gt messages.  This includes XML parse
+errors and errors on the rpc layer.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="out-rpc-errors" type="leaf"><description><![CDATA[Number of &ltrpc-reply&gt messages sent that contained an
+&ltrpc-error&gt element.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" name="out-notifications" type="leaf"><description><![CDATA[Number of &ltnotification&gt messages sent.]]>None</description></node></node><node access="read-only" name="nct:scheduling-tolerance" type="container"><description><![CDATA[The scheduling tolerance when the time capability
+is enabled.]]>None</description><node access="read-only" datatype="time-interval" default="00:00:15.0" name="nct:sched-max-future" type="leaf"><description><![CDATA[When the scheduled time is in the future, i.e., greater
+than the present time, this leaf defines the maximal
+difference between the scheduled time
+and the present time that the server is willing to
+accept.  If the difference exceeds this number, the
+server responds with an error.]]>None</description></node><node access="read-only" datatype="time-interval" default="00:00:15.0" name="nct:sched-max-past" type="leaf"><description><![CDATA[When the scheduled time is in the past, i.e., less
+than the present time, this leaf defines the maximal
+difference between the present time
+and the scheduled time that the server is willing to
+accept.  If the difference exceeds this number, the
+server responds with an error.]]>None</description></node></node></node><node access="write" name="get-schema" type="rpc"><description><![CDATA[This operation is used to retrieve a schema from the
+NETCONF server.
+
+Positive Response:
+  The NETCONF server returns the requested schema.
+
+Negative Response:
+  If requested schema does not exist, the &lterror-tag&gt is
+  'invalid-value'.
+
+  If more than one schema matches the requested parameters, the
+  &lterror-tag&gt is 'operation-failed', and &lterror-app-tag&gt is
+  'data-not-unique'.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="string" mandatory="true" name="identifier" type="leaf"><description><![CDATA[Identifier for the schema list entry.]]>None</description></node><node access="write" datatype="string" name="version" type="leaf"><description><![CDATA[Version of the schema requested.  If this parameter is not
+present, and more than one version of the schema exists on
+the server, a 'data-not-unique' error is returned, as
+described above.]]>None</description></node><node access="write" datatype="identityref:schema-format" name="format" type="leaf" values="ncm:rnc|ncm:rng|ncm:xsd|ncm:yang|ncm:yin"><description><![CDATA[The data modeling language of the schema.  If this
+parameter is not present, and more than one formats of
+the schema exists on the server, a 'data-not-unique' error
+is returned, as described above.]]>None</description></node></node><node access="read-only" name="output" type="output"><node access="read-only" name="data" type="anyxml"><description><![CDATA[Contains the schema content.]]>None</description></node></node></node></node>

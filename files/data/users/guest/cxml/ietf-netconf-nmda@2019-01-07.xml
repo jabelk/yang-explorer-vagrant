@@ -1,0 +1,81 @@
+<node name="ietf-netconf-nmda" prefix="ncds" type="module"><namespace import="true" module="ietf-datastores" prefix="ds">urn:ietf:params:xml:ns:yang:ietf-datastores</namespace><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-origin" prefix="or">urn:ietf:params:xml:ns:yang:ietf-origin</namespace><namespace import="true" module="ietf-netconf" prefix="nc">urn:ietf:params:xml:ns:netconf:base:1.0</namespace><namespace import="true" module="ietf-netconf-with-defaults" prefix="ncwd">urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="ietf-yang-metadata" prefix="md">urn:ietf:params:xml:ns:yang:ietf-yang-metadata</namespace><namespace import="false" module="ietf-netconf-nmda" prefix="ncds">urn:ietf:params:xml:ns:yang:ietf-netconf-nmda</namespace><node access="write" name="get-data" type="rpc"><description><![CDATA[Retrieve data from an NMDA datastore.  The content returned
+by get-data must satisfy all filters, i.e., the filter
+criteria are logically ANDed.
+
+Any ancestor nodes (including list keys) of nodes selected by
+the filters are included in the response.
+
+The 'with-origin' parameter is only valid for an operational
+datastore.  If 'with-origin' is used with an invalid
+datastore, then the server MUST return an &ltrpc-error&gt element
+with an &lterror-tag&gt value of 'invalid-value'.
+
+The 'with-defaults' parameter only applies to the operational
+datastore if the NETCONF :with-defaults and
+:with-operational-defaults capabilities are both advertised.
+If the 'with-defaults' parameter is present in a request for
+which it is not supported, then the server MUST return an
+&ltrpc-error&gt element with an &lterror-tag&gt value of
+'invalid-value'.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="ds:datastore-ref" mandatory="true" name="datastore" type="leaf"><description><![CDATA[Datastore from which to retrieve data.
+
+If the datastore is not supported by the server, then the
+server MUST return an &ltrpc-error&gt element with an
+&lterror-tag&gt value of 'invalid-value'.]]>None</description></node><node access="write" mandatory="true" name="filter-spec" type="choice"><description><![CDATA[The content filter specification for this request.]]>None</description><node access="write" name="subtree-filter" type="case"><node access="write" name="subtree-filter" type="anydata"><description><![CDATA[This parameter identifies the portions of the
+target datastore to retrieve.]]>None</description></node></node><node access="write" name="xpath-filter" type="case"><node access="write" datatype="yang:xpath1.0" name="xpath-filter" type="leaf"><description><![CDATA[This parameter contains an XPath expression identifying
+the portions of the target datastore to retrieve.
+
+If the expression returns a node-set, all nodes in the
+node-set are selected by the filter.  Otherwise, if the
+expression does not return a node-set, then the
+&ltget-data&gt operation fails.
+
+The expression is evaluated in the following XPath
+context:
+
+  o  The set of namespace declarations are those in
+     scope on the 'xpath-filter' leaf element.
+
+  o  The set of variable bindings is empty.
+
+  o  The function library is the core function library,
+     and the XPath functions are defined in Section 10
+     of RFC 7950.
+
+  o  The context node is the root node of the target
+     datastore.]]>None</description></node></node></node><node access="write" datatype="boolean" name="config-filter" type="leaf" values="true|false"><description><![CDATA[Filter for nodes with the given value for their 'config'
+property.  When this leaf is set to 'true', only 'config
+true' nodes are selected, and when set to 'false', only
+'config false' nodes are selected.  If this leaf is not
+present, no nodes are filtered.]]>None</description></node><node access="write" mandatory="true" name="origin-filters" type="choice"><description><![CDATA[Filters configuration nodes based on the 'origin'
+annotation.  Configuration nodes that do not have an
+'origin' annotation are treated as if they have the
+'origin' annotation 'or:unknown'.
+
+System state nodes are not affected by origin-filters and
+thus not filtered.  Note that system state nodes can be
+filtered with the 'config-filter' leaf.]]>None</description><node access="write" name="origin-filter" type="case"><node access="write" datatype="or:origin-ref" name="origin-filter" type="leaf-list"><description><![CDATA[Filter based on the 'origin' annotation.  A
+configuration node matches the filter if its 'origin'
+annotation is derived from or equal to any of the given
+filter values.]]>None</description></node></node><node access="write" name="negated-origin-filter" type="case"><node access="write" datatype="or:origin-ref" name="negated-origin-filter" type="leaf-list"><description><![CDATA[Filter based on the 'origin' annotation.  A
+configuration node matches the filter if its 'origin'
+annotation is neither derived from nor equal to any of
+the given filter values.]]>None</description></node></node></node><node access="write" datatype="union" default="unbounded" name="max-depth" type="leaf" values="unbounded"><description><![CDATA[For each node selected by the filters, this parameter
+selects how many conceptual subtree levels should be
+returned in the reply.  If the depth is 1, the reply
+includes just the selected nodes but no children.  If the
+depth is 'unbounded', all descendant nodes are included.]]>None</description></node><node access="write" datatype="empty" name="with-origin" type="leaf"><description><![CDATA[If this parameter is present, the server will return
+the 'origin' annotation for the nodes that have one.]]>None</description></node><node access="write" datatype="with-defaults-mode" name="with-defaults" type="leaf" values="report-all|report-all-tagged|trim|explicit"><description><![CDATA[The explicit defaults processing mode requested.]]>None</description></node></node><node access="read-only" name="output" type="output"><node access="read-only" name="data" type="anydata"><description><![CDATA[Copy of the source datastore subset that matched
+the filter criteria (if any).  An empty data
+container indicates that the request did not
+produce any results.]]>None</description></node></node></node><node access="write" name="edit-data" type="rpc"><description><![CDATA[Edit data in an NMDA datastore.
+
+If an error condition occurs such that an error severity
+&ltrpc-error&gt element is generated, the server will stop
+processing the &ltedit-data&gt operation and restore the
+specified configuration to its complete state at
+the start of this &ltedit-data&gt operation.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="ds:datastore-ref" mandatory="true" name="datastore" type="leaf"><description><![CDATA[Datastore that is the target of the &ltedit-data&gt operation.
+
+If the target datastore is not writable, or is not
+supported by the server, then the server MUST return an
+&ltrpc-error&gt element with an &lterror-tag&gt value of
+'invalid-value'.]]>None</description></node><node access="write" datatype="enumeration" default="merge" name="default-operation" type="leaf" values="merge|replace|none"><description><![CDATA[The default operation to use.]]>None</description></node><node access="write" name="edit-content" type="choice"><description><![CDATA[The content for the edit operation.]]>None</description><node access="write" name="config" type="case"><node access="write" name="config" type="anydata"><description><![CDATA[Inline config content.]]>None</description></node></node><node access="write" name="url" type="case"><node access="write" datatype="inet:uri" name="url" type="leaf"><description><![CDATA[URL-based config content.]]>None</description></node></node></node></node></node></node>

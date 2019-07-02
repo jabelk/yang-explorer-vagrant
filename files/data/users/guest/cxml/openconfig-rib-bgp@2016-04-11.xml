@@ -1,0 +1,669 @@
+<node name="openconfig-rib-bgp" prefix="oc-bgprib" type="module"><namespace import="false" module="openconfig-rib-bgp-ext" prefix="oc-bgprib-ext">http://openconfig.net/yang/rib/bgp-ext</namespace><namespace import="true" module="openconfig-bgp-types" prefix="oc-bgpt">http://openconfig.net/yang/bgp-types</namespace><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="false" module="openconfig-types" prefix="oc-types">http://openconfig.net/yang/openconfig-types</namespace><namespace import="false" module="openconfig-inet-types" prefix="oc-inet">http://openconfig.net/yang/types/inet</namespace><namespace import="true" module="openconfig-extensions" prefix="oc-ext">http://openconfig.net/yang/openconfig-ext</namespace><namespace import="false" module="openconfig-rib-bgp" prefix="oc-bgprib">http://openconfig.net/yang/rib/bgp</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="true" module="openconfig-rib-bgp-types" prefix="oc-bgpribt">http://openconfig.net/yang/rib/bgp-types</namespace><node access="read-only" name="bgp-rib" type="container"><description><![CDATA[Top level container for BGP RIBs]]>None</description><node access="read-only" name="afi-safis" type="container"><description><![CDATA[Enclosing container for address family list]]>None</description><node access="read-only" key="afi-safi-name" name="afi-safi" type="list"><description><![CDATA[list of afi-safi types]]>None</description><node access="read-only" datatype="identityref:oc-bgpt:AFI_SAFI_TYPE" is_key="true" mandatory="true" name="afi-safi-name" type="leaf" values="oc-bgpt:IPV4_LABELED_UNICAST|oc-bgpt:IPV4_UNICAST|oc-bgpt:IPV6_LABELED_UNICAST|oc-bgpt:IPV6_UNICAST|oc-bgpt:L2VPN_EVPN|oc-bgpt:L2VPN_VPLS|oc-bgpt:L3VPN_IPV4_MULTICAST|oc-bgpt:L3VPN_IPV4_UNICAST|oc-bgpt:L3VPN_IPV6_MULTICAST|oc-bgpt:L3VPN_IPV6_UNICAST"><description><![CDATA[AFI,SAFI]]>None</description></node><node access="read-only" name="ipv4-unicast" type="container"><description><![CDATA[Routing tables for IPv4 unicast -- active when the
+afi-safi name is ipv4-unicast]]>None</description><node access="read-only" name="loc-rib" type="container"><description><![CDATA[Main routing table on the router, containing best-path
+selections for each prefix.  The loc-rib may contain
+multiple routes for the same prefix (it is a read-only,
+unkeyed list).  The best-path leaf should be set to true
+for the route selected by the best-path selection process.
+Note that multiple paths may be used or advertised even if
+only one path is marked as best, e.g., when using BGP
+add-paths.  An implementation may choose to mark multiple
+paths in the RIB as best path by setting the flag to true for
+multiple entries.]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv4-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node><node access="read-only" name="neighbors" type="container"><description><![CDATA[Enclosing container for neighbor list]]>None</description><node access="read-only" key="neighbor-address" name="neighbor" type="list"><description><![CDATA[List of neighbors (peers) of the local BGP speaker]]>None</description><node access="read-only" datatype="inet:ip-address" is_key="true" mandatory="true" name="neighbor-address" type="leaf"><description><![CDATA[IP address of the BGP neighbor or peer]]>None</description></node><node access="read-only" name="adj-rib-in-pre" type="container"><description><![CDATA[Per-neighbor table containing the NLRI updates
+received from the neighbor before any local input
+policy rules or filters have been applied.  This can
+be considered the 'raw' updates from the neighbor.]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv4-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node><node access="read-only" name="adj-rib-in-post" type="container"><description><![CDATA[Per-neighbor table containing the paths received from
+the neighbor that are eligible for best-path selection
+after local input policy rules have been applied.]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv4-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node><node access="read-only" name="adj-rib-out-pre" type="container"><description><![CDATA[Per-neighbor table containing paths eligble for
+sending (advertising) to the neighbor before output
+policy rules have been applied]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv4-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node><node access="read-only" name="adj-rib-out-post" type="container"><description><![CDATA[Per-neighbor table containing paths eligble for
+sending (advertising) to the neighbor after output
+policy rules have been applied]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv4-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node></node></node></node><node access="read-only" name="ipv6-unicast" type="container"><description><![CDATA[Routing tables for IPv6 unicast -- active when the
+afi-safi name is ipv6-unicast]]>None</description><node access="read-only" name="loc-rib" type="container"><description><![CDATA[Main routing table on the router, containing best-path
+selections for each prefix.  The loc-rib may contain
+multiple routes for the same prefix (it is a read-only,
+unkeyed list).  The best-path leaf should be set to true
+for the route selected by the best-path selection process.
+Note that multiple paths may be used or advertised even if
+only one path is marked as best, e.g., when using BGP
+add-paths.  An implementation may choose to mark multiple
+paths in the RIB as best path by setting the flag to true for
+multiple entries.]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv6-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node><node access="read-only" name="neighbors" type="container"><description><![CDATA[Enclosing container for neighbor list]]>None</description><node access="read-only" key="neighbor-address" name="neighbor" type="list"><description><![CDATA[List of neighbors (peers) of the local BGP speaker]]>None</description><node access="read-only" datatype="inet:ip-address" is_key="true" mandatory="true" name="neighbor-address" type="leaf"><description><![CDATA[IP address of the BGP neighbor or peer]]>None</description></node><node access="read-only" name="adj-rib-in-pre" type="container"><description><![CDATA[Per-neighbor table containing the NLRI updates
+received from the neighbor before any local input
+policy rules or filters have been applied.  This can
+be considered the 'raw' updates from the neighbor.]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv6-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node><node access="read-only" name="adj-rib-in-post" type="container"><description><![CDATA[Per-neighbor table containing the paths received from
+the neighbor that are eligible for best-path selection
+after local input policy rules have been applied.]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv6-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node><node access="read-only" name="adj-rib-out-pre" type="container"><description><![CDATA[Per-neighbor table containing paths eligble for
+sending (advertising) to the neighbor before output
+policy rules have been applied]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv6-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node><node access="read-only" name="adj-rib-out-post" type="container"><description><![CDATA[Per-neighbor table containing paths eligble for
+sending (advertising) to the neighbor after output
+policy rules have been applied]]>None</description><node access="read-only" datatype="uint64" name="num-routes" type="leaf"><description><![CDATA[Number of route entries in the table]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Enclosing container for list of routes in the routing
+table.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[List of routes in the table]]>None</description><node access="read-only" datatype="inet:ipv6-prefix" name="prefix" type="leaf"><description><![CDATA[Prefix for the route]]>None</description></node><node access="read-only" name="attributes" type="container"><description><![CDATA[Base BGP route attributes associated with this route]]>None</description><node access="read-only" datatype="oc-bgpt:bgp-origin-attr-type" name="origin" type="leaf" values="IGP|EGP|INCOMPLETE"><description><![CDATA[BGP attribute defining the origin of the path information.]]>None</description></node><node access="read-only" datatype="string" name="as-path" type="leaf"><description><![CDATA[String representation of the BGP AS path attribute as
+concatenated AS path segments.  Each segment of the AS_PATH
+should be formatted as follows based on the segment type
+(#### denotes a single AS number):
+
+ AS_SEQ: #### #### #####
+ AS_SET: { #### #### }
+ AS_CONFED_SEQUENCE: ( #### #### )
+ AS_CONFED_SET: [ #### #### ]
+
+AS_PATH segment types are described in RFC 5065.
+
+In the Adj-RIB-In or Adj-RIB-Out, this leaf should show
+the received or sent AS_PATH value, respectively.  For
+example, if the local router is not 4-byte capable, this
+value should consist of 2-octet ASNs or the AS_TRANS
+(AS 23456) values received or sent in route updates.
+
+In the Loc-RIB, this leaf should reflect the effective
+AS path for the route, e.g., a 4-octet value if the
+local router is 4-octet capable.]]>None</description></node><node access="read-only" datatype="string" name="as4-path" type="leaf"><description><![CDATA[This string represents the AS path encoded with 4-octet
+AS numbers in the optional transitive AS4_PATH attribute.
+This value is populated with the received or sent attribute
+in Adj-RIB-In or Adj-RIB-Out, respectively.  It should not
+be populated in Loc-RIB since the Loc-RIB is expected to
+store the effective AS-Path in the as-path leaf regardless
+of being 4-octet or 2-octet.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="next-hop" type="leaf"><description><![CDATA[BGP next hop attribute defining the IP address of the router
+that should be used as the next hop to the destination]]>None</description></node><node access="read-only" datatype="uint32" name="med" type="leaf"><description><![CDATA[BGP multi-exit discriminator attribute used in BGP route
+selection process]]>None</description></node><node access="read-only" datatype="uint32" name="local-pref" type="leaf"><description><![CDATA[BGP local preference attribute sent to internal peers to
+indicate]]>None</description></node><node access="read-only" datatype="boolean" name="atomic-aggr" type="leaf" values="true|false"><description><![CDATA[BGP attribute indicating that the prefix is an atomic
+aggregate, i.e., the peer selected a less specific
+route without selecting a more specific route that is
+included in it.]]>None</description></node><node access="read-only" name="aggregator" type="container"><description><![CDATA[BGP attribute indicating the prefix has been aggregated by
+the specified AS and router.]]>None</description><node access="read-only" datatype="uint32" name="as" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation.]]>None</description></node><node access="read-only" datatype="uint32" name="as4" type="leaf"><description><![CDATA[AS number of the autnonomous system that performed the
+aggregation (4-octet representation).  This value is
+populated if an upstream router is not 4-octet capable.
+Its semantics are similar to the AS4_PATH optional
+transitive attribute]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="address" type="leaf"><description><![CDATA[IP address of the router that performed the
+aggregation.]]>None</description></node></node><node access="read-only" datatype="oc-bgpt:bgp-std-community-type" name="community" type="leaf-list"><description><![CDATA[List of standard BGP community attributes.]]>None</description></node></node><node access="read-only" name="ext-attributes" type="container"><description><![CDATA[Extended BGP route attributes associated with this
+route]]>None</description><node access="read-only" datatype="inet:ipv4-address" name="originator-id" type="leaf"><description><![CDATA[BGP attribute that provides the id as an IPv4 address
+of the route reflector that created the announcement]]>None</description></node><node access="read-only" datatype="inet:ipv4-address" name="cluster-list" type="leaf-list"><description><![CDATA[Represents the reflection path that the route has passed.]]>None</description></node><node access="read-only" datatype="oc-bgpt:bgp-ext-community-type" name="ext-community" type="leaf-list"><description><![CDATA[List of BGP extended community attributes]]>None</description></node><node access="read-only" datatype="uint64" name="aigp" type="leaf"><description><![CDATA[BGP path attribute representing the accumulated IGP metric
+for the path]]>None</description></node><node access="read-only" datatype="uint32" name="path-id" type="leaf"><description><![CDATA[When the BGP speaker supports advertisement of multiple
+paths for a prefix, the path identifier is used to
+uniquely identify a route based on the combination of the
+prefix and path id.  In the Adj-RIB-In, the path-id value is
+the value received in the update message.   In the Loc-RIB,
+if used, it should represent a locally generated path-id
+value for the corresponding route.  In Adj-RIB-Out, it
+should be the value sent to a neighbor when add-paths is
+used, i.e., the capability has been negotiated.]]>None</description></node><node access="read-only" key="attr-type" name="unknown-attribute" type="list"><description><![CDATA[This list contains received attributes that are unrecognized
+or unsupported by the local router.  The list may be empty.]]>None</description><node access="read-only" datatype="uint16" is_key="true" mandatory="true" name="attr-type" type="leaf"><description><![CDATA[2-octet value encoding the attribute flags and the
+attribute type code]]>None</description></node><node access="read-only" datatype="uint16" name="attr-len" type="leaf"><description><![CDATA[One or two octet attribute length field indicating the
+length of the attribute data in octets.  If the Extended
+Length attribute flag in the attribute type field is set,
+the length field is 2 octets, otherwise it is 1 octet]]>None</description></node><node access="read-only" datatype="binary" name="attr-value" type="leaf"><description><![CDATA[Raw attribute value data, not to exceed the length
+indicated in the attr-len field.  The maximum length
+of the attribute data is 2^16-1 per the max value of the
+attr-len field (2 octets).]]>None</description></node></node></node><node access="read-only" datatype="yang:date-and-time" name="last-modified-date" type="leaf"><description><![CDATA[Timestamp of when this path was last changed]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-update-received" type="leaf"><description><![CDATA[Timestamp of when the last BGP update message was received
+for this path / prefix]]>None</description></node><node access="read-only" datatype="boolean" name="valid-route" type="leaf" values="true|false"><description><![CDATA[Indicates that the route is considered valid by the
+local router]]>None</description></node><node access="read-only" datatype="identityref:oc-bgpribt:INVALID_ROUTE_REASON" name="invalid-reason" type="leaf" values="oc-bgpribt:INVALID_AS_LOOP|oc-bgpribt:INVALID_CLUSTER_LOOP|oc-bgpribt:INVALID_CONFED|oc-bgpribt:INVALID_ORIGINATOR"><description><![CDATA[If the route is rejected as invalid, this indicates the
+reason.]]>None</description></node><node access="read-only" datatype="boolean" name="best-path" type="leaf" values="true|false"><description><![CDATA[Current path was selected as the best path.]]>None</description></node><node access="read-only" datatype="union" name="oc-bgprib-ext:reject-reason" type="leaf" values="oc-bgpribt:AS_PATH_LONGER|oc-bgpribt:HIGHER_PEER_ADDRESS|oc-bgpribt:HIGHER_ROUTER_ID|oc-bgpribt:LOCAL_PREF_LOWER|oc-bgpribt:MED_HIGHER|oc-bgpribt:NEXTHOP_COST_HIGHER|oc-bgpribt:ORIGIN_TYPE_HIGHER|oc-bgpribt:PREFER_EXTERNAL|oc-bgpribt:REJECTED_IMPORT_POLICY"><description><![CDATA[Indicates the reason the route is not used, either due to
+policy filtering or bestpath selection]]>None</description></node></node></node></node></node></node></node></node></node></node></node>

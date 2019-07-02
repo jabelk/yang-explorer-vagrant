@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2015, Cisco Systems, Inc
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+@author: Pravin Gohite, Cisco Systems, Inc.
+-->
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:mx="library://ns.adobe.com/flex/mx"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:components="flatspark.components.*"
+               close="PopUpManager.removePopUp(this)" fontFamily="Avenir"
+               skinClass="flatspark.skins.TitleWindowSkin" title="Yang Dependencies">
+    <fx:Script>
+        <![CDATA[
+            import flash.net.navigateToURL;
+            
+            import mx.managers.PopUpManager;
+            import flatspark.enums.BrandColorEnum;
+            
+            public var graph_url : String = '';
+            
+            public function init(url : String, str:String):void
+            {
+                var loader:Loader = new Loader();
+                loader.contentLoaderInfo.addEventListener(Event.COMPLETE, displayImage);
+                graph_url = url + '/static/graph.jpeg';
+                loader.load(new URLRequest(graph_url));
+                this.title = str;
+                return;
+            }
+            
+            protected function displayImage(event:Event):void
+            {
+                var loader:Loader = (event.target as LoaderInfo).loader;
+                img.data   = loader.content;
+                img.width  = loader.width;
+                img.height = loader.height;
+                resizeWindow(img.height, img.width);
+                this.visible = true;
+                return;
+            }
+            
+            private function resizeWindow(i_height: int, i_width : int) : void {
+                i_width = Math.min(i_width + 6, parentApplication.width - 50);
+                i_height = Math.min(i_height + this.height, parentApplication.height - 50);
+                var xpad : int = (parentApplication.width - i_width) / 2;
+                var ypad : int = (parentApplication.height - i_height) / 2;
+                
+                this.x = parentApplication.x + xpad;
+                this.width = i_width;
+                this.y = parentApplication.y + ypad;
+                this.height = i_height;
+            }
+        ]]>
+    </fx:Script>
+    <s:VGroup width="100%" height="100%" padding="2">
+        <s:Scroller width="100%" height="100%">
+            <s:Group>
+                <mx:Image id="img" horizontalCenter="0" verticalCenter="0"/>
+            </s:Group>
+        </s:Scroller>
+        <s:HGroup width="100%" horizontalAlign="center" paddingBottom="5" paddingLeft="5"
+                  paddingRight="5">
+            <components:ButtonIcon width="80" label="Download" brand="{BrandColorEnum.Primary}"
+                                   click="PopUpManager.removePopUp(this);navigateToURL(new URLRequest(graph_url))"/>
+        </s:HGroup>
+    </s:VGroup>
+</s:TitleWindow>

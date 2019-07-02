@@ -1,0 +1,163 @@
+<node name="openconfig-rpc" prefix="oc-rpc" type="module"><namespace import="true" module="openconfig-telemetry" prefix="oc-telemetry">http://openconfig.net/yang/telemetry</namespace><namespace import="true" module="openconfig-rpc-types" prefix="oc-rpc-types">http://openconfig.net/yang/rpc-types</namespace><namespace import="false" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="false" module="openconfig-rpc" prefix="oc-rpc">http://openconfig.net/yang/rpc-api</namespace><namespace import="true" module="openconfig-extensions" prefix="oc-ext">http://openconfig.net/yang/openconfig-ext</namespace><node access="write" name="get-models" type="rpc"><description><![CDATA[Returns a repeated structure of supported data models]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="write" datatype="string" name="name" type="leaf"><description><![CDATA[Name of the YANG module, model/bundle, augmentation, or
+deviation module.
+
+In requests for model data, the name may be a
+regular expression (e.g., POSIX, RE2, etc.) to match against
+supported models on the system.]]>None</description></node><node access="write" datatype="string" name="namespace" type="leaf"><description><![CDATA[Namespace the model belongs to, whether standard or
+ad-hoc.
+
+In requests for model data, the namespace may be a
+regular expression (e.g., POSIX, RE2, etc.) to match against
+namespaces in models present on the system (e.g., openconfig
+ietf, etc.]]>None</description></node><node access="write" datatype="string" name="version" type="leaf"><description><![CDATA[Model version -- for YANG models this should be at least the
+OpenConfig semantic version number, but but could also
+include the YANG revision date.
+
+In requests for model data, the version may be a
+regular expression (e.g., POSIX, RE2, etc.) to match against
+model versions present on the system.]]>None</description></node><node access="write" datatype="identityref:oc-rpc-types:MODEL_REQUEST_TYPE" name="request-type" type="leaf" values="oc-rpc-types:DETAIL|oc-rpc-types:SUMMARY"><description><![CDATA[Specifies the type of data that should be returned by the
+get-models request, e.g., metadata only, or the full YANG
+modules.]]>None</description></node></node><node access="read-only" name="output" type="output"><node access="read-only" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="read-only" key="name version" name="model" type="list"><description><![CDATA[list of supported schemas]]>None</description><node access="read-only" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Name of the YANG module, model/bundle, augmentation, or
+deviation module.
+
+In requests for model data, the name may be a
+regular expression (e.g., POSIX, RE2, etc.) to match against
+supported models on the system.]]>None</description></node><node access="read-only" datatype="string" name="namespace" type="leaf"><description><![CDATA[Namespace the model belongs to, whether standard or
+ad-hoc.
+
+In requests for model data, the namespace may be a
+regular expression (e.g., POSIX, RE2, etc.) to match against
+namespaces in models present on the system (e.g., openconfig
+ietf, etc.]]>None</description></node><node access="read-only" datatype="string" is_key="true" mandatory="true" name="version" type="leaf"><description><![CDATA[Model version -- for YANG models this should be at least the
+OpenConfig semantic version number, but but could also
+include the YANG revision date.
+
+In requests for model data, the version may be a
+regular expression (e.g., POSIX, RE2, etc.) to match against
+model versions present on the system.]]>None</description></node><node access="read-only" datatype="identityref:oc-rpc-types:GET_MODEL_TYPE" name="model-type" type="leaf" values="oc-rpc-types:AUGMENTATION|oc-rpc-types:BUNDLE|oc-rpc-types:DEVIATION|oc-rpc-types:MODULE"><description><![CDATA[Indicates whether the returned model is an augmentation
+or deviation.]]>None</description></node><node access="read-only" datatype="string" name="model-data" type="leaf"><description><![CDATA[If the model code is requested by the client
+(i.e., request-type is 'DETAIL'), this leaf
+contains the YANG module(s) in a text-based encoding]]>None</description></node></node><node access="read-only" datatype="identityref:oc-rpc-types:OPENCONFIG_RPC_RESPONSE_TYPES" name="response-code" type="leaf" values="oc-rpc-types:INVALID_CONFIGURATION|oc-rpc-types:INVALID_PATH|oc-rpc-types:INVALID_SUBSCRIPTION_ID|oc-rpc-types:NOK|oc-rpc-types:OK|oc-rpc-types:UNSUPPORTED_ENCODING|oc-rpc-types:UNSUPPORTED_INTERVAL|oc-rpc-types:UNSUPPORTED_PATH"><description><![CDATA[Response code indicating the result of the command.]]>None</description></node><node access="read-only" datatype="string" name="message" type="leaf"><description><![CDATA[Error or information text associated with the return-code
+value.]]>None</description></node></node></node><node access="write" name="set-data-encoding" type="rpc"><description><![CDATA[Select and set one of the data encodings returned by
+getDataEncodings.  This RPC sets the global encoding /
+serialization for all data exchanged with the target
+device.  The global data encoding may be optionally overriden
+by setting the encoding for an individual RPC if supported
+by the target.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="write" datatype="identityref:oc-rpc-types:DATA_ENCODING_METHOD" name="encoding" type="leaf" values="oc-rpc-types:ENC_JSON_IETF|oc-rpc-types:ENC_PROTO3|oc-rpc-types:ENC_XML"><description><![CDATA[Specifies the data encoding scheme to be used for data
+sent to and from the target device.  The encoding may
+be specified for all data, or optionally on a per-RPC
+basis if supported by the target.]]>None</description></node></node><node access="read-only" name="output" type="output"><node access="read-only" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="read-only" datatype="identityref:oc-rpc-types:OPENCONFIG_RPC_RESPONSE_TYPES" name="response-code" type="leaf" values="oc-rpc-types:INVALID_CONFIGURATION|oc-rpc-types:INVALID_PATH|oc-rpc-types:INVALID_SUBSCRIPTION_ID|oc-rpc-types:NOK|oc-rpc-types:OK|oc-rpc-types:UNSUPPORTED_ENCODING|oc-rpc-types:UNSUPPORTED_INTERVAL|oc-rpc-types:UNSUPPORTED_PATH"><description><![CDATA[Response code indicating the result of the command.]]>None</description></node><node access="read-only" datatype="string" name="message" type="leaf"><description><![CDATA[Error or information text associated with the return-code
+value.]]>None</description></node></node></node><node access="write" name="get-data-encodings" type="rpc"><description><![CDATA[Return the set of data encodings supported by the device for
+configuration and telemetry data modeled in YANG]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node></node><node access="read-only" name="output" type="output"><node access="read-only" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="read-only" datatype="identityref:oc-rpc-types:DATA_ENCODING_METHOD" name="encoding" type="leaf-list" values="oc-rpc-types:ENC_JSON_IETF|oc-rpc-types:ENC_PROTO3|oc-rpc-types:ENC_XML"><description><![CDATA[List of supported encoding schemes on the target
+device]]>None</description></node><node access="read-only" datatype="identityref:oc-rpc-types:OPENCONFIG_RPC_RESPONSE_TYPES" name="response-code" type="leaf" values="oc-rpc-types:INVALID_CONFIGURATION|oc-rpc-types:INVALID_PATH|oc-rpc-types:INVALID_SUBSCRIPTION_ID|oc-rpc-types:NOK|oc-rpc-types:OK|oc-rpc-types:UNSUPPORTED_ENCODING|oc-rpc-types:UNSUPPORTED_INTERVAL|oc-rpc-types:UNSUPPORTED_PATH"><description><![CDATA[Response code indicating the result of the command.]]>None</description></node><node access="read-only" datatype="string" name="message" type="leaf"><description><![CDATA[Error or information text associated with the return-code
+value.]]>None</description></node></node></node><node access="write" name="subscribe" type="rpc"><description><![CDATA[Request an inline subscription for data at the specified path.
+The device should send telemetry data back on the same
+connection as the subscription request.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="write" key="destination-address destination-port" name="destination" type="list"><description><![CDATA[List of optional collector destinations to send data for
+this subscription, specified as an ip+port combination.
+If no collector destinations are specified, the collector
+destination is assumed to be the requester on the rpc channel]]>None</description><node access="write" datatype="inet:ip-address" is_key="true" mandatory="true" name="destination-address" type="leaf"><description><![CDATA[IP address of the telemetry stream destination]]>None</description></node><node access="write" datatype="uint16" is_key="true" mandatory="true" name="destination-port" type="leaf"><description><![CDATA[Protocol (udp or tcp) port number for the telemetry
+stream destination]]>None</description></node></node><node access="write" key="path" name="path" type="list"><description><![CDATA[List of data model paths, keyed by path name]]>None</description><node access="write" datatype="oc-rpc-types:openconfig-path" is_key="true" mandatory="true" name="path" type="leaf"><description><![CDATA[Specifies a path in the data model path corresponding to
+the data in the message]]>None</description></node><node access="write" datatype="string" name="exclude-filter" type="leaf"><description><![CDATA[Optional filter expression to be used in filtering data
+elements from the subtree specified by the corresponding
+path.]]>None</description></node></node><node access="write" datatype="uint64" name="sample-interval" type="leaf"><description><![CDATA[Time in milliseconds between the device's sample of a
+telemetry data source. For example, setting this to 100
+would require the local device to collect the telemetry
+data every 100 milliseconds. There can be latency or jitter
+in transmitting the data, but the sample must occur at
+the specified interval.
+
+The timestamp must reflect the actual time when the data
+was sampled, not simply the previous sample timestamp +
+sample-interval.
+
+If sample-interval is set to 0, the telemetry sensor
+becomes event based. The sensor must then emit data upon
+every change of the underlying data source.]]>None</description></node><node access="write" datatype="uint64" name="heartbeat-interval" type="leaf"><description><![CDATA[Maximum time interval in seconds that may pass
+between updates from a device to a telemetry collector.
+If this interval expires, but there is no updated data to
+send (such as if suppress_updates has been configured), the
+device must send a telemetry message to the collector.]]>None</description></node><node access="write" datatype="boolean" name="suppress-redundant" type="leaf" values="true|false"><description><![CDATA[Boolean flag to control suppression of redundant
+telemetry updates to the collector platform. If this flag is
+set to TRUE, then the collector will only send an update at
+the configured interval if a subscribed data value has
+changed. Otherwise, the device will not send an update to
+the collector until expiration of the heartbeat interval.]]>None</description></node><node access="write" datatype="inet:dscp" name="originated-qos-marking" type="leaf"><description><![CDATA[DSCP marking of packets generated by the telemetry
+subsystem on the network device.]]>None</description></node><node access="write" datatype="identityref:oc-rpc-types:DATA_ENCODING_METHOD" name="encoding" type="leaf" values="oc-rpc-types:ENC_JSON_IETF|oc-rpc-types:ENC_PROTO3|oc-rpc-types:ENC_XML"><description><![CDATA[Specifies the data encoding scheme to be used for data
+sent to and from the target device.  The encoding may
+be specified for all data, or optionally on a per-RPC
+basis if supported by the target.]]>None</description></node></node><node access="read-only" name="output" type="output"><node access="read-only" datatype="uint32" name="subscription-id" type="leaf"><description><![CDATA[Unique id for the subscription on the device.  This is
+generated by the device and returned in a subscription
+request or when listing existing subscriptions.]]>None</description></node><node access="read-only" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="read-only" datatype="identityref:oc-rpc-types:OPENCONFIG_RPC_RESPONSE_TYPES" name="response-code" type="leaf" values="oc-rpc-types:INVALID_CONFIGURATION|oc-rpc-types:INVALID_PATH|oc-rpc-types:INVALID_SUBSCRIPTION_ID|oc-rpc-types:NOK|oc-rpc-types:OK|oc-rpc-types:UNSUPPORTED_ENCODING|oc-rpc-types:UNSUPPORTED_INTERVAL|oc-rpc-types:UNSUPPORTED_PATH"><description><![CDATA[Response code indicating the result of the command.]]>None</description></node><node access="read-only" datatype="string" name="message" type="leaf"><description><![CDATA[Error or information text associated with the return-code
+value.]]>None</description></node></node></node><node access="write" name="cancel" type="rpc"><description><![CDATA[Terminates and removes an exisiting telemetry subscription]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="write" datatype="uint32" name="subscription-id" type="leaf"><description><![CDATA[Unique id for the subscription on the device.  This is
+generated by the device and returned in a subscription
+request or when listing existing subscriptions.]]>None</description></node></node><node access="read-only" name="output" type="output"><node access="read-only" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="read-only" datatype="identityref:oc-rpc-types:OPENCONFIG_RPC_RESPONSE_TYPES" name="response-code" type="leaf" values="oc-rpc-types:INVALID_CONFIGURATION|oc-rpc-types:INVALID_PATH|oc-rpc-types:INVALID_SUBSCRIPTION_ID|oc-rpc-types:NOK|oc-rpc-types:OK|oc-rpc-types:UNSUPPORTED_ENCODING|oc-rpc-types:UNSUPPORTED_INTERVAL|oc-rpc-types:UNSUPPORTED_PATH"><description><![CDATA[Response code indicating the result of the command.]]>None</description></node><node access="read-only" datatype="string" name="message" type="leaf"><description><![CDATA[Error or information text associated with the return-code
+value.]]>None</description></node></node></node><node access="write" name="set" type="rpc"><description><![CDATA[Modify configuration on the target device. The set
+RPC accepts a combination of commands, each with an
+associated path specification to indicate which data should
+be modified.
+
+The commands in a set request should be fully validated and
+accepted by the device before a response is returned.  The
+application of the configuration commands may or may not be
+complete when the command returns.  The NMS is expected to be
+able to track the application of the configuration using the
+operational state data in the telemetry stream, or by
+retrieving the state data using an RPC.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="write" datatype="identityref:oc-rpc-types:DATA_ENCODING_METHOD" name="encoding" type="leaf" values="oc-rpc-types:ENC_JSON_IETF|oc-rpc-types:ENC_PROTO3|oc-rpc-types:ENC_XML"><description><![CDATA[Specifies the data encoding scheme to be used for data
+sent to and from the target device.  The encoding may
+be specified for all data, or optionally on a per-RPC
+basis if supported by the target.]]>None</description></node><node access="write" datatype="oc-rpc-types:openconfig-path" name="prefix" type="leaf"><description><![CDATA[The prefix specifies a common path prefix for all commands
+in a set or get RPC.  The prefix may be used to shorten /
+abbreviate the paths in each command.  If the prefix is not
+specified, path values in each command must be absolute.]]>None</description></node><node access="write" name="operation" type="list"><description><![CDATA[List of configuration data items, each consisting of the
+data model path, and corresponding data encoded based on
+the requested format.
+
+All individual operations in the RPC request should be
+treated collectively as a single transaction. The target
+device should return a successful response only if all
+operations are successful.  If any one of the operations
+fails for any reason, the resulting state of the device
+should be as if none of the operations were applied, i.e.,
+any successful operations should be rolled back.]]>None</description><node access="write" datatype="identityref:oc-rpc-types:SET_CONFIG_COMMANDS" name="opcode" type="leaf" values="oc-rpc-types:DELETE_CONFIG|oc-rpc-types:REPLACE_CONFIG|oc-rpc-types:UPDATE_CONFIG"><description><![CDATA[The type of configuration modification requested for the
+corresponding path.  Note that some commands, such as
+'delete' do not specify any associated data with the
+path.]]>None</description></node><node access="write" datatype="oc-rpc-types:openconfig-path" name="path" type="leaf"><description><![CDATA[Specifies a path in the data model path corresponding to
+the data in the message]]>None</description></node><node access="write" datatype="string" name="value" type="leaf"><description><![CDATA[Data encoded using the encoding specified in
+set-data-encoding, or the device's default encoding.  This
+data may be populated by the management system, e.g., when
+sending configuration data, or by the device when returning
+configuration or operational state / telemetry data.]]>None</description></node></node></node><node access="read-only" name="output" type="output"><node access="read-only" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[The request id corresponding to the request]]>None</description></node><node access="read-only" datatype="identityref:oc-rpc-types:OPENCONFIG_RPC_RESPONSE_TYPES" name="response-code" type="leaf" values="oc-rpc-types:INVALID_CONFIGURATION|oc-rpc-types:INVALID_PATH|oc-rpc-types:INVALID_SUBSCRIPTION_ID|oc-rpc-types:NOK|oc-rpc-types:OK|oc-rpc-types:UNSUPPORTED_ENCODING|oc-rpc-types:UNSUPPORTED_INTERVAL|oc-rpc-types:UNSUPPORTED_PATH"><description><![CDATA[Response code indicating the result of the command.]]>None</description></node><node access="read-only" datatype="string" name="message" type="leaf"><description><![CDATA[Error or information text associated with the return-code
+value.]]>None</description></node></node></node><node access="write" name="get" type="rpc"><description><![CDATA[Requests data from the network device.  The get RPC
+request should include a subcommand to indicate the type of
+data desired by the requestor.  Supported types of data
+include:
+
+* configuration data (config: true nodes in the schema)
+* operational state data (config: false nodes)
+* derived operational state only (config: false nodes that
+ represent derived operational state, exluding config: false
+ nodes that represent applied configuration.
+* all data (config: true and config: false nodes)
+
+A get RPC can contain multiple requests for data.  Each
+request includes a path specifying a subtree in the data
+model, and a command to indicate which type of data should be
+returned.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[Identifier sent in request messages]]>None</description></node><node access="write" datatype="identityref:oc-rpc-types:DATA_ENCODING_METHOD" name="encoding" type="leaf" values="oc-rpc-types:ENC_JSON_IETF|oc-rpc-types:ENC_PROTO3|oc-rpc-types:ENC_XML"><description><![CDATA[Specifies the data encoding scheme to be used for data
+sent to and from the target device.  The encoding may
+be specified for all data, or optionally on a per-RPC
+basis if supported by the target.]]>None</description></node><node access="write" datatype="oc-rpc-types:openconfig-path" name="prefix" type="leaf"><description><![CDATA[The prefix specifies a common path prefix for all commands
+in a set or get RPC.  The prefix may be used to shorten /
+abbreviate the paths in each command.  If the prefix is not
+specified, path values in each command must be absolute.]]>None</description></node><node access="write" datatype="identityref:oc-rpc-types:GET_TYPE" name="data-type" type="leaf" values="oc-rpc-types:GET_ALL|oc-rpc-types:GET_CONFIG|oc-rpc-types:GET_OPERATIONAL|oc-rpc-types:GET_STATE"><description><![CDATA[Command indicates what type of data should be
+returned from the specified paths, e.g., configuration,
+opstate, etc.]]>None</description></node><node access="write" datatype="oc-rpc-types:openconfig-path" name="path" type="leaf-list"><description><![CDATA[List of paths indicating the data to
+be returned.]]>None</description></node></node><node access="read-only" name="output" type="output"><node access="read-only" datatype="uint64" name="request-id" type="leaf"><description><![CDATA[The request id corresponding to the request]]>None</description></node><node access="read-only" name="response" type="list"><description><![CDATA[List of operational state data items, each consisting of the
+data model path, corresponding data encoded based on
+the requested format, and a response code for each requested
+path.]]>None</description><node access="read-only" datatype="oc-rpc-types:openconfig-path" name="path" type="leaf"><description><![CDATA[Specifies a path in the data model path corresponding to
+the data in the message]]>None</description></node><node access="read-only" datatype="string" name="value" type="leaf"><description><![CDATA[Data encoded using the encoding specified in
+set-data-encoding, or the device's default encoding.  This
+data may be populated by the management system, e.g., when
+sending configuration data, or by the device when returning
+configuration or operational state / telemetry data.]]>None</description></node></node><node access="read-only" datatype="identityref:oc-rpc-types:OPENCONFIG_RPC_RESPONSE_TYPES" name="response-code" type="leaf" values="oc-rpc-types:INVALID_CONFIGURATION|oc-rpc-types:INVALID_PATH|oc-rpc-types:INVALID_SUBSCRIPTION_ID|oc-rpc-types:NOK|oc-rpc-types:OK|oc-rpc-types:UNSUPPORTED_ENCODING|oc-rpc-types:UNSUPPORTED_INTERVAL|oc-rpc-types:UNSUPPORTED_PATH"><description><![CDATA[Response code indicating the result of the command.]]>None</description></node><node access="read-only" datatype="string" name="message" type="leaf"><description><![CDATA[Error or information text associated with the return-code
+value.]]>None</description></node></node></node></node>

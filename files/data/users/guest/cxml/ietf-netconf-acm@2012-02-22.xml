@@ -1,0 +1,58 @@
+<node name="ietf-netconf-acm" prefix="nacm" type="module"><namespace import="false" module="ietf-lmap-control" prefix="lmapc">urn:ietf:params:xml:ns:yang:ietf-lmap-control</namespace><namespace import="false" module="ietf-key-chain" prefix="key-chain">urn:ietf:params:xml:ns:yang:ietf-key-chain</namespace><namespace import="false" module="ietf-l2vpn-svc" prefix="l2vpn-svc">urn:ietf:params:xml:ns:yang:ietf-l2vpn-svc</namespace><namespace import="false" module="ietf-lmap-common" prefix="lmap">urn:ietf:params:xml:ns:yang:ietf-lmap-common</namespace><namespace import="false" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="false" module="iana-crypt-hash" prefix="ianach">urn:ietf:params:xml:ns:yang:iana-crypt-hash</namespace><namespace import="false" module="ietf-netconf-acm" prefix="nacm">urn:ietf:params:xml:ns:yang:ietf-netconf-acm</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="ietf-system" prefix="sys">urn:ietf:params:xml:ns:yang:ietf-system</namespace><node access="read-write" name="nacm" type="container"><description><![CDATA[Parameters for NETCONF Access Control Model.]]>None</description><node access="read-write" datatype="boolean" default="true" name="enable-nacm" type="leaf" values="true|false"><description><![CDATA[Enables or disables all NETCONF access control
+enforcement.  If 'true', then enforcement
+is enabled.  If 'false', then enforcement
+is disabled.]]>None</description></node><node access="read-write" datatype="action-type" default="permit" name="read-default" type="leaf" values="permit|deny"><description><![CDATA[Controls whether read access is granted if
+no appropriate rule is found for a
+particular read request.]]>None</description></node><node access="read-write" datatype="action-type" default="deny" name="write-default" type="leaf" values="permit|deny"><description><![CDATA[Controls whether create, update, or delete access
+is granted if no appropriate rule is found for a
+particular write request.]]>None</description></node><node access="read-write" datatype="action-type" default="permit" name="exec-default" type="leaf" values="permit|deny"><description><![CDATA[Controls whether exec access is granted if no appropriate
+rule is found for a particular protocol operation request.]]>None</description></node><node access="read-write" datatype="boolean" default="true" name="enable-external-groups" type="leaf" values="true|false"><description><![CDATA[Controls whether the server uses the groups reported by the
+NETCONF transport layer when it assigns the user to a set of
+NACM groups.  If this leaf has the value 'false', any group
+names reported by the transport layer are ignored by the
+server.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" mandatory="true" name="denied-operations" type="leaf"><description><![CDATA[Number of times since the server last restarted that a
+protocol operation request was denied.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" mandatory="true" name="denied-data-writes" type="leaf"><description><![CDATA[Number of times since the server last restarted that a
+protocol operation request to alter
+a configuration datastore was denied.]]>None</description></node><node access="read-only" datatype="yang:zero-based-counter32" mandatory="true" name="denied-notifications" type="leaf"><description><![CDATA[Number of times since the server last restarted that
+a notification was dropped for a subscription because
+access to the event type was denied.]]>None</description></node><node access="read-write" name="groups" type="container"><description><![CDATA[NETCONF Access Control Groups.]]>None</description><node access="read-write" key="name" name="group" type="list"><description><![CDATA[One NACM Group Entry.  This list will only contain
+configured entries, not any entries learned from
+any transport protocols.]]>None</description><node access="read-write" datatype="group-name-type" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Group name associated with this entry.]]>None</description></node><node access="read-write" datatype="user-name-type" name="user-name" type="leaf-list"><description><![CDATA[Each entry identifies the username of
+a member of the group associated with
+this entry.]]>None</description></node></node></node><node access="read-write" key="name" name="rule-list" type="list"><description><![CDATA[An ordered collection of access control rules.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Arbitrary name assigned to the rule-list.]]>None</description></node><node access="read-write" datatype="union" name="group" type="leaf-list"><description><![CDATA[List of administrative groups that will be
+assigned the associated access rights
+defined by the 'rule' list.
+
+The string '*' indicates that all groups apply to the
+entry.]]>None</description></node><node access="read-write" key="name" name="rule" type="list"><description><![CDATA[One access control rule.
+
+Rules are processed in user-defined order until a match is
+found.  A rule matches if 'module-name', 'rule-type', and
+'access-operations' match the request.  If a rule
+matches, the 'action' leaf determines if access is granted
+or not.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Arbitrary name assigned to the rule.]]>None</description></node><node access="read-write" datatype="union" default="*" name="module-name" type="leaf"><description><![CDATA[Name of the module associated with this rule.
+
+This leaf matches if it has the value '*' or if the
+object being accessed is defined in the module with the
+specified module name.]]>None</description></node><node access="read-write" mandatory="true" name="rule-type" type="choice" values="protocol-operation|notification|data-node"><description><![CDATA[This choice matches if all leafs present in the rule
+match the request.  If no leafs are present, the
+choice matches all requests.]]>None</description><node access="read-write" name="protocol-operation" type="case"><node access="read-write" datatype="union" name="rpc-name" type="leaf"><description><![CDATA[This leaf matches if it has the value '*' or if
+its value equals the requested protocol operation
+name.]]>None</description></node></node><node access="read-write" name="notification" type="case"><node access="read-write" datatype="union" name="notification-name" type="leaf"><description><![CDATA[This leaf matches if it has the value '*' or if its
+value equals the requested notification name.]]>None</description></node></node><node access="read-write" name="data-node" type="case"><node access="read-write" datatype="node-instance-identifier" mandatory="true" name="path" type="leaf"><description><![CDATA[Data Node Instance Identifier associated with the
+data node controlled by this rule.
+
+Configuration data or state data instance
+identifiers start with a top-level data node.  A
+complete instance identifier is required for this
+type of path value.
+
+The special value '/' refers to all possible
+datastore contents.]]>None</description></node></node></node><node access="read-write" datatype="union" default="*" name="access-operations" type="leaf"><description><![CDATA[Access operations associated with this rule.
+
+This leaf matches if it has the value '*' or if the
+bit corresponding to the requested operation is set.]]>None</description></node><node access="read-write" datatype="action-type" mandatory="true" name="action" type="leaf" values="permit|deny"><description><![CDATA[The access control action associated with the
+rule.  If a rule is determined to match a
+particular request, then this object is used
+to determine whether to permit or deny the
+request.]]>None</description></node><node access="read-write" datatype="string" name="comment" type="leaf"><description><![CDATA[A textual description of the access rule.]]>None</description></node></node></node></node></node>

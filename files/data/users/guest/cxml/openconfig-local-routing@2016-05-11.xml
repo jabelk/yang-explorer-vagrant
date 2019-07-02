@@ -1,0 +1,98 @@
+<node name="openconfig-local-routing" prefix="oc-loc-rt" type="module"><namespace import="false" module="openconfig-network-instance-l3" prefix="oc-ni-l3">http://openconfig.net/yang/network-instance-l3</namespace><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="openconfig-interfaces" prefix="oc-if">http://openconfig.net/yang/interfaces</namespace><namespace import="false" module="openconfig-bgp" prefix="oc-bgp">http://openconfig.net/yang/bgp</namespace><namespace import="false" module="openconfig-isis-lsdb-types" prefix="oc-isis-lsdb-types">http://openconfig.net/yang/isis-lsdb-types</namespace><namespace import="false" module="openconfig-vlan-types" prefix="oc-vlan-types">http://openconfig.net/yang/vlan-types</namespace><namespace import="false" module="openconfig-mpls-sr" prefix="oc-mpls-sr">http://openconfig.net/yang/mpls-sr</namespace><namespace import="false" module="openconfig-mpls-types" prefix="oc-mpls-types">http://openconfig.net/yang/mpls-types</namespace><namespace import="false" module="openconfig-bgp-types" prefix="oc-bgp-types">http://openconfig.net/yang/bgp-types</namespace><namespace import="false" module="openconfig-isis-types" prefix="oc-isis-types">http://openconfig.net/yang/isis-types</namespace><namespace import="false" module="openconfig-network-instance" prefix="oc-netinst">http://openconfig.net/yang/network-instance</namespace><namespace import="false" module="openconfig-if-aggregate" prefix="oc-lag">http://openconfig.net/yang/interfaces/aggregate</namespace><namespace import="false" module="openconfig-aft-types" prefix="oc-aftt">http://openconfig.net/yang/fib-types</namespace><namespace import="false" module="iana-if-type" prefix="ianaift">urn:ietf:params:xml:ns:yang:iana-if-type</namespace><namespace import="false" module="openconfig-ospf-types" prefix="oc-ospf-types">http://openconfig.net/yang/ospf-types</namespace><namespace import="false" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="openconfig-packet-match" prefix="oc-pkt-match">http://openconfig.net/yang/header-fields</namespace><namespace import="false" module="openconfig-types" prefix="oc-types">http://openconfig.net/yang/openconfig-types</namespace><namespace import="false" module="openconfig-policy-forwarding" prefix="oc-pf">http://openconfig.net/yang/policy-forwarding</namespace><namespace import="false" module="ietf-interfaces" prefix="if">urn:ietf:params:xml:ns:yang:ietf-interfaces</namespace><namespace import="false" module="openconfig-inet-types" prefix="oc-inet">http://openconfig.net/yang/types/inet</namespace><namespace import="false" module="openconfig-vlan" prefix="oc-vlan">http://openconfig.net/yang/vlan</namespace><namespace import="true" module="openconfig-extensions" prefix="oc-ext">http://openconfig.net/yang/openconfig-ext</namespace><namespace import="false" module="openconfig-ospfv2" prefix="oc-ospfv2">http://openconfig.net/yang/ospfv2</namespace><namespace import="false" module="openconfig-routing-policy" prefix="oc-rpol">http://openconfig.net/yang/routing-policy</namespace><namespace import="false" module="openconfig-packet-match-types" prefix="oc-pkt-match-types">http://openconfig.net/yang/packet-match-types</namespace><namespace import="false" module="openconfig-mpls-rsvp" prefix="oc-rsvp">http://openconfig.net/yang/rsvp</namespace><namespace import="false" module="openconfig-isis" prefix="oc-isis">http://openconfig.net/yang/openconfig-isis</namespace><namespace import="true" module="openconfig-policy-types" prefix="oc-pt">http://openconfig.net/yang/policy-types</namespace><namespace import="false" module="openconfig-aft" prefix="oc-aft">http://openconfig.net/yang/aft</namespace><namespace import="false" module="openconfig-local-routing" prefix="oc-loc-rt">http://openconfig.net/yang/local-routing</namespace><namespace import="false" module="openconfig-mpls" prefix="oc-mpls">http://openconfig.net/yang/mpls</namespace><namespace import="false" module="openconfig-mpls-ldp" prefix="ldp">http://openconfig.net/yang/ldp</namespace><namespace import="false" module="openconfig-yang-types" prefix="oc-yang">http://openconfig.net/yang/types/yang</namespace><namespace import="false" module="openconfig-network-instance-types" prefix="oc-ni-types">http://openconfig.net/yang/network-instance-types</namespace><namespace import="false" module="openconfig-segment-routing" prefix="oc-sr">http://openconfig.net/yang/sr</namespace><namespace import="false" module="openconfig-if-ethernet" prefix="oc-eth">http://openconfig.net/yang/interfaces/ethernet</namespace><node access="read-write" name="local-routes" type="container"><description><![CDATA[Top-level container for local routes]]>None</description><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for locally defined routes]]>None</description></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for locally defined routes]]>None</description></node><node access="read-write" name="static-routes" type="container"><description><![CDATA[Enclosing container for the list of static routes]]>None</description><node access="read-write" key="prefix" name="static" type="list"><description><![CDATA[List of locally configured static routes]]>None</description><node access="read-write" datatype="-&gt; ../config/prefix" is_key="true" mandatory="true" name="prefix" type="leaf"><description><![CDATA[Reference to the destination prefix list key.]]>None</description></node><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for static routes]]>None</description><node access="read-write" datatype="inet:ip-prefix" name="prefix" type="leaf"><description><![CDATA[Destination prefix for the static route, either IPv4 or
+IPv6.]]>None</description></node><node access="read-write" datatype="oc-pt:tag-type" name="set-tag" type="leaf"><description><![CDATA[Set a generic tag value on the route. This tag can be
+used for filtering routes that are distributed to other
+routing protocols.]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for static routes]]>None</description><node access="read-only" datatype="inet:ip-prefix" name="prefix" type="leaf"><description><![CDATA[Destination prefix for the static route, either IPv4 or
+IPv6.]]>None</description></node><node access="read-only" datatype="oc-pt:tag-type" name="set-tag" type="leaf"><description><![CDATA[Set a generic tag value on the route. This tag can be
+used for filtering routes that are distributed to other
+routing protocols.]]>None</description></node></node><node access="read-write" name="next-hops" type="container"><description><![CDATA[Configuration and state parameters relating to the
+next-hops that are to be utilised for the static
+route being specified]]>None</description><node access="read-write" key="index" name="next-hop" type="list"><description><![CDATA[A list of next-hops to be utilised for the static
+route being specified.]]>None</description><node access="read-write" datatype="-&gt; ../config/index" is_key="true" mandatory="true" name="index" type="leaf"><description><![CDATA[A reference to the index of the current next-hop.
+The index is intended to be a user-specified value
+which can be used to reference the next-hop in
+question, without any other semantics being
+assigned to it.]]>None</description></node><node access="read-write" name="config" type="container"><description><![CDATA[Configuration parameters relating to the next-hop
+entry]]>None</description><node access="read-write" datatype="string" name="index" type="leaf"><description><![CDATA[An user-specified identifier utilised to uniquely reference
+the next-hop entry in the next-hop list. The value of this
+index has no semantic meaning other than for referencing
+the entry.]]>None</description></node><node access="read-write" datatype="union" name="next-hop" type="leaf" values="oc-loc-rt:DROP|oc-loc-rt:LOCAL_LINK"><description><![CDATA[The next-hop that is to be used for the static route
+- this may be specified as an IP address, an interface
+or a pre-defined next-hop type - for instance, DROP or
+LOCAL_LINK. When this leaf is not set, and the interface-ref
+value is specified for the next-hop, then the system should
+treat the prefix as though it is directly connected to the
+interface.]]>None</description></node><node access="read-write" datatype="uint32" name="metric" type="leaf"><description><![CDATA[A metric which is utilised to specify the preference of
+the next-hop entry when it is injected into the RIB. The
+lower the metric, the more preferable the prefix is. When
+this value is not specified the metric is inherited from
+the default metric utilised for static routes within the
+network instance that the static routes are being
+instantiated. When multiple next-hops are specified for a
+static route, the metric is utilised to determine which of
+the next-hops is to be installed in the RIB. When multiple
+next-hops have the same metric (be it specified, or simply
+the default) then these next-hops should all be installed
+in the RIB]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="recurse" type="leaf" values="true|false"><description><![CDATA[Determines whether the next-hop should be allowed to
+be looked up recursively - i.e., via a RIB entry which has
+been installed by a routing protocol, or another static route
+- rather than needing to be connected directly to an
+interface of the local system within the current network
+instance. When the interface reference specified within the
+next-hop entry is set (i.e., is not null) then forwarding is
+restricted to being via the interface specified - and
+recursion is hence disabled.]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state parameters relating to the
+next-hop entry]]>None</description><node access="read-only" datatype="string" name="index" type="leaf"><description><![CDATA[An user-specified identifier utilised to uniquely reference
+the next-hop entry in the next-hop list. The value of this
+index has no semantic meaning other than for referencing
+the entry.]]>None</description></node><node access="read-only" datatype="union" name="next-hop" type="leaf" values="oc-loc-rt:DROP|oc-loc-rt:LOCAL_LINK"><description><![CDATA[The next-hop that is to be used for the static route
+- this may be specified as an IP address, an interface
+or a pre-defined next-hop type - for instance, DROP or
+LOCAL_LINK. When this leaf is not set, and the interface-ref
+value is specified for the next-hop, then the system should
+treat the prefix as though it is directly connected to the
+interface.]]>None</description></node><node access="read-only" datatype="uint32" name="metric" type="leaf"><description><![CDATA[A metric which is utilised to specify the preference of
+the next-hop entry when it is injected into the RIB. The
+lower the metric, the more preferable the prefix is. When
+this value is not specified the metric is inherited from
+the default metric utilised for static routes within the
+network instance that the static routes are being
+instantiated. When multiple next-hops are specified for a
+static route, the metric is utilised to determine which of
+the next-hops is to be installed in the RIB. When multiple
+next-hops have the same metric (be it specified, or simply
+the default) then these next-hops should all be installed
+in the RIB]]>None</description></node><node access="read-only" datatype="boolean" default="false" name="recurse" type="leaf" values="true|false"><description><![CDATA[Determines whether the next-hop should be allowed to
+be looked up recursively - i.e., via a RIB entry which has
+been installed by a routing protocol, or another static route
+- rather than needing to be connected directly to an
+interface of the local system within the current network
+instance. When the interface reference specified within the
+next-hop entry is set (i.e., is not null) then forwarding is
+restricted to being via the interface specified - and
+recursion is hence disabled.]]>None</description></node></node><node access="read-write" name="interface-ref" type="container"><description><![CDATA[Reference to an interface or subinterface]]>None</description><node access="read-write" name="config" type="container"><description><![CDATA[Configured reference to interface / subinterface]]>None</description><node access="read-write" datatype="-&gt; /oc-if:interfaces/interface/name" name="interface" type="leaf"><description><![CDATA[Reference to a base interface.  If a reference to a
+subinterface is required, this leaf must be specified
+to indicate the base interface.]]>None</description></node><node access="read-write" datatype="-&gt; /oc-if:interfaces/interface[oc-if:name=current()/../interface]/subinterfaces/subinterface/index" name="subinterface" type="leaf"><description><![CDATA[Reference to a subinterface -- this requires the base
+interface to be specified using the interface leaf in
+this container.  If only a reference to a base interface
+is requuired, this leaf should not be set.]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state for interface-ref]]>None</description><node access="read-only" datatype="-&gt; /oc-if:interfaces/interface/name" name="interface" type="leaf"><description><![CDATA[Reference to a base interface.  If a reference to a
+subinterface is required, this leaf must be specified
+to indicate the base interface.]]>None</description></node><node access="read-only" datatype="-&gt; /oc-if:interfaces/interface[oc-if:name=current()/../interface]/subinterfaces/subinterface/index" name="subinterface" type="leaf"><description><![CDATA[Reference to a subinterface -- this requires the base
+interface to be specified using the interface leaf in
+this container.  If only a reference to a base interface
+is requuired, this leaf should not be set.]]>None</description></node></node></node></node></node></node></node><node access="read-write" name="local-aggregates" type="container"><description><![CDATA[Enclosing container for locally-defined aggregate
+routes]]>None</description><node access="read-write" key="prefix" name="aggregate" type="list"><description><![CDATA[List of aggregates]]>None</description><node access="read-write" datatype="-&gt; ../config/prefix" is_key="true" mandatory="true" name="prefix" type="leaf"><description><![CDATA[Reference to the configured prefix for this aggregate]]>None</description></node><node access="read-write" name="config" type="container"><description><![CDATA[Configuration data for aggregate advertisements]]>None</description><node access="read-write" datatype="inet:ip-prefix" name="prefix" type="leaf"><description><![CDATA[Aggregate prefix to be advertised]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="discard" type="leaf" values="true|false"><description><![CDATA[When true, install the aggregate route with a discard
+next-hop -- traffic destined to the aggregate will be
+discarded with no ICMP message generated.  When false,
+traffic destined to an aggregate address when no
+constituent routes are present will generate an ICMP
+unreachable message.]]>None</description></node><node access="read-write" datatype="oc-pt:tag-type" name="set-tag" type="leaf"><description><![CDATA[Set a generic tag value on the route. This tag can be
+used for filtering routes that are distributed to other
+routing protocols.]]>None</description></node></node><node access="read-only" name="state" type="container"><description><![CDATA[Operational state data for aggregate
+advertisements]]>None</description><node access="read-only" datatype="inet:ip-prefix" name="prefix" type="leaf"><description><![CDATA[Aggregate prefix to be advertised]]>None</description></node><node access="read-only" datatype="boolean" default="false" name="discard" type="leaf" values="true|false"><description><![CDATA[When true, install the aggregate route with a discard
+next-hop -- traffic destined to the aggregate will be
+discarded with no ICMP message generated.  When false,
+traffic destined to an aggregate address when no
+constituent routes are present will generate an ICMP
+unreachable message.]]>None</description></node><node access="read-only" datatype="oc-pt:tag-type" name="set-tag" type="leaf"><description><![CDATA[Set a generic tag value on the route. This tag can be
+used for filtering routes that are distributed to other
+routing protocols.]]>None</description></node></node></node></node></node></node>

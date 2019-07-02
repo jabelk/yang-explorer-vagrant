@@ -1,0 +1,65 @@
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <get>
+    <filter>
+      <system xmlns="http://openconfig.net/yang/system">
+        <config>
+          <hostname>csr1</hostname>
+          <domain-name>networktocode.com</domain-name>
+        </config>
+      </system>
+    </filter>
+  </get>
+</rpc>
+<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <edit-config>
+    <target>
+      <running/>
+    </target>
+    <config>
+      <system xmlns="http://openconfig.net/yang/system">
+        <ntp>
+          <config>
+            <enabled xc:operation="create">false</enabled>
+            <ntp-source-address xc:operation="create">10.1.1.1</ntp-source-address>
+            <enable-ntp-auth xc:operation="create">true</enable-ntp-auth>
+          </config>
+          <servers>
+            <server>
+              <address>googledns.google.com</address>
+              <config>
+                <address xc:operation="create">googledns.google.com</address>
+                <port xc:operation="create">8080</port>
+                <version xc:operation="create">16</version>
+                <association-type xc:operation="create">SERVER</association-type>
+                <iburst xc:operation="create">true</iburst>
+                <prefer xc:operation="create">true</prefer>
+              </config>
+            </server>
+          </servers>
+        </ntp>
+      </system>
+      <network-instances xmlns="http://openconfig.net/yang/network-instance">
+        <network-instance>
+          <name xc:operation="create">network_instance_name_placeholder</name>
+          <config>
+            <name xc:operation="create">network_instance_name_placeholder</name>
+            <type xc:operation="create" xmlns:oc-ni-types="http://openconfig.net/yang/network-instance-types">oc-ni-types:DEFAULT_INSTANCE</type>
+            <enabled xc:operation="create">true</enabled>
+            <description xc:operation="create">my desc</description>
+          </config>
+        </network-instance>
+      </network-instances>
+      <vlans xmlns="http://openconfig.net/yang/vlan">
+        <vlan>
+          <vlan-id xc:operation="create">300</vlan-id>
+          <config>
+            <vlan-id xc:operation="create">300</vlan-id>
+            <name xc:operation="create">web</name>
+            <status xc:operation="create">ACTIVE</status>
+            <tpid xc:operation="create" xmlns:oc-vlan-types="http://openconfig.net/yang/vlan-types">oc-vlan-types:TPID_0X9200</tpid>
+          </config>
+        </vlan>
+      </vlans>
+    </config>
+  </edit-config>
+</rpc>

@@ -1,0 +1,215 @@
+<node name="ietf-access-control-list" prefix="acl" type="module"><namespace import="false" module="ietf-ethertypes" prefix="ethertypes">urn:ietf:params:xml:ns:yang:ietf-ethertypes</namespace><namespace import="true" module="ietf-interfaces" prefix="if">urn:ietf:params:xml:ns:yang:ietf-interfaces</namespace><namespace import="false" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-packet-fields" prefix="pf">urn:ietf:params:xml:ns:yang:ietf-packet-fields</namespace><namespace import="false" module="ietf-access-control-list" prefix="acl">urn:ietf:params:xml:ns:yang:ietf-access-control-list</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="ietf-acldns" prefix="ietf-acldns">urn:ietf:params:xml:ns:yang:ietf-acldns</namespace><node access="read-write" name="acls" type="container"><description><![CDATA[This is a top-level container for Access Control Lists.
+It can have one or more acl nodes.]]>None</description><node access="read-write" key="name" name="acl" type="list"><description><![CDATA[An ACL is an ordered list of ACEs.  Each ACE has a
+list of match criteria and a list of actions.
+Since there are several kinds of ACLs implemented
+with different attributes for different vendors,
+this model accommodates customizing ACLs for
+each kind and for each vendor.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of the access list.  A device MAY further
+restrict the length of this name; space and special
+characters are not allowed.]]>None</description></node><node access="read-write" datatype="acl-type" name="type" type="leaf"><description><![CDATA[Type of ACL.  Indicates the primary intended
+type of match criteria (e.g., Ethernet, IPv4, IPv6, mixed,
+etc.) used in the list instance.]]>None</description></node><node access="read-write" name="aces" type="container"><description><![CDATA[The aces container contains one or more ACE nodes.]]>None</description><node access="read-write" key="name" name="ace" type="list"><description><![CDATA[List of ACEs.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[A unique name identifying this ACE.]]>None</description></node><node access="read-write" name="matches" type="container"><description><![CDATA[The rules in this set determine what fields will be
+matched upon before any action is taken on them.
+The rules are selected based on the feature set
+defined by the server and the acl-type defined.
+If no matches are defined in a particular container,
+then any packet will match that container.  If no
+matches are specified at all in an ACE, then any
+packet will match the ACE.]]>None</description><node access="read-write" mandatory="true" name="l2" type="choice"><description><![CDATA[Match Layer 2 headers, for example, Ethernet
+header fields.]]>None</description><node access="read-write" name="eth" type="case"><node access="read-write" name="eth" type="container"><description><![CDATA[Rule set that matches Ethernet headers.]]>None</description><node access="read-write" datatype="yang:mac-address" name="destination-mac-address" type="leaf"><description><![CDATA[Destination IEEE 802 Media Access Control (MAC)
+address.]]>None</description></node><node access="read-write" datatype="yang:mac-address" name="destination-mac-address-mask" type="leaf"><description><![CDATA[Destination IEEE 802 MAC address mask.]]>None</description></node><node access="read-write" datatype="yang:mac-address" name="source-mac-address" type="leaf"><description><![CDATA[Source IEEE 802 MAC address.]]>None</description></node><node access="read-write" datatype="yang:mac-address" name="source-mac-address-mask" type="leaf"><description><![CDATA[Source IEEE 802 MAC address mask.]]>None</description></node><node access="read-write" datatype="eth:ethertype" name="ethertype" type="leaf" values="ipv4|arp|wlan|trill|srp|decnet|rarp|appletalk|aarp|vlan|ipx|qnx|ipv6|efc|esp|cobranet|mpls-unicast|mpls-multicast|pppoe-discovery|pppoe-session|intel-ans|jumbo-frames|homeplug|eap|profinet|hyperscsi|aoe|ethercat|provider-bridging|ethernet-powerlink|goose|gse|sv|lldp|sercos|wsmp|homeplug-av-mme|mrp|macsec|pbb|cfm|fcoe|fcoe-ip|roce|tte|hsr"><description><![CDATA[The Ethernet Type (or Length) value represented
+in the canonical order defined by IEEE 802.
+The canonical representation uses lowercase
+characters.]]>None</description></node></node></node></node><node access="read-write" mandatory="true" name="l3" type="choice"><description><![CDATA[Choice of either IPv4 or IPv6 headers]]>None</description><node access="read-write" name="ipv4" type="case"><node access="read-write" name="ipv4" type="container"><description><![CDATA[Rule set that matches IPv4 headers.]]>None</description><node access="read-write" datatype="inet:dscp" name="dscp" type="leaf"><description><![CDATA[Differentiated Services Code Point.]]>None</description></node><node access="read-write" datatype="uint8" name="ecn" type="leaf"><description><![CDATA[Explicit Congestion Notification.]]>None</description></node><node access="read-write" datatype="uint16" name="length" type="leaf"><description><![CDATA[In the IPv4 header field, this field is known as the Total
+Length.  Total Length is the length of the datagram, measured
+in octets, including internet header and data.
+
+In the IPv6 header field, this field is known as the Payload
+Length, which is the length of the IPv6 payload, i.e., the rest
+of the packet following the IPv6 header, in octets.]]>None</description></node><node access="read-write" datatype="uint8" name="ttl" type="leaf"><description><![CDATA[This field indicates the maximum time the datagram is allowed
+to remain in the internet system.  If this field contains the
+value zero, then the datagram must be dropped.
+
+In IPv6, this field is known as the Hop Limit.]]>None</description></node><node access="read-write" datatype="uint8" name="protocol" type="leaf"><description><![CDATA[Internet Protocol number.  Refers to the protocol of the
+payload.  In IPv6, this field is known as 'next-header',
+and if extension headers are present, the protocol is
+present in the 'upper-layer' header.]]>None</description></node><node access="read-write" datatype="uint8" name="ihl" type="leaf"><description><![CDATA[In an IPv4 header field, the Internet Header Length (IHL) is
+the length of the internet header in 32-bit words and
+thus points to the beginning of the data.  Note that the
+minimum value for a correct header is 5.]]>None</description></node><node access="read-write" datatype="bits" name="flags" type="leaf"><description><![CDATA[Bit definitions for the Flags field in the IPv4 header.]]>None</description></node><node access="read-write" datatype="uint16" name="offset" type="leaf"><description><![CDATA[The fragment offset is measured in units of 8 octets (64 bits).
+The first fragment has offset zero.  The length is 13 bits]]>None</description></node><node access="read-write" datatype="uint16" name="identification" type="leaf"><description><![CDATA[An identifying value assigned by the sender to aid in
+assembling the fragments of a datagram.]]>None</description></node><node access="read-write" mandatory="true" name="destination-network" type="choice" values="destination-ipv4-network"><description><![CDATA[Choice of specifying a destination IPv4 address or
+referring to a group of IPv4 destination addresses.]]>None</description><node access="read-write" name="destination-ipv4-network" type="case"><node access="read-write" datatype="inet:ipv4-prefix" name="destination-ipv4-network" type="leaf"><description><![CDATA[Destination IPv4 address prefix.]]>None</description></node></node></node><node access="read-write" mandatory="true" name="source-network" type="choice" values="source-ipv4-network"><description><![CDATA[Choice of specifying a source IPv4 address or
+referring to a group of IPv4 source addresses.]]>None</description><node access="read-write" name="source-ipv4-network" type="case"><node access="read-write" datatype="inet:ipv4-prefix" name="source-ipv4-network" type="leaf"><description><![CDATA[Source IPv4 address prefix.]]>None</description></node></node></node><node access="read-write" datatype="inet:host" name="ietf-acldns:src-dnsname" type="leaf"><description><![CDATA[domain name to be matched against.]]>None</description></node><node access="read-write" datatype="inet:host" name="ietf-acldns:dst-dnsname" type="leaf"><description><![CDATA[domain name to be matched against.]]>None</description></node></node></node><node access="read-write" name="ipv6" type="case"><node access="read-write" name="ipv6" type="container"><description><![CDATA[Rule set that matches IPv6 headers.]]>None</description><node access="read-write" datatype="inet:dscp" name="dscp" type="leaf"><description><![CDATA[Differentiated Services Code Point.]]>None</description></node><node access="read-write" datatype="uint8" name="ecn" type="leaf"><description><![CDATA[Explicit Congestion Notification.]]>None</description></node><node access="read-write" datatype="uint16" name="length" type="leaf"><description><![CDATA[In the IPv4 header field, this field is known as the Total
+Length.  Total Length is the length of the datagram, measured
+in octets, including internet header and data.
+
+In the IPv6 header field, this field is known as the Payload
+Length, which is the length of the IPv6 payload, i.e., the rest
+of the packet following the IPv6 header, in octets.]]>None</description></node><node access="read-write" datatype="uint8" name="ttl" type="leaf"><description><![CDATA[This field indicates the maximum time the datagram is allowed
+to remain in the internet system.  If this field contains the
+value zero, then the datagram must be dropped.
+
+In IPv6, this field is known as the Hop Limit.]]>None</description></node><node access="read-write" datatype="uint8" name="protocol" type="leaf"><description><![CDATA[Internet Protocol number.  Refers to the protocol of the
+payload.  In IPv6, this field is known as 'next-header',
+and if extension headers are present, the protocol is
+present in the 'upper-layer' header.]]>None</description></node><node access="read-write" mandatory="true" name="destination-network" type="choice" values="destination-ipv6-network"><description><![CDATA[Choice of specifying a destination IPv6 address
+or referring to a group of IPv6 destination
+addresses.]]>None</description><node access="read-write" name="destination-ipv6-network" type="case"><node access="read-write" datatype="inet:ipv6-prefix" name="destination-ipv6-network" type="leaf"><description><![CDATA[Destination IPv6 address prefix.]]>None</description></node></node></node><node access="read-write" mandatory="true" name="source-network" type="choice" values="source-ipv6-network"><description><![CDATA[Choice of specifying a source IPv6 address or
+referring to a group of IPv6 source addresses.]]>None</description><node access="read-write" name="source-ipv6-network" type="case"><node access="read-write" datatype="inet:ipv6-prefix" name="source-ipv6-network" type="leaf"><description><![CDATA[Source IPv6 address prefix.]]>None</description></node></node></node><node access="read-write" datatype="inet:ipv6-flow-label" name="flow-label" type="leaf"><description><![CDATA[IPv6 Flow label.]]>None</description></node><node access="read-write" datatype="inet:host" name="ietf-acldns:src-dnsname" type="leaf"><description><![CDATA[domain name to be matched against.]]>None</description></node><node access="read-write" datatype="inet:host" name="ietf-acldns:dst-dnsname" type="leaf"><description><![CDATA[domain name to be matched against.]]>None</description></node></node></node></node><node access="read-write" mandatory="true" name="l4" type="choice"><description><![CDATA[Choice of TCP, UDP, or ICMP headers.]]>None</description><node access="read-write" name="tcp" type="case"><node access="read-write" name="tcp" type="container"><description><![CDATA[Rule set that matches TCP headers.]]>None</description><node access="read-write" datatype="uint32" name="sequence-number" type="leaf"><description><![CDATA[Sequence number that appears in the packet.]]>None</description></node><node access="read-write" datatype="uint32" name="acknowledgement-number" type="leaf"><description><![CDATA[The acknowledgement number that appears in the
+packet.]]>None</description></node><node access="read-write" datatype="uint8" name="data-offset" type="leaf"><description><![CDATA[Specifies the size of the TCP header in 32-bit
+words.  The minimum size header is 5 words and
+the maximum is 15 words; thus, this gives a
+minimum size of 20 bytes and a maximum of 60
+bytes, allowing for up to 40 bytes of options
+in the header.]]>None</description></node><node access="read-write" datatype="uint8" name="reserved" type="leaf"><description><![CDATA[Reserved for future use.]]>None</description></node><node access="read-write" datatype="bits" name="flags" type="leaf"><description><![CDATA[Also known as Control Bits.  Contains nine 1-bit flags.]]>None</description></node><node access="read-write" datatype="uint16" name="window-size" type="leaf"><description><![CDATA[The size of the receive window, which specifies
+the number of window size units beyond the segment
+identified by the sequence number in the Acknowledgement
+field that the sender of this segment is currently
+willing to receive.]]>None</description></node><node access="read-write" datatype="uint16" name="urgent-pointer" type="leaf"><description><![CDATA[This field is an offset from the sequence number
+indicating the last urgent data byte.]]>None</description></node><node access="read-write" datatype="binary" name="options" type="leaf"><description><![CDATA[The length of this field is determined by the
+Data Offset field.  Options have up to three
+fields: Option-Kind (1 byte), Option-Length
+(1 byte), and Option-Data (variable).  The Option-Kind
+field indicates the type of option and is the
+only field that is not optional.  Depending on
+what kind of option we are dealing with,
+the next two fields may be set: the Option-Length
+field indicates the total length of the option,
+and the Option-Data field contains the value of
+the option, if applicable.]]>None</description></node><node access="read-write" name="source-port" type="container"><description><![CDATA[Source port definition.]]>None</description><node access="read-write" mandatory="true" name="source-port" type="choice" values="range-or-operator"><description><![CDATA[Choice of source port definition using
+range/operator or a choice to support future
+'case' statements, such as one enabling a
+group of source ports to be referenced.]]>None</description><node access="read-write" name="range-or-operator" type="case"><description><![CDATA[Source port definition from range or
+operator.]]>None</description><node access="read-write" mandatory="true" name="port-range-or-operator" type="choice" values="range|operator"><description><![CDATA[Choice of specifying a port range or a single
+port along with an operator.]]>None</description><node access="read-write" name="range" type="case"><node access="read-write" datatype="inet:port-number" mandatory="true" name="lower-port" type="leaf"><description><![CDATA[Lower boundary for a port.]]>None</description></node><node access="read-write" datatype="inet:port-number" mandatory="true" name="upper-port" type="leaf"><description><![CDATA[Upper boundary for a port.]]>None</description></node></node><node access="read-write" name="operator" type="case"><node access="read-write" datatype="operator" default="eq" name="operator" type="leaf" values="lte|gte|eq|neq"><description><![CDATA[Operator to be applied on the port below.]]>None</description></node><node access="read-write" datatype="inet:port-number" mandatory="true" name="port" type="leaf"><description><![CDATA[Port number along with the operator on which to
+match.]]>None</description></node></node></node></node></node></node><node access="read-write" name="destination-port" type="container"><description><![CDATA[Destination port definition.]]>None</description><node access="read-write" mandatory="true" name="destination-port" type="choice" values="range-or-operator"><description><![CDATA[Choice of destination port definition using
+range/operator or a choice to support future
+'case' statements, such as one enabling a
+group of destination ports to be referenced.]]>None</description><node access="read-write" name="range-or-operator" type="case"><description><![CDATA[Destination port definition from range or
+operator.]]>None</description><node access="read-write" mandatory="true" name="port-range-or-operator" type="choice" values="range|operator"><description><![CDATA[Choice of specifying a port range or a single
+port along with an operator.]]>None</description><node access="read-write" name="range" type="case"><node access="read-write" datatype="inet:port-number" mandatory="true" name="lower-port" type="leaf"><description><![CDATA[Lower boundary for a port.]]>None</description></node><node access="read-write" datatype="inet:port-number" mandatory="true" name="upper-port" type="leaf"><description><![CDATA[Upper boundary for a port.]]>None</description></node></node><node access="read-write" name="operator" type="case"><node access="read-write" datatype="operator" default="eq" name="operator" type="leaf" values="lte|gte|eq|neq"><description><![CDATA[Operator to be applied on the port below.]]>None</description></node><node access="read-write" datatype="inet:port-number" mandatory="true" name="port" type="leaf"><description><![CDATA[Port number along with the operator on which to
+match.]]>None</description></node></node></node></node></node></node></node></node><node access="read-write" name="udp" type="case"><node access="read-write" name="udp" type="container"><description><![CDATA[Rule set that matches UDP headers.]]>None</description><node access="read-write" datatype="uint16" name="length" type="leaf"><description><![CDATA[A field that specifies the length in bytes of
+the UDP header and UDP data.  The minimum
+length is 8 bytes because that is the length of
+the header.  The field size sets a theoretical
+limit of 65,535 bytes (8-byte header plus 65,527
+bytes of data) for a UDP datagram.  However, the
+actual limit for the data length, which is
+imposed by the underlying IPv4 protocol, is
+65,507 bytes (65,535 minus 8-byte UDP header
+minus 20-byte IP header).
+
+In IPv6 jumbograms, it is possible to have
+UDP packets of a size greater than 65,535 bytes.
+RFC 2675 specifies that the Length field is set
+to zero if the length of the UDP header plus
+UDP data is greater than 65,535.]]>None</description></node><node access="read-write" name="source-port" type="container"><description><![CDATA[Source port definition.]]>None</description><node access="read-write" mandatory="true" name="source-port" type="choice" values="range-or-operator"><description><![CDATA[Choice of source port definition using
+range/operator or a choice to support future
+'case' statements, such as one enabling a
+group of source ports to be referenced.]]>None</description><node access="read-write" name="range-or-operator" type="case"><description><![CDATA[Source port definition from range or
+operator.]]>None</description><node access="read-write" mandatory="true" name="port-range-or-operator" type="choice" values="range|operator"><description><![CDATA[Choice of specifying a port range or a single
+port along with an operator.]]>None</description><node access="read-write" name="range" type="case"><node access="read-write" datatype="inet:port-number" mandatory="true" name="lower-port" type="leaf"><description><![CDATA[Lower boundary for a port.]]>None</description></node><node access="read-write" datatype="inet:port-number" mandatory="true" name="upper-port" type="leaf"><description><![CDATA[Upper boundary for a port.]]>None</description></node></node><node access="read-write" name="operator" type="case"><node access="read-write" datatype="operator" default="eq" name="operator" type="leaf" values="lte|gte|eq|neq"><description><![CDATA[Operator to be applied on the port below.]]>None</description></node><node access="read-write" datatype="inet:port-number" mandatory="true" name="port" type="leaf"><description><![CDATA[Port number along with the operator on which to
+match.]]>None</description></node></node></node></node></node></node><node access="read-write" name="destination-port" type="container"><description><![CDATA[Destination port definition.]]>None</description><node access="read-write" mandatory="true" name="destination-port" type="choice" values="range-or-operator"><description><![CDATA[Choice of destination port definition using
+range/operator or a choice to support future
+'case' statements, such as one enabling a
+group of destination ports to be referenced.]]>None</description><node access="read-write" name="range-or-operator" type="case"><description><![CDATA[Destination port definition from range or
+operator.]]>None</description><node access="read-write" mandatory="true" name="port-range-or-operator" type="choice" values="range|operator"><description><![CDATA[Choice of specifying a port range or a single
+port along with an operator.]]>None</description><node access="read-write" name="range" type="case"><node access="read-write" datatype="inet:port-number" mandatory="true" name="lower-port" type="leaf"><description><![CDATA[Lower boundary for a port.]]>None</description></node><node access="read-write" datatype="inet:port-number" mandatory="true" name="upper-port" type="leaf"><description><![CDATA[Upper boundary for a port.]]>None</description></node></node><node access="read-write" name="operator" type="case"><node access="read-write" datatype="operator" default="eq" name="operator" type="leaf" values="lte|gte|eq|neq"><description><![CDATA[Operator to be applied on the port below.]]>None</description></node><node access="read-write" datatype="inet:port-number" mandatory="true" name="port" type="leaf"><description><![CDATA[Port number along with the operator on which to
+match.]]>None</description></node></node></node></node></node></node></node></node><node access="read-write" name="icmp" type="case"><node access="read-write" name="icmp" type="container"><description><![CDATA[Rule set that matches ICMP headers.]]>None</description><node access="read-write" datatype="uint8" name="type" type="leaf"><description><![CDATA[Also known as control messages.]]>None</description></node><node access="read-write" datatype="uint8" name="code" type="leaf"><description><![CDATA[ICMP subtype.  Also known as control messages.]]>None</description></node><node access="read-write" datatype="binary" name="rest-of-header" type="leaf"><description><![CDATA[Unbounded in length, the contents vary based on the
+ICMP type and code.  Also referred to as 'Message Body'
+in ICMPv6.]]>None</description></node></node></node></node><node access="read-write" datatype="if:interface-ref" name="egress-interface" type="leaf"><description><![CDATA[Egress interface.  This should not be used if this ACL
+is attached as an egress ACL (or the value should
+equal the interface to which the ACL is attached).]]>None</description></node><node access="read-write" datatype="if:interface-ref" name="ingress-interface" type="leaf"><description><![CDATA[Ingress interface.  This should not be used if this ACL
+is attached as an ingress ACL (or the value should
+equal the interface to which the ACL is attached).]]>None</description></node></node><node access="read-write" name="actions" type="container"><description><![CDATA[Definition of actions for this ace entry.]]>None</description><node access="read-write" datatype="identityref:forwarding-action" mandatory="true" name="forwarding" type="leaf" values="acl:accept|acl:drop|acl:reject"><description><![CDATA[Specifies the forwarding action per ace entry.]]>None</description></node><node access="read-write" datatype="identityref:log-action" default="log-none" name="logging" type="leaf" values="acl:log-none|acl:log-syslog"><description><![CDATA[Specifies the log action and destination for
+matched packets.  Default value is not to log the
+packet.]]>None</description></node></node><node access="read-only" name="statistics" type="container"><description><![CDATA[Statistics gathered across all attachment points for the
+given ACL.]]>None</description><node access="read-only" datatype="yang:counter64" name="matched-packets" type="leaf"><description><![CDATA[Count of the number of packets matching the current ACL
+entry.
+
+An implementation should provide this counter on a
+per-interface, per-ACL-entry basis if possible.
+
+If an implementation only supports ACL counters on a per-
+entry basis (i.e., not broken out per interface), then the
+value should be equal to the aggregate count across all
+interfaces.
+
+An implementation that provides counters on a per-entry, per-
+interface basis is not required to also provide an aggregate
+count, e.g., per entry -- the user is expected to be able to
+implement the required aggregation if such a count is
+needed.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="matched-octets" type="leaf"><description><![CDATA[Count of the number of octets (bytes) matching the current
+ACL entry.
+
+An implementation should provide this counter on a
+per-interface, per-ACL-entry basis if possible.
+
+If an implementation only supports ACL counters per entry
+(i.e., not broken out per interface), then the value
+should be equal to the aggregate count across all interfaces.
+
+An implementation that provides counters per entry per
+interface is not required to also provide an aggregate count,
+e.g., per entry -- the user is expected to be able to
+implement the required aggregation if such a count is needed.]]>None</description></node></node></node></node></node><node access="read-write" name="attachment-points" type="container"><description><![CDATA[Enclosing container for the list of
+attachment points on which ACLs are set.]]>None</description><node access="read-write" key="interface-id" name="interface" type="list"><description><![CDATA[List of interfaces on which ACLs are set.]]>None</description><node access="read-write" datatype="if:interface-ref" is_key="true" mandatory="true" name="interface-id" type="leaf"><description><![CDATA[Reference to the interface id list key.]]>None</description></node><node access="read-write" name="ingress" type="container"><description><![CDATA[The ACLs applied to the ingress interface.]]>None</description><node access="read-write" name="acl-sets" type="container"><description><![CDATA[Enclosing container for the list of ingress ACLs on the
+interface.]]>None</description><node access="read-write" key="name" name="acl-set" type="list"><description><![CDATA[List of ingress ACLs on the interface.]]>None</description><node access="read-write" datatype="-&gt; /acls/acl/name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Reference to the ACL name applied on the ingress.]]>None</description></node><node access="read-only" key="name" name="ace-statistics" type="list"><description><![CDATA[List of ACEs.]]>None</description><node access="read-only" datatype="-&gt; /acls/acl/aces/ace/name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Name of the ace entry.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="matched-packets" type="leaf"><description><![CDATA[Count of the number of packets matching the current ACL
+entry.
+
+An implementation should provide this counter on a
+per-interface, per-ACL-entry basis if possible.
+
+If an implementation only supports ACL counters on a per-
+entry basis (i.e., not broken out per interface), then the
+value should be equal to the aggregate count across all
+interfaces.
+
+An implementation that provides counters on a per-entry, per-
+interface basis is not required to also provide an aggregate
+count, e.g., per entry -- the user is expected to be able to
+implement the required aggregation if such a count is
+needed.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="matched-octets" type="leaf"><description><![CDATA[Count of the number of octets (bytes) matching the current
+ACL entry.
+
+An implementation should provide this counter on a
+per-interface, per-ACL-entry basis if possible.
+
+If an implementation only supports ACL counters per entry
+(i.e., not broken out per interface), then the value
+should be equal to the aggregate count across all interfaces.
+
+An implementation that provides counters per entry per
+interface is not required to also provide an aggregate count,
+e.g., per entry -- the user is expected to be able to
+implement the required aggregation if such a count is needed.]]>None</description></node></node></node></node></node><node access="read-write" name="egress" type="container"><description><![CDATA[The ACLs applied to the egress interface.]]>None</description><node access="read-write" name="acl-sets" type="container"><description><![CDATA[Enclosing container for the list of ingress ACLs on the
+interface.]]>None</description><node access="read-write" key="name" name="acl-set" type="list"><description><![CDATA[List of ingress ACLs on the interface.]]>None</description><node access="read-write" datatype="-&gt; /acls/acl/name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Reference to the ACL name applied on the ingress.]]>None</description></node><node access="read-only" key="name" name="ace-statistics" type="list"><description><![CDATA[List of ACEs.]]>None</description><node access="read-only" datatype="-&gt; /acls/acl/aces/ace/name" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Name of the ace entry.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="matched-packets" type="leaf"><description><![CDATA[Count of the number of packets matching the current ACL
+entry.
+
+An implementation should provide this counter on a
+per-interface, per-ACL-entry basis if possible.
+
+If an implementation only supports ACL counters on a per-
+entry basis (i.e., not broken out per interface), then the
+value should be equal to the aggregate count across all
+interfaces.
+
+An implementation that provides counters on a per-entry, per-
+interface basis is not required to also provide an aggregate
+count, e.g., per entry -- the user is expected to be able to
+implement the required aggregation if such a count is
+needed.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="matched-octets" type="leaf"><description><![CDATA[Count of the number of octets (bytes) matching the current
+ACL entry.
+
+An implementation should provide this counter on a
+per-interface, per-ACL-entry basis if possible.
+
+If an implementation only supports ACL counters per entry
+(i.e., not broken out per interface), then the value
+should be equal to the aggregate count across all interfaces.
+
+An implementation that provides counters per entry per
+interface is not required to also provide an aggregate count,
+e.g., per entry -- the user is expected to be able to
+implement the required aggregation if such a count is needed.]]>None</description></node></node></node></node></node></node></node></node></node>

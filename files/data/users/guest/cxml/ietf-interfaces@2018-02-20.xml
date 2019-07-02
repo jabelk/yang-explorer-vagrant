@@ -1,0 +1,591 @@
+<node name="ietf-interfaces" prefix="if" type="module"><namespace import="false" module="ietf-dslite" prefix="dslite">urn:ietf:params:xml:ns:yang:ietf-dslite</namespace><namespace import="false" module="ietf-lime-time-types" prefix="lime">urn:ietf:params:xml:ns:yang:ietf-lime-time-types</namespace><namespace import="false" module="ietf-ptp" prefix="ptp">urn:ietf:params:xml:ns:yang:ietf-ptp</namespace><namespace import="false" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="false" module="openconfig-interfaces" prefix="oc-if">http://openconfig.net/yang/interfaces</namespace><namespace import="false" module="ietf-yang-schema-mount" prefix="yangmnt">urn:ietf:params:xml:ns:yang:ietf-yang-schema-mount</namespace><namespace import="false" module="ietf-connectionless-oam-methods" prefix="cloam-methods">urn:ietf:params:xml:ns:yang:ietf-connectionless-oam-methods</namespace><namespace import="false" module="ietf-network-instance" prefix="ni">urn:ietf:params:xml:ns:yang:ietf-network-instance</namespace><namespace import="false" module="ietf-connectionless-oam" prefix="cl-oam">urn:ietf:params:xml:ns:yang:ietf-connectionless-oam</namespace><namespace import="false" module="ietf-logical-network-element" prefix="lne">urn:ietf:params:xml:ns:yang:ietf-logical-network-element</namespace><namespace import="false" module="ietf-vrrp" prefix="vrrp">urn:ietf:params:xml:ns:yang:ietf-vrrp</namespace><namespace import="false" module="ietf-i2rs-rib" prefix="iir">urn:ietf:params:xml:ns:yang:ietf-i2rs-rib</namespace><namespace import="false" module="ietf-nat" prefix="nat">urn:ietf:params:xml:ns:yang:ietf-nat</namespace><namespace import="false" module="iana-if-type" prefix="ianaift">urn:ietf:params:xml:ns:yang:iana-if-type</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="ietf-network" prefix="nw">urn:ietf:params:xml:ns:yang:ietf-network</namespace><namespace import="false" module="ietf-ip" prefix="ip">urn:ietf:params:xml:ns:yang:ietf-ip</namespace><namespace import="false" module="ietf-routing-types" prefix="rt-types">urn:ietf:params:xml:ns:yang:ietf-routing-types</namespace><namespace import="false" module="ietf-ethertypes" prefix="ethertypes">urn:ietf:params:xml:ns:yang:ietf-ethertypes</namespace><namespace import="false" module="ietf-interfaces" prefix="if">urn:ietf:params:xml:ns:yang:ietf-interfaces</namespace><namespace import="false" module="ietf-connection-oriented-oam" prefix="co-oam">urn:ietf:params:xml:ns:yang:ietf-connection-oriented-oam</namespace><namespace import="false" module="ietf-packet-fields" prefix="packet-fields">urn:ietf:params:xml:ns:yang:ietf-packet-fields</namespace><namespace import="false" module="ietf-routing" prefix="rt">urn:ietf:params:xml:ns:yang:ietf-routing</namespace><namespace import="false" module="openconfig-extensions" prefix="oc-ext">http://openconfig.net/yang/openconfig-ext</namespace><namespace import="false" module="ietf-access-control-list" prefix="acl">urn:ietf:params:xml:ns:yang:ietf-access-control-list</namespace><node access="read-write" name="interfaces" type="container"><description><![CDATA[Interface parameters.]]>None</description><node access="read-write" key="name" name="interface" type="list"><description><![CDATA[The list of interfaces on the device.
+
+The status of an interface is available in this list in the
+operational state.  If the configuration of a
+system-controlled interface cannot be used by the system
+(e.g., the interface hardware present does not match the
+interface type), then the configuration is not applied to
+the system-controlled interface shown in the operational
+state.  If the configuration of a user-controlled interface
+cannot be used by the system, the configured interface is
+not instantiated in the operational state.
+
+System-controlled interfaces created by the system are
+always present in this list in the operational state,
+whether or not they are configured.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of the interface.
+
+A device MAY restrict the allowed values for this leaf,
+possibly depending on the type of the interface.
+For system-controlled interfaces, this leaf is the
+device-specific name of the interface.
+
+If a client tries to create configuration for a
+system-controlled interface that is not present in the
+operational state, the server MAY reject the request if
+the implementation does not support pre-provisioning of
+interfaces or if the name refers to an interface that can
+never exist in the system.  A Network Configuration
+Protocol (NETCONF) server MUST reply with an rpc-error
+with the error-tag 'invalid-value' in this case.
+
+If the device supports pre-provisioning of interface
+configuration, the 'pre-provisioning' feature is
+advertised.
+
+If the device allows arbitrarily named user-controlled
+interfaces, the 'arbitrary-names' feature is advertised.
+
+When a configured user-controlled interface is created by
+the system, it is instantiated with the same name in the
+operational state.
+
+A server implementation MAY map this leaf to the ifName
+MIB object.  Such an implementation needs to use some
+mechanism to handle the differences in size and characters
+allowed between this leaf and ifName.  The definition of
+such a mechanism is outside the scope of this document.]]>None</description></node><node access="read-write" datatype="string" name="description" type="leaf"><description><![CDATA[A textual description of the interface.
+
+A server implementation MAY map this leaf to the ifAlias
+MIB object.  Such an implementation needs to use some
+mechanism to handle the differences in size and characters
+allowed between this leaf and ifAlias.  The definition of
+such a mechanism is outside the scope of this document.
+
+Since ifAlias is defined to be stored in non-volatile
+storage, the MIB implementation MUST map ifAlias to the
+value of 'description' in the persistently stored
+configuration.]]>None</description></node><node access="read-write" datatype="identityref:interface-type" mandatory="true" name="type" type="leaf" values="ianaift:iana-interface-type|ianaift:iana-interface-type"><description><![CDATA[The type of the interface.
+
+When an interface entry is created, a server MAY
+initialize the type leaf with a valid value, e.g., if it
+is possible to derive the type from the name of the
+interface.
+
+If a client tries to set the type of an interface to a
+value that can never be used by the system, e.g., if the
+type is not supported or if the type does not match the
+name of the interface, the server MUST reject the request.
+A NETCONF server MUST reply with an rpc-error with the
+error-tag 'invalid-value' in this case.]]>None</description></node><node access="read-write" datatype="boolean" default="true" name="enabled" type="leaf" values="true|false"><description><![CDATA[This leaf contains the configured, desired state of the
+interface.
+
+Systems that implement the IF-MIB use the value of this
+leaf in the intended configuration to set
+IF-MIB.ifAdminStatus to 'up' or 'down' after an ifEntry
+has been initialized, as described in RFC 2863.
+
+Changes in this leaf in the intended configuration are
+reflected in ifAdminStatus.]]>None</description></node><node access="read-write" datatype="enumeration" name="link-up-down-trap-enable" type="leaf" values="enabled|disabled"><description><![CDATA[Controls whether linkUp/linkDown SNMP notifications
+should be generated for this interface.
+
+If this node is not configured, the value 'enabled' is
+operationally used by the server for interfaces that do
+not operate on top of any other interface (i.e., there are
+no 'lower-layer-if' entries), and 'disabled' otherwise.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="admin-status" type="leaf" values="up|down|testing"><description><![CDATA[The desired state of the interface.
+
+This leaf has the same read semantics as ifAdminStatus.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="oper-status" type="leaf" values="up|down|testing|unknown|dormant|not-present|lower-layer-down"><description><![CDATA[The current operational state of the interface.
+
+This leaf has the same semantics as ifOperStatus.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-change" type="leaf"><description><![CDATA[The time the interface entered its current operational
+state.  If the current state was entered prior to the
+last re-initialization of the local network management
+subsystem, then this node is not present.]]>None</description></node><node access="read-only" datatype="int32" mandatory="true" name="if-index" type="leaf"><description><![CDATA[The ifIndex value for the ifEntry represented by this
+interface.]]>None</description></node><node access="read-only" datatype="yang:phys-address" name="phys-address" type="leaf"><description><![CDATA[The interface's address at its protocol sub-layer.  For
+example, for an 802.x interface, this object normally
+contains a Media Access Control (MAC) address.  The
+interface's media-specific modules must define the bit
+and byte ordering and the format of the value of this
+object.  For interfaces that do not have such an address
+(e.g., a serial line), this node is not present.]]>None</description></node><node access="read-only" datatype="interface-ref" name="higher-layer-if" type="leaf-list"><description><![CDATA[A list of references to interfaces layered on top of this
+interface.]]>None</description></node><node access="read-only" datatype="interface-ref" name="lower-layer-if" type="leaf-list"><description><![CDATA[A list of references to interfaces layered underneath this
+interface.]]>None</description></node><node access="read-only" datatype="yang:gauge64" name="speed" type="leaf"><description><![CDATA[An estimate of the interface's current bandwidth in bits
+per second.  For interfaces that do not vary in
+bandwidth or for those where no accurate estimation can
+be made, this node should contain the nominal bandwidth.
+For interfaces that have no concept of bandwidth, this
+node is not present.]]>None</description></node><node access="read-only" name="statistics" type="container"><description><![CDATA[A collection of interface-related statistics objects.]]>None</description><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="discontinuity-time" type="leaf"><description><![CDATA[The time on the most recent occasion at which any one or
+more of this interface's counters suffered a
+discontinuity.  If no such discontinuities have occurred
+since the last re-initialization of the local management
+subsystem, then this node contains the time the local
+management subsystem re-initialized itself.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-octets" type="leaf"><description><![CDATA[The total number of octets received on the interface,
+including framing characters.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-unicast-pkts" type="leaf"><description><![CDATA[The number of packets, delivered by this sub-layer to a
+higher (sub-)layer, that were not addressed to a
+multicast or broadcast address at this sub-layer.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-broadcast-pkts" type="leaf"><description><![CDATA[The number of packets, delivered by this sub-layer to a
+higher (sub-)layer, that were addressed to a broadcast
+address at this sub-layer.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-multicast-pkts" type="leaf"><description><![CDATA[The number of packets, delivered by this sub-layer to a
+higher (sub-)layer, that were addressed to a multicast
+address at this sub-layer.  For a MAC-layer protocol,
+this includes both Group and Functional addresses.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="in-discards" type="leaf"><description><![CDATA[The number of inbound packets that were chosen to be
+discarded even though no errors had been detected to
+prevent their being deliverable to a higher-layer
+protocol.  One possible reason for discarding such a
+packet could be to free up buffer space.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="in-errors" type="leaf"><description><![CDATA[For packet-oriented interfaces, the number of inbound
+packets that contained errors preventing them from being
+deliverable to a higher-layer protocol.  For character-
+oriented or fixed-length interfaces, the number of
+inbound transmission units that contained errors
+preventing them from being deliverable to a higher-layer
+protocol.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="in-unknown-protos" type="leaf"><description><![CDATA[For packet-oriented interfaces, the number of packets
+received via the interface that were discarded because
+of an unknown or unsupported protocol.  For
+character-oriented or fixed-length interfaces that
+support protocol multiplexing, the number of
+transmission units received via the interface that were
+discarded because of an unknown or unsupported protocol.
+For any interface that does not support protocol
+multiplexing, this counter is not present.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-octets" type="leaf"><description><![CDATA[The total number of octets transmitted out of the
+interface, including framing characters.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-unicast-pkts" type="leaf"><description><![CDATA[The total number of packets that higher-level protocols
+requested be transmitted and that were not addressed
+to a multicast or broadcast address at this sub-layer,
+including those that were discarded or not sent.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-broadcast-pkts" type="leaf"><description><![CDATA[The total number of packets that higher-level protocols
+requested be transmitted and that were addressed to a
+broadcast address at this sub-layer, including those
+that were discarded or not sent.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-multicast-pkts" type="leaf"><description><![CDATA[The total number of packets that higher-level protocols
+requested be transmitted and that were addressed to a
+multicast address at this sub-layer, including those
+that were discarded or not sent.  For a MAC-layer
+protocol, this includes both Group and Functional
+addresses.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="out-discards" type="leaf"><description><![CDATA[The number of outbound packets that were chosen to be
+discarded even though no errors had been detected to
+prevent their being transmitted.  One possible reason
+for discarding such a packet could be to free up buffer
+space.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="out-errors" type="leaf"><description><![CDATA[For packet-oriented interfaces, the number of outbound
+packets that could not be transmitted because of errors.
+For character-oriented or fixed-length interfaces, the
+number of outbound transmission units that could not be
+transmitted because of errors.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node></node><node access="read-write" name="ip:ipv4" presence="true" type="container"><description><![CDATA[Parameters for the IPv4 address family.]]>None</description><node access="read-write" datatype="boolean" default="true" name="ip:enabled" type="leaf" values="true|false"><description><![CDATA[Controls whether IPv4 is enabled or disabled on this
+interface.  When IPv4 is enabled, this interface is
+connected to an IPv4 stack, and the interface can send
+and receive IPv4 packets.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="ip:forwarding" type="leaf" values="true|false"><description><![CDATA[Controls IPv4 packet forwarding of datagrams received by,
+but not addressed to, this interface.  IPv4 routers
+forward datagrams.  IPv4 hosts do not (except those
+source-routed via the host).]]>None</description></node><node access="read-write" datatype="uint16" name="ip:mtu" type="leaf"><description><![CDATA[The size, in octets, of the largest IPv4 packet that the
+interface will send and receive.
+
+The server may restrict the allowed values for this leaf,
+depending on the interface's type.
+
+If this leaf is not configured, the operationally used MTU
+depends on the interface's type.]]>None</description></node><node access="read-write" key="ip" name="ip:address" type="list"><description><![CDATA[The list of IPv4 addresses on the interface.]]>None</description><node access="read-write" datatype="inet:ipv4-address-no-zone" is_key="true" mandatory="true" name="ip:ip" type="leaf"><description><![CDATA[The IPv4 address on the interface.]]>None</description></node><node access="read-write" name="ip:subnet" type="choice"><description><![CDATA[The subnet can be specified as a prefix length or,
+if the server supports non-contiguous netmasks, as
+a netmask.]]>None</description><node access="read-write" name="ip:prefix-length" type="case"><node access="read-write" datatype="uint8" name="ip:prefix-length" type="leaf"><description><![CDATA[The length of the subnet prefix.]]>None</description></node></node><node access="read-write" name="ip:netmask" type="case"><node access="read-write" datatype="yang:dotted-quad" name="ip:netmask" type="leaf"><description><![CDATA[The subnet specified as a netmask.]]>None</description></node></node></node><node access="read-only" datatype="ip-address-origin" name="ip:origin" type="leaf" values="other|static|dhcp|link-layer|random"><description><![CDATA[The origin of this address.]]>None</description></node></node><node access="read-write" key="ip" name="ip:neighbor" type="list"><description><![CDATA[A list of mappings from IPv4 addresses to
+link-layer addresses.
+
+Entries in this list in the intended configuration are
+used as static entries in the ARP Cache.
+
+In the operational state, this list represents the ARP
+Cache.]]>None</description><node access="read-write" datatype="inet:ipv4-address-no-zone" is_key="true" mandatory="true" name="ip:ip" type="leaf"><description><![CDATA[The IPv4 address of the neighbor node.]]>None</description></node><node access="read-write" datatype="yang:phys-address" mandatory="true" name="ip:link-layer-address" type="leaf"><description><![CDATA[The link-layer address of the neighbor node.]]>None</description></node><node access="read-only" datatype="neighbor-origin" name="ip:origin" type="leaf" values="other|static|dynamic"><description><![CDATA[The origin of this neighbor entry.]]>None</description></node></node><node access="read-write" datatype="-&gt; /network-instances/network-instance/name" name="ni:bind-ni-name" type="leaf"><description><![CDATA[Network instance to which IPv4 interface is bound.]]>None</description></node><node access="read-write" name="vrrp:vrrp" type="container"><description><![CDATA[Configures VRRP version 2 or 3 for IPv4.]]>None</description><node access="read-write" key="vrid" name="vrrp:vrrp-instance" type="list"><description><![CDATA[Defines a virtual router, identified by a VRID, within the
+IPv4 address space.]]>None</description><node access="read-write" datatype="uint8" is_key="true" mandatory="true" name="vrrp:vrid" type="leaf"><description><![CDATA[Virtual Router ID (i.e., VRID).]]>None</description></node><node access="read-write" datatype="identityref:vrrp:vrrp-version" mandatory="true" name="vrrp:version" type="leaf" values="vrrp:vrrp-v2|vrrp:vrrp-v3"><description><![CDATA[Version 2 or 3 of VRRP.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="vrrp:log-state-change" type="leaf" values="true|false"><description><![CDATA[Generates VRRP state change messages each time the
+VRRP instance changes state (from 'up' to 'down'
+or 'down' to 'up').]]>None</description></node><node access="read-write" name="vrrp:preempt" type="container"><description><![CDATA[Enables a higher-priority VRRP backup router to preempt a
+lower-priority VRRP master.]]>None</description><node access="read-write" datatype="boolean" default="true" name="vrrp:enabled" type="leaf" values="true|false"><description><![CDATA['true' if preemption is enabled.]]>None</description></node><node access="read-write" datatype="uint16" default="0" name="vrrp:hold-time" type="leaf"><description><![CDATA[Hold time, in seconds, for which a higher-priority VRRP
+backup router must wait before preempting a lower-priority
+VRRP master.]]>None</description></node></node><node access="read-write" datatype="uint8" default="100" name="vrrp:priority" type="leaf"><description><![CDATA[Configures the VRRP election priority for the backup
+virtual router.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="vrrp:accept-mode" type="leaf" values="true|false"><description><![CDATA[Controls whether a virtual router in master state will
+accept packets addressed to the address owner's IPvX address
+as its own if it is not the IPvX address owner.  The default
+is 'false'.  Deployments that rely on, for example, pinging
+the address owner's IPvX address may wish to configure
+accept-mode to 'true'.
+
+Note: IPv6 Neighbor Solicitations and Neighbor
+Advertisements MUST NOT be dropped when accept-mode
+is 'false'.]]>None</description></node><node access="read-write" mandatory="true" name="vrrp:advertise-interval-choice" type="choice" values="v2|v3"><description><![CDATA[The options for the advertisement interval at which VRRPv2
+or VRRPv3 advertisements are sent from the specified
+interface.]]>None</description><node access="read-write" name="vrrp:v2" type="case"><node access="read-write" datatype="uint8" default="1" name="vrrp:advertise-interval-sec" type="leaf"><description><![CDATA[Configures the interval that VRRPv2 advertisements
+are sent from the specified interface.]]>None</description></node></node><node access="read-write" name="vrrp:v3" type="case"><node access="read-write" datatype="uint16" default="100" name="vrrp:advertise-interval-centi-sec" type="leaf"><description><![CDATA[Configures the interval that VRRPv3 advertisements
+are sent from the specified interface.]]>None</description></node></node></node><node access="read-write" name="vrrp:track" type="container"><description><![CDATA[Enables the specified VRRP instance to track interfaces
+or networks.]]>None</description><node access="read-write" name="vrrp:interfaces" type="container"><description><![CDATA[Enables the specified VRRPv2 or VRRPv3 instance to track
+interfaces.  Interface tracking prevents traffic loss by
+detecting the availability of interfaces.  The operational
+states of other interfaces are associated with the
+priority of a VRRP router.  When a tracked interface
+becomes unavailable (or 'operational down'), the priority
+of the VRRP router decrements.  When an unavailable
+interface becomes available again, the priority of the
+VRRP router is incremented by the same amount.]]>None</description><node access="read-write" key="interface" name="vrrp:interface" type="list"><description><![CDATA[Interface to track.]]>None</description><node access="read-write" datatype="if:interface-ref" is_key="true" mandatory="true" name="vrrp:interface" type="leaf"><description><![CDATA[Interface to track.]]>None</description></node><node access="read-write" datatype="uint8" default="10" name="vrrp:priority-decrement" type="leaf"><description><![CDATA[Specifies how much to decrement the priority of the
+VRRP instance if the interface goes down.]]>None</description></node></node></node><node access="read-write" name="vrrp:networks" type="container"><description><![CDATA[Enables the VRRPv2 or VRRPv3 router instance to track the
+specified networks through their IPv4 network prefixes.
+Network tracking prevents traffic loss by detecting
+network connectivity failure.  The states of
+connectivity to some networks are associated with the
+priority of a VRRP router.  When connectivity to a
+tracked network represented by its prefix is lost, the
+priority of the VRRP router decrements.  When an
+unavailable network is again reachable, the priority of
+the VRRP router is incremented by the same amount.]]>None</description><node access="read-write" key="prefix" name="vrrp:network" type="list"><description><![CDATA[Enables the specified VRRPv2 or VRRPv3 instance to
+track an IPv4 network by specifying the prefix of the
+IPv4 network.]]>None</description><node access="read-write" datatype="inet:ipv4-prefix" is_key="true" mandatory="true" name="vrrp:prefix" type="leaf"><description><![CDATA[The IPv4 prefix of the network to track.]]>None</description></node><node access="read-write" datatype="uint8" default="10" name="vrrp:priority-decrement" type="leaf"><description><![CDATA[Specifies how much to decrement the priority of the
+VRRP router if there is a failure in the IPv4
+network.]]>None</description></node></node></node></node><node access="read-write" name="vrrp:virtual-ipv4-addresses" type="container"><description><![CDATA[Configures the virtual IPv4 address for the
+VRRP interface.]]>None</description><node access="read-write" key="ipv4-address" name="vrrp:virtual-ipv4-address" type="list"><description><![CDATA[Virtual IPv4 addresses for a single VRRP instance.  For a
+VRRP owner router, the virtual address must match one
+of the IPv4 addresses configured on the interface
+corresponding to the virtual router.]]>None</description><node access="read-write" datatype="inet:ipv4-address" is_key="true" mandatory="true" name="vrrp:ipv4-address" type="leaf"><description><![CDATA[An IPv4 address associated with a virtual router.]]>None</description></node></node></node><node access="read-only" datatype="identityref:vrrp:vrrp-state-type" name="vrrp:state" type="leaf" values="vrrp:backup|vrrp:initialize|vrrp:master"><description><![CDATA[Operational state.]]>None</description></node><node access="read-only" datatype="boolean" name="vrrp:is-owner" type="leaf" values="true|false"><description><![CDATA[Set to 'true' if this virtual router is the owner.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="vrrp:last-adv-source" type="leaf"><description><![CDATA[Last advertised IPv4/IPv6 source address.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="vrrp:up-datetime" type="leaf"><description><![CDATA[The date and time when this virtual router
+transitioned out of 'init' state.]]>None</description></node><node access="read-only" datatype="uint32" name="vrrp:master-down-interval" type="leaf"><description><![CDATA[Time interval for the backup virtual router to declare
+'master down'.]]>None</description></node><node access="read-only" datatype="uint32" name="vrrp:skew-time" type="leaf"><description><![CDATA[Calculated based on the priority and advertisement
+interval configuration command parameters.  See RFC 3768.]]>None</description></node><node access="read-only" datatype="identityref:vrrp:vrrp-event-type" name="vrrp:last-event" type="leaf" values="vrrp:vrrp-event-higher-priority-backup|vrrp:vrrp-event-interface-down|vrrp:vrrp-event-interface-up|vrrp:vrrp-event-lower-priority-master|vrrp:vrrp-event-master-timeout|vrrp:vrrp-event-no-primary-ip-address|vrrp:vrrp-event-no-virtual-ip-addresses|vrrp:vrrp-event-none|vrrp:vrrp-event-owner-preempt|vrrp:vrrp-event-preempt-hold-timeout|vrrp:vrrp-event-primary-ip-address|vrrp:vrrp-event-shutdown|vrrp:vrrp-event-startup|vrrp:vrrp-event-virtual-ip-addresses"><description><![CDATA[Last reported event.]]>None</description></node><node access="read-only" datatype="new-master-reason-type" name="vrrp:new-master-reason" type="leaf" values="not-master|priority|preempted|no-response"><description><![CDATA[Indicates why the virtual router has transitioned to
+master state.]]>None</description></node><node access="read-only" name="vrrp:statistics" type="container"><description><![CDATA[VRRP statistics.]]>None</description><node access="read-only" datatype="yang:date-and-time" name="vrrp:discontinuity-datetime" type="leaf"><description><![CDATA[The time on the most recent occasion at which any one or
+more of the VRRP statistics counters suffered a
+discontinuity.  If no such discontinuities have occurred
+since the last re-initialization of the local management
+subsystem, then this node contains the time that the
+local management subsystem re-initialized itself.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="vrrp:master-transitions" type="leaf"><description><![CDATA[The total number of times that this virtual router's
+state has transitioned to 'master'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:advertisement-rcvd" type="leaf"><description><![CDATA[The total number of VRRP advertisements received by
+this virtual router.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:advertisement-sent" type="leaf"><description><![CDATA[The total number of VRRP advertisements sent by
+this virtual router.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:interval-errors" type="leaf"><description><![CDATA[The total number of VRRP advertisement packets received
+with an advertisement interval different than the
+interval configured for the local virtual router.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:priority-zero-pkts-rcvd" type="leaf"><description><![CDATA[The total number of VRRP packets received by the
+virtual router with a priority of 0.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:priority-zero-pkts-sent" type="leaf"><description><![CDATA[The total number of VRRP packets sent by the
+virtual router with a priority of 0.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:invalid-type-pkts-rcvd" type="leaf"><description><![CDATA[The number of VRRP packets received by the virtual
+router with an invalid value in the 'type' field.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:address-list-errors" type="leaf"><description><![CDATA[The total number of packets received with an
+address list that does not match the locally
+configured address list for the virtual router.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:packet-length-errors" type="leaf"><description><![CDATA[The total number of packets received with a packet
+length less than the length of the VRRP header.]]>None</description></node></node></node></node></node><node access="read-write" name="ip:ipv6" presence="true" type="container"><description><![CDATA[Parameters for the IPv6 address family.]]>None</description><node access="read-write" datatype="boolean" default="true" name="ip:enabled" type="leaf" values="true|false"><description><![CDATA[Controls whether IPv6 is enabled or disabled on this
+interface.  When IPv6 is enabled, this interface is
+connected to an IPv6 stack, and the interface can send
+and receive IPv6 packets.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="ip:forwarding" type="leaf" values="true|false"><description><![CDATA[Controls IPv6 packet forwarding of datagrams received by,
+but not addressed to, this interface.  IPv6 routers
+forward datagrams.  IPv6 hosts do not (except those
+source-routed via the host).]]>None</description></node><node access="read-write" datatype="uint32" name="ip:mtu" type="leaf"><description><![CDATA[The size, in octets, of the largest IPv6 packet that the
+interface will send and receive.
+
+The server may restrict the allowed values for this leaf,
+depending on the interface's type.
+
+If this leaf is not configured, the operationally used MTU
+depends on the interface's type.]]>None</description></node><node access="read-write" key="ip" name="ip:address" type="list"><description><![CDATA[The list of IPv6 addresses on the interface.]]>None</description><node access="read-write" datatype="inet:ipv6-address-no-zone" is_key="true" mandatory="true" name="ip:ip" type="leaf"><description><![CDATA[The IPv6 address on the interface.]]>None</description></node><node access="read-write" datatype="uint8" mandatory="true" name="ip:prefix-length" type="leaf"><description><![CDATA[The length of the subnet prefix.]]>None</description></node><node access="read-only" datatype="ip-address-origin" name="ip:origin" type="leaf" values="other|static|dhcp|link-layer|random"><description><![CDATA[The origin of this address.]]>None</description></node><node access="read-only" datatype="enumeration" name="ip:status" type="leaf" values="preferred|deprecated|invalid|inaccessible|unknown|tentative|duplicate|optimistic"><description><![CDATA[The status of an address.  Most of the states correspond
+to states from the IPv6 Stateless Address
+Autoconfiguration protocol.]]>None</description></node></node><node access="read-write" key="ip" name="ip:neighbor" type="list"><description><![CDATA[A list of mappings from IPv6 addresses to
+link-layer addresses.
+
+Entries in this list in the intended configuration are
+used as static entries in the Neighbor Cache.
+
+In the operational state, this list represents the
+Neighbor Cache.]]>None</description><node access="read-write" datatype="inet:ipv6-address-no-zone" is_key="true" mandatory="true" name="ip:ip" type="leaf"><description><![CDATA[The IPv6 address of the neighbor node.]]>None</description></node><node access="read-write" datatype="yang:phys-address" mandatory="true" name="ip:link-layer-address" type="leaf"><description><![CDATA[The link-layer address of the neighbor node.
+
+In the operational state, if the neighbor's 'state' leaf
+is 'incomplete', this leaf is not instantiated.]]>None</description></node><node access="read-only" datatype="neighbor-origin" name="ip:origin" type="leaf" values="other|static|dynamic"><description><![CDATA[The origin of this neighbor entry.]]>None</description></node><node access="read-only" datatype="empty" name="ip:is-router" type="leaf"><description><![CDATA[Indicates that the neighbor node acts as a router.]]>None</description></node><node access="read-only" datatype="enumeration" name="ip:state" type="leaf" values="incomplete|reachable|stale|delay|probe"><description><![CDATA[The Neighbor Unreachability Detection state of this
+entry.]]>None</description></node></node><node access="read-write" datatype="uint32" default="1" name="ip:dup-addr-detect-transmits" type="leaf"><description><![CDATA[The number of consecutive Neighbor Solicitation messages
+sent while performing Duplicate Address Detection on a
+tentative address.  A value of zero indicates that
+Duplicate Address Detection is not performed on
+tentative addresses.  A value of one indicates a single
+transmission with no follow-up retransmissions.]]>None</description></node><node access="read-write" name="ip:autoconf" type="container"><description><![CDATA[Parameters to control the autoconfiguration of IPv6
+addresses, as described in RFC 4862.]]>None</description><node access="read-write" datatype="boolean" default="true" name="ip:create-global-addresses" type="leaf" values="true|false"><description><![CDATA[If enabled, the host creates global addresses as
+described in RFC 4862.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="ip:create-temporary-addresses" type="leaf" values="true|false"><description><![CDATA[If enabled, the host creates temporary addresses as
+described in RFC 4941.]]>None</description></node><node access="read-write" datatype="uint32" default="604800" name="ip:temporary-valid-lifetime" type="leaf"><description><![CDATA[The time period during which the temporary address
+is valid.]]>None</description></node><node access="read-write" datatype="uint32" default="86400" name="ip:temporary-preferred-lifetime" type="leaf"><description><![CDATA[The time period during which the temporary address is
+preferred.]]>None</description></node></node><node access="read-write" datatype="-&gt; /network-instances/network-instance/name" name="ni:bind-ni-name" type="leaf"><description><![CDATA[Network instance to which IPv6 interface is bound.]]>None</description></node><node access="read-write" name="vrrp:vrrp" type="container"><description><![CDATA[Configures VRRP version 3 for IPv6.]]>None</description><node access="read-write" key="vrid" name="vrrp:vrrp-instance" type="list"><description><![CDATA[Defines a virtual router, identified by a VRID, within the
+IPv6 address space.]]>None</description><node access="read-write" datatype="uint8" is_key="true" mandatory="true" name="vrrp:vrid" type="leaf"><description><![CDATA[Virtual Router ID (i.e., VRID).]]>None</description></node><node access="read-write" datatype="identityref:vrrp:vrrp-version" mandatory="true" name="vrrp:version" type="leaf" values="vrrp:vrrp-v2|vrrp:vrrp-v3"><description><![CDATA[Version 2 or 3 of VRRP.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="vrrp:log-state-change" type="leaf" values="true|false"><description><![CDATA[Generates VRRP state change messages each time the
+VRRP instance changes state (from 'up' to 'down'
+or 'down' to 'up').]]>None</description></node><node access="read-write" name="vrrp:preempt" type="container"><description><![CDATA[Enables a higher-priority VRRP backup router to preempt a
+lower-priority VRRP master.]]>None</description><node access="read-write" datatype="boolean" default="true" name="vrrp:enabled" type="leaf" values="true|false"><description><![CDATA['true' if preemption is enabled.]]>None</description></node><node access="read-write" datatype="uint16" default="0" name="vrrp:hold-time" type="leaf"><description><![CDATA[Hold time, in seconds, for which a higher-priority VRRP
+backup router must wait before preempting a lower-priority
+VRRP master.]]>None</description></node></node><node access="read-write" datatype="uint8" default="100" name="vrrp:priority" type="leaf"><description><![CDATA[Configures the VRRP election priority for the backup
+virtual router.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="vrrp:accept-mode" type="leaf" values="true|false"><description><![CDATA[Controls whether a virtual router in master state will
+accept packets addressed to the address owner's IPvX address
+as its own if it is not the IPvX address owner.  The default
+is 'false'.  Deployments that rely on, for example, pinging
+the address owner's IPvX address may wish to configure
+accept-mode to 'true'.
+
+Note: IPv6 Neighbor Solicitations and Neighbor
+Advertisements MUST NOT be dropped when accept-mode
+is 'false'.]]>None</description></node><node access="read-write" datatype="uint16" default="100" name="vrrp:advertise-interval-centi-sec" type="leaf"><description><![CDATA[Configures the interval that VRRPv3 advertisements
+are sent from the specified interface.]]>None</description></node><node access="read-write" name="vrrp:track" type="container"><description><![CDATA[Enables the specified VRRP instance to track interfaces
+or networks.]]>None</description><node access="read-write" name="vrrp:interfaces" type="container"><description><![CDATA[Enables the specified VRRPv2 or VRRPv3 instance to track
+interfaces.  Interface tracking prevents traffic loss by
+detecting the availability of interfaces.  The operational
+states of other interfaces are associated with the
+priority of a VRRP router.  When a tracked interface
+becomes unavailable (or 'operational down'), the priority
+of the VRRP router decrements.  When an unavailable
+interface becomes available again, the priority of the
+VRRP router is incremented by the same amount.]]>None</description><node access="read-write" key="interface" name="vrrp:interface" type="list"><description><![CDATA[Interface to track.]]>None</description><node access="read-write" datatype="if:interface-ref" is_key="true" mandatory="true" name="vrrp:interface" type="leaf"><description><![CDATA[Interface to track.]]>None</description></node><node access="read-write" datatype="uint8" default="10" name="vrrp:priority-decrement" type="leaf"><description><![CDATA[Specifies how much to decrement the priority of the
+VRRP instance if the interface goes down.]]>None</description></node></node></node><node access="read-write" name="vrrp:networks" type="container"><description><![CDATA[Enables the VRRPv2 or VRRPv3 router instance to track the
+specified networks through their IPv6 network prefixes.
+Network tracking prevents traffic loss by detecting
+network connectivity failure.  The states of
+connectivity to some networks are associated with the
+priority of a VRRP router.  When connectivity to a
+tracked network represented by its prefix is lost, the
+priority of the VRRP router decrements.  When an
+unavailable network is again reachable, the priority of
+the VRRP router is incremented by the same amount.]]>None</description><node access="read-write" key="prefix" name="vrrp:network" type="list"><description><![CDATA[Enables the specified VRRPv2 or VRRPv3 instance to
+track an IPv6 network by specifying the prefix of the
+IPv6 network.]]>None</description><node access="read-write" datatype="inet:ipv6-prefix" is_key="true" mandatory="true" name="vrrp:prefix" type="leaf"><description><![CDATA[The IPv6 prefix of the network to track.]]>None</description></node><node access="read-write" datatype="uint8" default="10" name="vrrp:priority-decrement" type="leaf"><description><![CDATA[Specifies how much to decrement the priority of the
+VRRP router if there is a failure in the IPv6
+network.]]>None</description></node></node></node></node><node access="read-write" name="vrrp:virtual-ipv6-addresses" type="container"><description><![CDATA[Configures the virtual IPv6 address for the
+VRRP interface.]]>None</description><node access="read-write" key="ipv6-address" name="vrrp:virtual-ipv6-address" type="list"><description><![CDATA[Two IPv6 addresses are allowed.  The first address must
+be a link-local address.  The second address can be a
+link-local or global address.]]>None</description><node access="read-write" datatype="inet:ipv6-address" is_key="true" mandatory="true" name="vrrp:ipv6-address" type="leaf"><description><![CDATA[An IPv6 address associated with a virtual router.]]>None</description></node></node></node><node access="read-only" datatype="identityref:vrrp:vrrp-state-type" name="vrrp:state" type="leaf" values="vrrp:backup|vrrp:initialize|vrrp:master"><description><![CDATA[Operational state.]]>None</description></node><node access="read-only" datatype="boolean" name="vrrp:is-owner" type="leaf" values="true|false"><description><![CDATA[Set to 'true' if this virtual router is the owner.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="vrrp:last-adv-source" type="leaf"><description><![CDATA[Last advertised IPv4/IPv6 source address.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="vrrp:up-datetime" type="leaf"><description><![CDATA[The date and time when this virtual router
+transitioned out of 'init' state.]]>None</description></node><node access="read-only" datatype="uint32" name="vrrp:master-down-interval" type="leaf"><description><![CDATA[Time interval for the backup virtual router to declare
+'master down'.]]>None</description></node><node access="read-only" datatype="uint32" name="vrrp:skew-time" type="leaf"><description><![CDATA[Calculated based on the priority and advertisement
+interval configuration command parameters.  See RFC 3768.]]>None</description></node><node access="read-only" datatype="identityref:vrrp:vrrp-event-type" name="vrrp:last-event" type="leaf" values="vrrp:vrrp-event-higher-priority-backup|vrrp:vrrp-event-interface-down|vrrp:vrrp-event-interface-up|vrrp:vrrp-event-lower-priority-master|vrrp:vrrp-event-master-timeout|vrrp:vrrp-event-no-primary-ip-address|vrrp:vrrp-event-no-virtual-ip-addresses|vrrp:vrrp-event-none|vrrp:vrrp-event-owner-preempt|vrrp:vrrp-event-preempt-hold-timeout|vrrp:vrrp-event-primary-ip-address|vrrp:vrrp-event-shutdown|vrrp:vrrp-event-startup|vrrp:vrrp-event-virtual-ip-addresses"><description><![CDATA[Last reported event.]]>None</description></node><node access="read-only" datatype="new-master-reason-type" name="vrrp:new-master-reason" type="leaf" values="not-master|priority|preempted|no-response"><description><![CDATA[Indicates why the virtual router has transitioned to
+master state.]]>None</description></node><node access="read-only" name="vrrp:statistics" type="container"><description><![CDATA[VRRP statistics.]]>None</description><node access="read-only" datatype="yang:date-and-time" name="vrrp:discontinuity-datetime" type="leaf"><description><![CDATA[The time on the most recent occasion at which any one or
+more of the VRRP statistics counters suffered a
+discontinuity.  If no such discontinuities have occurred
+since the last re-initialization of the local management
+subsystem, then this node contains the time that the
+local management subsystem re-initialized itself.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="vrrp:master-transitions" type="leaf"><description><![CDATA[The total number of times that this virtual router's
+state has transitioned to 'master'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:advertisement-rcvd" type="leaf"><description><![CDATA[The total number of VRRP advertisements received by
+this virtual router.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:advertisement-sent" type="leaf"><description><![CDATA[The total number of VRRP advertisements sent by
+this virtual router.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:interval-errors" type="leaf"><description><![CDATA[The total number of VRRP advertisement packets received
+with an advertisement interval different than the
+interval configured for the local virtual router.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:priority-zero-pkts-rcvd" type="leaf"><description><![CDATA[The total number of VRRP packets received by the
+virtual router with a priority of 0.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:priority-zero-pkts-sent" type="leaf"><description><![CDATA[The total number of VRRP packets sent by the
+virtual router with a priority of 0.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:invalid-type-pkts-rcvd" type="leaf"><description><![CDATA[The number of VRRP packets received by the virtual
+router with an invalid value in the 'type' field.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:address-list-errors" type="leaf"><description><![CDATA[The total number of packets received with an
+address list that does not match the locally
+configured address list for the virtual router.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="vrrp:packet-length-errors" type="leaf"><description><![CDATA[The total number of packets received with a packet
+length less than the length of the VRRP header.]]>None</description></node></node></node></node></node><node access="read-write" datatype="-&gt; /network-instances/network-instance/name" name="ni:bind-ni-name" type="leaf"><description><![CDATA[Network instance to which an interface is bound.]]>None</description></node><node access="read-write" datatype="inet:ipv6-address" name="dslite:ipv6-address" type="leaf"><description><![CDATA[IPv6 address of the local DS-Lite endpoint (AFTR or B4).]]>None</description></node><node access="read-write" datatype="inet:ipv4-address" name="dslite:ipv4-address" type="leaf"><description><![CDATA[IPv4 address of the local DS-Lite AFTR or B4.
+
+192.0.0.1 is reserved for the AFTR element, while
+192.0.0.0/29 is reserved for the B4 element.
+
+This address can be used to report ICMP problems and will
+appear in traceroute outputs.]]>None</description></node><node access="read-write" datatype="inet:ipv6-address" name="dslite:aftr-ipv6-addr" type="leaf"><description><![CDATA[Indicates the AFTR's IPv6 address to be used by a B4
+element.]]>None</description></node><node access="read-write" datatype="uint16" name="dslite:tunnel-mtu" type="leaf"><description><![CDATA[Configures a tunnel MTU.
+
+RFC 6908 specifies that since fragmentation and reassembly
+are not optimal, the operator should do everything possible
+to eliminate the need for them.  If the operator uses simple
+IPv4-in-IPv6 softwire, it is recommended that the MTU size
+of the IPv6 network between the B4 and the AFTR account
+for the additional overhead (40 bytes).]]>None</description></node><node access="read-write" datatype="boolean" name="dslite:v6-v4-dscp-preservation" type="leaf" values="true|false"><description><![CDATA[Copies the DSCP value from the IPv6 header, and vice versa.
+
+According to Section 2.10 of RFC 6908, operators should
+use the uniform model by provisioning the network such
+that the AFTR/B4 copies the DSCP value in the IPv4 header
+to the Traffic Class field in the IPv6 header, after the
+IPv4-in-IPv6 encapsulation.]]>None</description></node><node access="read-write" datatype="-&gt; /logical-network-elements/logical-network-element/name" name="lne:bind-lne-name" type="leaf"><description><![CDATA[Logical network element ID to which the interface is
+bound.]]>None</description></node></node></node><node access="read-only" name="interfaces-state" type="container"><description><![CDATA[Data nodes for the operational state of interfaces.]]>None</description><node access="read-only" key="name" name="interface" type="list"><description><![CDATA[The list of interfaces on the device.
+
+System-controlled interfaces created by the system are
+always present in this list, whether or not they are
+configured.]]>None</description><node access="read-only" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of the interface.
+
+A server implementation MAY map this leaf to the ifName
+MIB object.  Such an implementation needs to use some
+mechanism to handle the differences in size and characters
+allowed between this leaf and ifName.  The definition of
+such a mechanism is outside the scope of this document.]]>None</description></node><node access="read-only" datatype="identityref:interface-type" mandatory="true" name="type" type="leaf" values="ianaift:iana-interface-type|ianaift:iana-interface-type"><description><![CDATA[The type of the interface.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="admin-status" type="leaf" values="up|down|testing"><description><![CDATA[The desired state of the interface.
+
+This leaf has the same read semantics as ifAdminStatus.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="oper-status" type="leaf" values="up|down|testing|unknown|dormant|not-present|lower-layer-down"><description><![CDATA[The current operational state of the interface.
+
+This leaf has the same semantics as ifOperStatus.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-change" type="leaf"><description><![CDATA[The time the interface entered its current operational
+state.  If the current state was entered prior to the
+last re-initialization of the local network management
+subsystem, then this node is not present.]]>None</description></node><node access="read-only" datatype="int32" mandatory="true" name="if-index" type="leaf"><description><![CDATA[The ifIndex value for the ifEntry represented by this
+interface.]]>None</description></node><node access="read-only" datatype="yang:phys-address" name="phys-address" type="leaf"><description><![CDATA[The interface's address at its protocol sub-layer.  For
+example, for an 802.x interface, this object normally
+contains a Media Access Control (MAC) address.  The
+interface's media-specific modules must define the bit
+and byte ordering and the format of the value of this
+object.  For interfaces that do not have such an address
+(e.g., a serial line), this node is not present.]]>None</description></node><node access="read-only" datatype="interface-state-ref" name="higher-layer-if" type="leaf-list"><description><![CDATA[A list of references to interfaces layered on top of this
+interface.]]>None</description></node><node access="read-only" datatype="interface-state-ref" name="lower-layer-if" type="leaf-list"><description><![CDATA[A list of references to interfaces layered underneath this
+interface.]]>None</description></node><node access="read-only" datatype="yang:gauge64" name="speed" type="leaf"><description><![CDATA[An estimate of the interface's current bandwidth in bits
+per second.  For interfaces that do not vary in
+bandwidth or for those where no accurate estimation can
+
+be made, this node should contain the nominal bandwidth.
+For interfaces that have no concept of bandwidth, this
+node is not present.]]>None</description></node><node access="read-only" name="statistics" type="container"><description><![CDATA[A collection of interface-related statistics objects.]]>None</description><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="discontinuity-time" type="leaf"><description><![CDATA[The time on the most recent occasion at which any one or
+more of this interface's counters suffered a
+discontinuity.  If no such discontinuities have occurred
+since the last re-initialization of the local management
+subsystem, then this node contains the time the local
+management subsystem re-initialized itself.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-octets" type="leaf"><description><![CDATA[The total number of octets received on the interface,
+including framing characters.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-unicast-pkts" type="leaf"><description><![CDATA[The number of packets, delivered by this sub-layer to a
+higher (sub-)layer, that were not addressed to a
+multicast or broadcast address at this sub-layer.
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-broadcast-pkts" type="leaf"><description><![CDATA[The number of packets, delivered by this sub-layer to a
+higher (sub-)layer, that were addressed to a broadcast
+address at this sub-layer.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="in-multicast-pkts" type="leaf"><description><![CDATA[The number of packets, delivered by this sub-layer to a
+higher (sub-)layer, that were addressed to a multicast
+address at this sub-layer.  For a MAC-layer protocol,
+this includes both Group and Functional addresses.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="in-discards" type="leaf"><description><![CDATA[The number of inbound packets that were chosen to be
+discarded even though no errors had been detected to
+prevent their being deliverable to a higher-layer
+protocol.  One possible reason for discarding such a
+packet could be to free up buffer space.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="in-errors" type="leaf"><description><![CDATA[For packet-oriented interfaces, the number of inbound
+packets that contained errors preventing them from being
+deliverable to a higher-layer protocol.  For character-
+oriented or fixed-length interfaces, the number of
+inbound transmission units that contained errors
+preventing them from being deliverable to a higher-layer
+protocol.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="in-unknown-protos" type="leaf"><description><![CDATA[For packet-oriented interfaces, the number of packets
+received via the interface that were discarded because
+of an unknown or unsupported protocol.  For
+character-oriented or fixed-length interfaces that
+support protocol multiplexing, the number of
+transmission units received via the interface that were
+discarded because of an unknown or unsupported protocol.
+For any interface that does not support protocol
+multiplexing, this counter is not present.
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-octets" type="leaf"><description><![CDATA[The total number of octets transmitted out of the
+interface, including framing characters.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-unicast-pkts" type="leaf"><description><![CDATA[The total number of packets that higher-level protocols
+requested be transmitted and that were not addressed
+to a multicast or broadcast address at this sub-layer,
+including those that were discarded or not sent.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-broadcast-pkts" type="leaf"><description><![CDATA[The total number of packets that higher-level protocols
+requested be transmitted and that were addressed to a
+broadcast address at this sub-layer, including those
+that were discarded or not sent.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="out-multicast-pkts" type="leaf"><description><![CDATA[The total number of packets that higher-level protocols
+requested be transmitted and that were addressed to a
+multicast address at this sub-layer, including those
+that were discarded or not sent.  For a MAC-layer
+protocol, this includes both Group and Functional
+addresses.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="out-discards" type="leaf"><description><![CDATA[The number of outbound packets that were chosen to be
+discarded even though no errors had been detected to
+prevent their being transmitted.  One possible reason
+for discarding such a packet could be to free up buffer
+space.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="out-errors" type="leaf"><description><![CDATA[For packet-oriented interfaces, the number of outbound
+packets that could not be transmitted because of errors.
+For character-oriented or fixed-length interfaces, the
+number of outbound transmission units that could not be
+transmitted because of errors.
+
+Discontinuities in the value of this counter can occur
+at re-initialization of the management system and at
+other times as indicated by the value of
+'discontinuity-time'.]]>None</description></node></node><node access="read-only" name="ip:ipv4" presence="true" type="container"><description><![CDATA[Interface-specific parameters for the IPv4 address family.]]>None</description><node access="read-only" datatype="boolean" name="ip:forwarding" type="leaf" values="true|false"><description><![CDATA[Indicates whether IPv4 packet forwarding is enabled or
+disabled on this interface.]]>None</description></node><node access="read-only" datatype="uint16" name="ip:mtu" type="leaf"><description><![CDATA[The size, in octets, of the largest IPv4 packet that the
+interface will send and receive.]]>None</description></node><node access="read-only" key="ip" name="ip:address" type="list"><description><![CDATA[The list of IPv4 addresses on the interface.]]>None</description><node access="read-only" datatype="inet:ipv4-address-no-zone" is_key="true" mandatory="true" name="ip:ip" type="leaf"><description><![CDATA[The IPv4 address on the interface.]]>None</description></node><node access="read-only" mandatory="true" name="ip:subnet" type="choice"><description><![CDATA[The subnet can be specified as a prefix length or,
+if the server supports non-contiguous netmasks, as
+a netmask.]]>None</description><node access="read-only" name="ip:prefix-length" type="case"><node access="read-only" datatype="uint8" name="ip:prefix-length" type="leaf"><description><![CDATA[The length of the subnet prefix.]]>None</description></node></node><node access="read-only" name="ip:netmask" type="case"><node access="read-only" datatype="yang:dotted-quad" name="ip:netmask" type="leaf"><description><![CDATA[The subnet specified as a netmask.]]>None</description></node></node></node><node access="read-only" datatype="ip-address-origin" name="ip:origin" type="leaf" values="other|static|dhcp|link-layer|random"><description><![CDATA[The origin of this address.]]>None</description></node></node><node access="read-only" key="ip" name="ip:neighbor" type="list"><description><![CDATA[A list of mappings from IPv4 addresses to
+link-layer addresses.
+
+This list represents the ARP Cache.]]>None</description><node access="read-only" datatype="inet:ipv4-address-no-zone" is_key="true" mandatory="true" name="ip:ip" type="leaf"><description><![CDATA[The IPv4 address of the neighbor node.]]>None</description></node><node access="read-only" datatype="yang:phys-address" name="ip:link-layer-address" type="leaf"><description><![CDATA[The link-layer address of the neighbor node.]]>None</description></node><node access="read-only" datatype="neighbor-origin" name="ip:origin" type="leaf" values="other|static|dynamic"><description><![CDATA[The origin of this neighbor entry.]]>None</description></node></node></node><node access="read-only" name="ip:ipv6" presence="true" type="container"><description><![CDATA[Parameters for the IPv6 address family.]]>None</description><node access="read-only" datatype="boolean" default="false" name="ip:forwarding" type="leaf" values="true|false"><description><![CDATA[Indicates whether IPv6 packet forwarding is enabled or
+disabled on this interface.]]>None</description></node><node access="read-only" datatype="uint32" name="ip:mtu" type="leaf"><description><![CDATA[The size, in octets, of the largest IPv6 packet that the
+interface will send and receive.]]>None</description></node><node access="read-only" key="ip" name="ip:address" type="list"><description><![CDATA[The list of IPv6 addresses on the interface.]]>None</description><node access="read-only" datatype="inet:ipv6-address-no-zone" is_key="true" mandatory="true" name="ip:ip" type="leaf"><description><![CDATA[The IPv6 address on the interface.]]>None</description></node><node access="read-only" datatype="uint8" mandatory="true" name="ip:prefix-length" type="leaf"><description><![CDATA[The length of the subnet prefix.]]>None</description></node><node access="read-only" datatype="ip-address-origin" name="ip:origin" type="leaf" values="other|static|dhcp|link-layer|random"><description><![CDATA[The origin of this address.]]>None</description></node><node access="read-only" datatype="enumeration" name="ip:status" type="leaf" values="preferred|deprecated|invalid|inaccessible|unknown|tentative|duplicate|optimistic"><description><![CDATA[The status of an address.  Most of the states correspond
+to states from the IPv6 Stateless Address
+Autoconfiguration protocol.]]>None</description></node></node><node access="read-only" key="ip" name="ip:neighbor" type="list"><description><![CDATA[A list of mappings from IPv6 addresses to
+link-layer addresses.
+
+This list represents the Neighbor Cache.]]>None</description><node access="read-only" datatype="inet:ipv6-address-no-zone" is_key="true" mandatory="true" name="ip:ip" type="leaf"><description><![CDATA[The IPv6 address of the neighbor node.]]>None</description></node><node access="read-only" datatype="yang:phys-address" name="ip:link-layer-address" type="leaf"><description><![CDATA[The link-layer address of the neighbor node.]]>None</description></node><node access="read-only" datatype="neighbor-origin" name="ip:origin" type="leaf" values="other|static|dynamic"><description><![CDATA[The origin of this neighbor entry.]]>None</description></node><node access="read-only" datatype="empty" name="ip:is-router" type="leaf"><description><![CDATA[Indicates that the neighbor node acts as a router.]]>None</description></node><node access="read-only" datatype="enumeration" name="ip:state" type="leaf" values="incomplete|reachable|stale|delay|probe"><description><![CDATA[The Neighbor Unreachability Detection state of this
+entry.]]>None</description></node></node></node></node></node></node>

@@ -1,0 +1,1 @@
+<node name="ietf-ethertypes" prefix="ethertypes" type="module"><namespace import="false" module="ietf-ethertypes" prefix="ethertypes">urn:ietf:params:xml:ns:yang:ietf-ethertypes</namespace></node>

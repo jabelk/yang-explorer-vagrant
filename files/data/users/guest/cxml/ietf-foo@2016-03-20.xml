@@ -1,0 +1,1 @@
+<node name="ietf-foo" prefix="foo" type="module"><namespace import="false" module="ietf-foo" prefix="foo">urn:ietf:params:xml:ns:yang:ietf-foo</namespace></node>

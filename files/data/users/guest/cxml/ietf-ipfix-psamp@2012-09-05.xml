@@ -1,0 +1,1797 @@
+<node name="ietf-ipfix-psamp" prefix="ipfix" type="module"><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="false" module="ietf-ipfix-psamp" prefix="ipfix">urn:ietf:params:xml:ns:yang:ietf-ipfix-psamp</namespace><node access="read-write" name="ipfix" type="container"><description><![CDATA[Top-level node of the IPFIX/PSAMP configuration
+data model.]]>None</description><node access="read-write" key="name" name="collectingProcess" type="list"><description><![CDATA[Collecting Process of the Monitoring Device.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" key="name" name="sctpCollector" type="list"><description><![CDATA[List of SCTP receivers (sockets) on which the
+Collecting Process receives IPFIX Messages.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="localPort" type="leaf"><description><![CDATA[If not configured, the Monitoring Device uses the
+default port number for IPFIX, which is 4739 without
+TLS or DTLS and 4740 if TLS or DTLS is activated.]]>None</description></node><node access="read-write" name="transportLayerSecurity" presence="true" type="container"><description><![CDATA[TLS or DTLS configuration.]]>None</description><node access="read-write" datatype="string" name="localCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates may be used to identify the local
+endpoint.]]>None</description></node><node access="read-write" datatype="string" name="localSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names that may be used in the
+certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="localSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that may be used to
+in the certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="string" name="remoteCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates are accepted to authorize remote
+endpoints.]]>None</description></node><node access="read-write" datatype="string" name="remoteSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names which are accepted in
+certificates to authorize remote endpoints.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="remoteSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that are accepted in
+certificates to authorize remote endpoints.]]>None</description></node></node><node access="read-only" name="transportSession" type="list"><description><![CDATA[This list contains the currently established
+Transport Sessions terminating at the given socket.]]>None</description><node access="read-only" datatype="uint16" name="ipfixVersion" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the version number of the IPFIX protocol that the
+Exporter uses to export its data in this Transport Session.
+Hence, it is identical to the value of the configuration
+parameter ipfixVersion of the outer SctpExporter,
+UdpExporter, or TcpExporter node.
+Used for Collecting Processes, this parameter contains the
+version number of the IPFIX protocol it receives for
+this Transport Session.  If IPFIX Messages of different
+IPFIX protocol versions are received, this parameter
+contains the maximum version number.
+Note that this parameter corresponds to
+ipfixTransportSessionIpfixVersion in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="sourceAddress" type="leaf"><description><![CDATA[The source address of the Exporter of the
+IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Exporter.
+Preferably, the source IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionSourceAddressType and
+ipfixTransportSessionSourceAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="destinationAddress" type="leaf"><description><![CDATA[The destination address of the Collector of
+the IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Collector.
+Preferably, the destination IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDestinationAddressType and
+ipfixTransportSessionDestinationAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="sourcePort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Exporter of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionSourcePort in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Collector of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionDestinationPort in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="sctpAssocId" type="leaf"><description><![CDATA[The association ID used for the SCTP session
+between the Exporter and the Collector of the IPFIX
+Transport Session.  It is equal to the sctpAssocId entry
+in the sctpAssocTable defined in the SCTP-MIB.
+This parameter is only available if the transport protocol
+is SCTP and if an SNMP agent on the same Monitoring Device
+enables access to the corresponding MIB objects in the
+sctpAssocTable.
+Note that this parameter corresponds to
+ipfixTransportSessionSctpAssocId in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="transportSessionStatus" name="status" type="leaf" values="inactive|active|unknown"><description><![CDATA[Status of the Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionStatus in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="rate" type="leaf"><description><![CDATA[The number of bytes per second transmitted by the
+Exporting Process or received by the Collecting Process.
+This parameter is updated every second.
+Note that this parameter corresponds to
+ipfixTransportSessionRate in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="bytes" type="leaf"><description><![CDATA[The number of bytes transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionBytes in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="messages" type="leaf"><description><![CDATA[The number of messages transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionMessages in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="discardedMessages" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+indicates the number of messages that could not be sent due
+to internal buffer overflows, network congestion, routing
+issues, etc.  Used for Collecting Process, this parameter
+indicates the number of received IPFIX Message that are
+malformed, cannot be decoded, are received in the wrong
+order or are missing according to the sequence number.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionDiscardedMessages in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="records" type="leaf"><description><![CDATA[The number of Data Records transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="templates" type="leaf"><description><![CDATA[The number of Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplates in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="optionsTemplates" type="leaf"><description><![CDATA[The number of Option Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplates in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionStartTime" type="leaf"><description><![CDATA[Timestamp of the start of the given Transport
+Session.
+This state parameter does not correspond to any object in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more of the Transport Session counters suffered a
+discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDiscontinuityTime in the IPFIX MIB
+module.  In contrast to
+ipfixTransportSessionDiscontinuityTime, the time is
+absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="template" type="list"><description><![CDATA[This list contains the Templates and Options
+Templates that are transmitted by the Exporting Process
+or received by the Collecting Process.
+Withdrawn or invalidated (Options) Templates MUST be removed
+from this list.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[The ID of the Observation Domain for which this
+Template is defined.
+Note that this parameter corresponds to
+ipfixTemplateObservationDomainId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="templateId" type="leaf"><description><![CDATA[This number indicates the Template ID in the IPFIX
+message.
+Note that this parameter corresponds to ipfixTemplateId in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="setId" type="leaf"><description><![CDATA[This number indicates the Set ID of the Template.
+Currently, there are two values defined.  The value 2 is used
+for Sets containing Template definitions.  The value 3 is
+used for Sets containing Options Template definitions.
+Note that this parameter corresponds to ipfixTemplateSetId
+in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="accessTime" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the time when this (Options) Template was last
+sent to the Collector(s) or written to the file.
+Used for Collecting Processes, this parameter contains the
+time when this (Options) Template was last received from the
+Exporter or read from the file.
+Note that this parameter corresponds to
+ipfixTemplateAccessTime in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="templateDataRecords" type="leaf"><description><![CDATA[The number of transmitted or received Data
+Records defined by this (Options) Template.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+templateDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTemplateDataRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="templateDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter templateDataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTemplateDiscontinuityTime in the IPFIX MIB module.
+In contrast to ipfixTemplateDiscontinuityTime, the time
+is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="field" type="list"><description><![CDATA[This list contains the (Options) Template
+fields of which the (Options) Template is defined.
+The order of the list corresponds to the order of the fields
+in the (Option) Template Record.]]>None</description><node access="read-only" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[This parameter indicates the Information
+Element identifier of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[This parameter indicates the length of the
+Information Element of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeLength in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[This parameter indicates the IANA enterprise
+number of the authority defining the Information Element
+identifier.
+If the Information Element is not enterprise-specific,
+this state parameter is zero.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeEnterpriseNumber in the IPFIX
+MIB module.]]>None</description></node><node access="read-only" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a Flow Key field.
+Note that this corresponds to flowKey(1) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node><node access="read-only" datatype="empty" name="isScope" type="leaf"><description><![CDATA[If present, this is a scope field.
+Note that this corresponds to scope(0) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node></node></node></node><node access="read-write" datatype="inet:ip-address" name="localIPAddress" type="leaf-list"><description><![CDATA[List of local IP addresses on which the
+Collecting Process listens for IPFIX Messages.  The IP
+addresses are used as eligible local IP addresses of the
+multihomed SCTP endpoint.]]>None</description></node></node><node access="read-write" key="name" name="udpCollector" type="list"><description><![CDATA[List of UDP receivers (sockets) on which the
+Collecting Process receives IPFIX Messages.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="localPort" type="leaf"><description><![CDATA[If not configured, the Monitoring Device uses the
+default port number for IPFIX, which is 4739 without
+TLS or DTLS and 4740 if TLS or DTLS is activated.]]>None</description></node><node access="read-write" name="transportLayerSecurity" presence="true" type="container"><description><![CDATA[TLS or DTLS configuration.]]>None</description><node access="read-write" datatype="string" name="localCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates may be used to identify the local
+endpoint.]]>None</description></node><node access="read-write" datatype="string" name="localSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names that may be used in the
+certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="localSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that may be used to
+in the certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="string" name="remoteCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates are accepted to authorize remote
+endpoints.]]>None</description></node><node access="read-write" datatype="string" name="remoteSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names which are accepted in
+certificates to authorize remote endpoints.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="remoteSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that are accepted in
+certificates to authorize remote endpoints.]]>None</description></node></node><node access="read-only" name="transportSession" type="list"><description><![CDATA[This list contains the currently established
+Transport Sessions terminating at the given socket.]]>None</description><node access="read-only" datatype="uint16" name="ipfixVersion" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the version number of the IPFIX protocol that the
+Exporter uses to export its data in this Transport Session.
+Hence, it is identical to the value of the configuration
+parameter ipfixVersion of the outer SctpExporter,
+UdpExporter, or TcpExporter node.
+Used for Collecting Processes, this parameter contains the
+version number of the IPFIX protocol it receives for
+this Transport Session.  If IPFIX Messages of different
+IPFIX protocol versions are received, this parameter
+contains the maximum version number.
+Note that this parameter corresponds to
+ipfixTransportSessionIpfixVersion in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="sourceAddress" type="leaf"><description><![CDATA[The source address of the Exporter of the
+IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Exporter.
+Preferably, the source IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionSourceAddressType and
+ipfixTransportSessionSourceAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="destinationAddress" type="leaf"><description><![CDATA[The destination address of the Collector of
+the IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Collector.
+Preferably, the destination IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDestinationAddressType and
+ipfixTransportSessionDestinationAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="sourcePort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Exporter of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionSourcePort in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Collector of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionDestinationPort in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="sctpAssocId" type="leaf"><description><![CDATA[The association ID used for the SCTP session
+between the Exporter and the Collector of the IPFIX
+Transport Session.  It is equal to the sctpAssocId entry
+in the sctpAssocTable defined in the SCTP-MIB.
+This parameter is only available if the transport protocol
+is SCTP and if an SNMP agent on the same Monitoring Device
+enables access to the corresponding MIB objects in the
+sctpAssocTable.
+Note that this parameter corresponds to
+ipfixTransportSessionSctpAssocId in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="transportSessionStatus" name="status" type="leaf" values="inactive|active|unknown"><description><![CDATA[Status of the Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionStatus in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="rate" type="leaf"><description><![CDATA[The number of bytes per second transmitted by the
+Exporting Process or received by the Collecting Process.
+This parameter is updated every second.
+Note that this parameter corresponds to
+ipfixTransportSessionRate in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="bytes" type="leaf"><description><![CDATA[The number of bytes transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionBytes in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="messages" type="leaf"><description><![CDATA[The number of messages transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionMessages in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="discardedMessages" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+indicates the number of messages that could not be sent due
+to internal buffer overflows, network congestion, routing
+issues, etc.  Used for Collecting Process, this parameter
+indicates the number of received IPFIX Message that are
+malformed, cannot be decoded, are received in the wrong
+order or are missing according to the sequence number.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionDiscardedMessages in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="records" type="leaf"><description><![CDATA[The number of Data Records transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="templates" type="leaf"><description><![CDATA[The number of Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplates in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="optionsTemplates" type="leaf"><description><![CDATA[The number of Option Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplates in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionStartTime" type="leaf"><description><![CDATA[Timestamp of the start of the given Transport
+Session.
+This state parameter does not correspond to any object in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more of the Transport Session counters suffered a
+discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDiscontinuityTime in the IPFIX MIB
+module.  In contrast to
+ipfixTransportSessionDiscontinuityTime, the time is
+absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="template" type="list"><description><![CDATA[This list contains the Templates and Options
+Templates that are transmitted by the Exporting Process
+or received by the Collecting Process.
+Withdrawn or invalidated (Options) Templates MUST be removed
+from this list.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[The ID of the Observation Domain for which this
+Template is defined.
+Note that this parameter corresponds to
+ipfixTemplateObservationDomainId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="templateId" type="leaf"><description><![CDATA[This number indicates the Template ID in the IPFIX
+message.
+Note that this parameter corresponds to ipfixTemplateId in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="setId" type="leaf"><description><![CDATA[This number indicates the Set ID of the Template.
+Currently, there are two values defined.  The value 2 is used
+for Sets containing Template definitions.  The value 3 is
+used for Sets containing Options Template definitions.
+Note that this parameter corresponds to ipfixTemplateSetId
+in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="accessTime" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the time when this (Options) Template was last
+sent to the Collector(s) or written to the file.
+Used for Collecting Processes, this parameter contains the
+time when this (Options) Template was last received from the
+Exporter or read from the file.
+Note that this parameter corresponds to
+ipfixTemplateAccessTime in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="templateDataRecords" type="leaf"><description><![CDATA[The number of transmitted or received Data
+Records defined by this (Options) Template.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+templateDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTemplateDataRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="templateDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter templateDataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTemplateDiscontinuityTime in the IPFIX MIB module.
+In contrast to ipfixTemplateDiscontinuityTime, the time
+is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="field" type="list"><description><![CDATA[This list contains the (Options) Template
+fields of which the (Options) Template is defined.
+The order of the list corresponds to the order of the fields
+in the (Option) Template Record.]]>None</description><node access="read-only" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[This parameter indicates the Information
+Element identifier of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[This parameter indicates the length of the
+Information Element of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeLength in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[This parameter indicates the IANA enterprise
+number of the authority defining the Information Element
+identifier.
+If the Information Element is not enterprise-specific,
+this state parameter is zero.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeEnterpriseNumber in the IPFIX
+MIB module.]]>None</description></node><node access="read-only" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a Flow Key field.
+Note that this corresponds to flowKey(1) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node><node access="read-only" datatype="empty" name="isScope" type="leaf"><description><![CDATA[If present, this is a scope field.
+Note that this corresponds to scope(0) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node></node></node></node><node access="read-write" datatype="inet:ip-address" name="localIPAddress" type="leaf-list"><description><![CDATA[List of local IP addresses on which the Collecting
+Process listens for IPFIX Messages.]]>None</description></node><node access="read-write" datatype="uint32" default="1800" name="templateLifeTime" type="leaf"><description><![CDATA[Sets the lifetime of Templates for all UDP
+Transport Sessions terminating at this UDP socket.
+Templates that are not received again within the configured
+lifetime become invalid at the Collecting Process.
+As specified in RFC 5101, the Template lifetime MUST be at
+least three times higher than the templateRefreshTimeout
+parameter value configured on the corresponding Exporting
+Processes.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplateRefreshTimeout in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" default="1800" name="optionsTemplateLifeTime" type="leaf"><description><![CDATA[Sets the lifetime of Options Templates for all
+UDP Transport Sessions terminating at this UDP socket.
+Options Templates that are not received again within the
+configured lifetime become invalid at the Collecting
+Process.
+As specified in RFC 5101, the Options Template lifetime MUST
+be at least three times higher than the
+optionsTemplateRefreshTimeout parameter value configured on
+the corresponding Exporting Processes.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplateRefreshTimeout in the
+IPFIX MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="templateLifePacket" type="leaf"><description><![CDATA[If this parameter is configured, Templates
+defined in a UDP Transport Session become invalid if they
+are neither included in a sequence of more than this number
+of IPFIX Messages nor received again within the period of
+time specified by templateLifeTime.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplateRefreshPacket in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="optionsTemplateLifePacket" type="leaf"><description><![CDATA[If this parameter is configured, Options
+Templates defined in a UDP Transport Session become
+invalid if they are neither included in a sequence of more
+than this number of IPFIX Messages nor received again
+within the period of time specified by
+optionsTemplateLifeTime.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplateRefreshPacket in the
+IPFIX MIB module.]]>None</description></node></node><node access="read-write" key="name" name="tcpCollector" type="list"><description><![CDATA[List of TCP receivers (sockets) on which the
+Collecting Process receives IPFIX Messages.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="localPort" type="leaf"><description><![CDATA[If not configured, the Monitoring Device uses the
+default port number for IPFIX, which is 4739 without
+TLS or DTLS and 4740 if TLS or DTLS is activated.]]>None</description></node><node access="read-write" name="transportLayerSecurity" presence="true" type="container"><description><![CDATA[TLS or DTLS configuration.]]>None</description><node access="read-write" datatype="string" name="localCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates may be used to identify the local
+endpoint.]]>None</description></node><node access="read-write" datatype="string" name="localSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names that may be used in the
+certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="localSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that may be used to
+in the certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="string" name="remoteCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates are accepted to authorize remote
+endpoints.]]>None</description></node><node access="read-write" datatype="string" name="remoteSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names which are accepted in
+certificates to authorize remote endpoints.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="remoteSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that are accepted in
+certificates to authorize remote endpoints.]]>None</description></node></node><node access="read-only" name="transportSession" type="list"><description><![CDATA[This list contains the currently established
+Transport Sessions terminating at the given socket.]]>None</description><node access="read-only" datatype="uint16" name="ipfixVersion" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the version number of the IPFIX protocol that the
+Exporter uses to export its data in this Transport Session.
+Hence, it is identical to the value of the configuration
+parameter ipfixVersion of the outer SctpExporter,
+UdpExporter, or TcpExporter node.
+Used for Collecting Processes, this parameter contains the
+version number of the IPFIX protocol it receives for
+this Transport Session.  If IPFIX Messages of different
+IPFIX protocol versions are received, this parameter
+contains the maximum version number.
+Note that this parameter corresponds to
+ipfixTransportSessionIpfixVersion in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="sourceAddress" type="leaf"><description><![CDATA[The source address of the Exporter of the
+IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Exporter.
+Preferably, the source IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionSourceAddressType and
+ipfixTransportSessionSourceAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="destinationAddress" type="leaf"><description><![CDATA[The destination address of the Collector of
+the IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Collector.
+Preferably, the destination IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDestinationAddressType and
+ipfixTransportSessionDestinationAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="sourcePort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Exporter of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionSourcePort in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Collector of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionDestinationPort in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="sctpAssocId" type="leaf"><description><![CDATA[The association ID used for the SCTP session
+between the Exporter and the Collector of the IPFIX
+Transport Session.  It is equal to the sctpAssocId entry
+in the sctpAssocTable defined in the SCTP-MIB.
+This parameter is only available if the transport protocol
+is SCTP and if an SNMP agent on the same Monitoring Device
+enables access to the corresponding MIB objects in the
+sctpAssocTable.
+Note that this parameter corresponds to
+ipfixTransportSessionSctpAssocId in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="transportSessionStatus" name="status" type="leaf" values="inactive|active|unknown"><description><![CDATA[Status of the Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionStatus in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="rate" type="leaf"><description><![CDATA[The number of bytes per second transmitted by the
+Exporting Process or received by the Collecting Process.
+This parameter is updated every second.
+Note that this parameter corresponds to
+ipfixTransportSessionRate in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="bytes" type="leaf"><description><![CDATA[The number of bytes transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionBytes in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="messages" type="leaf"><description><![CDATA[The number of messages transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionMessages in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="discardedMessages" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+indicates the number of messages that could not be sent due
+to internal buffer overflows, network congestion, routing
+issues, etc.  Used for Collecting Process, this parameter
+indicates the number of received IPFIX Message that are
+malformed, cannot be decoded, are received in the wrong
+order or are missing according to the sequence number.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionDiscardedMessages in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="records" type="leaf"><description><![CDATA[The number of Data Records transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="templates" type="leaf"><description><![CDATA[The number of Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplates in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="optionsTemplates" type="leaf"><description><![CDATA[The number of Option Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplates in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionStartTime" type="leaf"><description><![CDATA[Timestamp of the start of the given Transport
+Session.
+This state parameter does not correspond to any object in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more of the Transport Session counters suffered a
+discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDiscontinuityTime in the IPFIX MIB
+module.  In contrast to
+ipfixTransportSessionDiscontinuityTime, the time is
+absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="template" type="list"><description><![CDATA[This list contains the Templates and Options
+Templates that are transmitted by the Exporting Process
+or received by the Collecting Process.
+Withdrawn or invalidated (Options) Templates MUST be removed
+from this list.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[The ID of the Observation Domain for which this
+Template is defined.
+Note that this parameter corresponds to
+ipfixTemplateObservationDomainId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="templateId" type="leaf"><description><![CDATA[This number indicates the Template ID in the IPFIX
+message.
+Note that this parameter corresponds to ipfixTemplateId in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="setId" type="leaf"><description><![CDATA[This number indicates the Set ID of the Template.
+Currently, there are two values defined.  The value 2 is used
+for Sets containing Template definitions.  The value 3 is
+used for Sets containing Options Template definitions.
+Note that this parameter corresponds to ipfixTemplateSetId
+in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="accessTime" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the time when this (Options) Template was last
+sent to the Collector(s) or written to the file.
+Used for Collecting Processes, this parameter contains the
+time when this (Options) Template was last received from the
+Exporter or read from the file.
+Note that this parameter corresponds to
+ipfixTemplateAccessTime in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="templateDataRecords" type="leaf"><description><![CDATA[The number of transmitted or received Data
+Records defined by this (Options) Template.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+templateDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTemplateDataRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="templateDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter templateDataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTemplateDiscontinuityTime in the IPFIX MIB module.
+In contrast to ipfixTemplateDiscontinuityTime, the time
+is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="field" type="list"><description><![CDATA[This list contains the (Options) Template
+fields of which the (Options) Template is defined.
+The order of the list corresponds to the order of the fields
+in the (Option) Template Record.]]>None</description><node access="read-only" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[This parameter indicates the Information
+Element identifier of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[This parameter indicates the length of the
+Information Element of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeLength in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[This parameter indicates the IANA enterprise
+number of the authority defining the Information Element
+identifier.
+If the Information Element is not enterprise-specific,
+this state parameter is zero.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeEnterpriseNumber in the IPFIX
+MIB module.]]>None</description></node><node access="read-only" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a Flow Key field.
+Note that this corresponds to flowKey(1) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node><node access="read-only" datatype="empty" name="isScope" type="leaf"><description><![CDATA[If present, this is a scope field.
+Note that this corresponds to scope(0) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node></node></node></node><node access="read-write" datatype="inet:ip-address" name="localIPAddress" type="leaf-list"><description><![CDATA[List of local IP addresses on which the Collecting
+Process listens for IPFIX Messages.]]>None</description></node></node><node access="read-write" key="name" name="fileReader" type="list"><description><![CDATA[List of File Readers from which the Collecting
+Process reads IPFIX Messages.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" datatype="inet:uri" mandatory="true" name="file" type="leaf"><description><![CDATA[URI specifying the location of the file.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="bytes" type="leaf"><description><![CDATA[The number of bytes read by the File Reader.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileReaderDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="messages" type="leaf"><description><![CDATA[The number of IPFIX Messages read by the File
+Reader.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileReaderDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="records" type="leaf"><description><![CDATA[The number of Data Records read by the File
+Reader.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileReaderDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="templates" type="leaf"><description><![CDATA[The number of Template Records (excluding
+Options Template Records) read by the File Reader.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileReaderDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="optionsTemplates" type="leaf"><description><![CDATA[The number of Options Template Records read by
+the File Reader.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileReaderDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="fileReaderDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more File Reader counters suffered a discontinuity.
+In contrast to discontinuity times in the IPFIX MIB module,
+the time is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="template" type="list"><description><![CDATA[This list contains the Templates and Options
+Templates that have been read by the File Reader.
+Withdrawn or invalidated (Options) Template MUST be removed
+from this list.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[The ID of the Observation Domain for which this
+Template is defined.
+Note that this parameter corresponds to
+ipfixTemplateObservationDomainId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="templateId" type="leaf"><description><![CDATA[This number indicates the Template ID in the IPFIX
+message.
+Note that this parameter corresponds to ipfixTemplateId in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="setId" type="leaf"><description><![CDATA[This number indicates the Set ID of the Template.
+Currently, there are two values defined.  The value 2 is used
+for Sets containing Template definitions.  The value 3 is
+used for Sets containing Options Template definitions.
+Note that this parameter corresponds to ipfixTemplateSetId
+in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="accessTime" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the time when this (Options) Template was last
+sent to the Collector(s) or written to the file.
+Used for Collecting Processes, this parameter contains the
+time when this (Options) Template was last received from the
+Exporter or read from the file.
+Note that this parameter corresponds to
+ipfixTemplateAccessTime in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="templateDataRecords" type="leaf"><description><![CDATA[The number of transmitted or received Data
+Records defined by this (Options) Template.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+templateDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTemplateDataRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="templateDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter templateDataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTemplateDiscontinuityTime in the IPFIX MIB module.
+In contrast to ipfixTemplateDiscontinuityTime, the time
+is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="field" type="list"><description><![CDATA[This list contains the (Options) Template
+fields of which the (Options) Template is defined.
+The order of the list corresponds to the order of the fields
+in the (Option) Template Record.]]>None</description><node access="read-only" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[This parameter indicates the Information
+Element identifier of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[This parameter indicates the length of the
+Information Element of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeLength in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[This parameter indicates the IANA enterprise
+number of the authority defining the Information Element
+identifier.
+If the Information Element is not enterprise-specific,
+this state parameter is zero.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeEnterpriseNumber in the IPFIX
+MIB module.]]>None</description></node><node access="read-only" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a Flow Key field.
+Note that this corresponds to flowKey(1) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node><node access="read-only" datatype="empty" name="isScope" type="leaf"><description><![CDATA[If present, this is a scope field.
+Note that this corresponds to scope(0) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node></node></node></node><node access="read-write" datatype="-&gt; /ipfix/exportingProcess/name" name="exportingProcess" type="leaf-list"><description><![CDATA[Export of received records without any
+modifications.  Records are processed by all Exporting
+Processes in the list.]]>None</description></node></node><node access="read-write" key="name" name="observationPoint" type="list"><description><![CDATA[Observation Point of the Monitoring Device.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-only" datatype="uint32" name="observationPointId" type="leaf"><description><![CDATA[Observation Point ID (i.e., the value of the
+Information Element observationPointId) assigned by the
+Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" mandatory="true" name="observationDomainId" type="leaf"><description><![CDATA[The Observation Domain ID associates the
+Observation Point to an Observation Domain.  Observation
+Points with identical Observation Domain IDs belong to the
+same Observation Domain.
+Note that this parameter corresponds to
+ipfixObservationPointObservationDomainId in the IPFIX MIB
+module.]]>None</description></node><node access="read-write" datatype="ifNameType" name="ifName" type="leaf-list"><description><![CDATA[List of names identifying interfaces of the
+Monitoring Device.  The Observation Point observes packets at
+the specified interfaces.]]>None</description></node><node access="read-write" datatype="uint32" name="ifIndex" type="leaf-list"><description><![CDATA[List of ifIndex values pointing to entries in the
+ifTable of the IF-MIB module maintained by the Monitoring
+Device.  The Observation Point observes packets at the
+specified interfaces.
+This parameter SHOULD only be used if an SNMP agent enables
+access to the ifTable.
+Note that this parameter corresponds to
+ipfixObservationPointPhysicalInterface in the IPFIX MIB
+module.]]>None</description></node><node access="read-write" datatype="string" name="entPhysicalName" type="leaf-list"><description><![CDATA[List of names identifying physical entities of the
+Monitoring Device.  The Observation Point observes packets at
+the specified entities.]]>None</description></node><node access="read-write" datatype="uint32" name="entPhysicalIndex" type="leaf-list"><description><![CDATA[List of entPhysicalIndex values pointing to
+entries in the entPhysicalTable of the ENTITY-MIB module
+maintained by the Monitoring Device.  The Observation Point
+observes packets at the specified entities.
+This parameter SHOULD only be used if an SNMP agent enables
+access to the entPhysicalTable.
+Note that this parameter corresponds to
+ipfixObservationPointPhysicalEntity in the IPFIX MIB
+module.]]>None</description></node><node access="read-write" datatype="direction" default="both" name="direction" type="leaf" values="ingress|egress|both"><description><![CDATA[Direction of packets.  If not applicable (e.g., in
+the case of a sniffing interface in promiscuous mode), this
+parameter is ignored.]]>None</description></node><node access="read-write" datatype="-&gt; /ipfix/selectionProcess/name" name="selectionProcess" type="leaf-list"><description><![CDATA[Selection Processes in this list process
+packets in parallel.]]>None</description></node></node><node access="read-write" key="name" name="selectionProcess" type="list"><description><![CDATA[Selection Process of the Monitoring Device.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" key="name" name="selector" type="list"><description><![CDATA[List of Selectors that define the action of the
+Selection Process on a single packet.  The Selectors are
+serially invoked in the same order as they appear in this
+list.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" name="Method" type="choice"><description><![CDATA[Packet selection method applied by the Selector.]]>None</description><node access="read-write" name="selectAll" type="case"><node access="read-write" datatype="empty" name="selectAll" type="leaf"><description><![CDATA[Method that selects all packets.]]>None</description></node></node><node access="read-write" name="sampCountBased" type="case"><node access="read-write" name="sampCountBased" type="container"><description><![CDATA[Systematic count-based packet Sampling.]]>None</description><node access="read-write" datatype="uint32" mandatory="true" name="packetInterval" type="leaf"><description><![CDATA[The number of packets that are consecutively
+sampled between gaps of length packetSpace.
+This parameter corresponds to the Information Element
+samplingPacketInterval and to psampSampCountBasedInterval
+in the PSAMP MIB module.]]>None</description></node><node access="read-write" datatype="uint32" mandatory="true" name="packetSpace" type="leaf"><description><![CDATA[The number of unsampled packets between two
+Sampling intervals.
+This parameter corresponds to the Information Element
+samplingPacketSpace and to psampSampCountBasedSpace
+in the PSAMP MIB module.]]>None</description></node></node></node><node access="read-write" name="sampTimeBased" type="case"><node access="read-write" name="sampTimeBased" type="container"><description><![CDATA[Systematic time-based packet Sampling.]]>None</description><node access="read-write" datatype="uint32" mandatory="true" name="timeInterval" type="leaf"><description><![CDATA[The time interval in microseconds during
+which all arriving packets are sampled between gaps
+of length timeSpace.
+This parameter corresponds to the Information Element
+samplingTimeInterval and to psampSampTimeBasedInterval
+in the PSAMP MIB module.]]>None</description></node><node access="read-write" datatype="uint32" mandatory="true" name="timeSpace" type="leaf"><description><![CDATA[The time interval in microseconds during
+which no packets are sampled between two Sampling
+intervals specified by timeInterval.
+This parameter corresponds to the Information Element
+samplingTimeInterval and to psampSampTimeBasedSpace
+in the PSAMP MIB module.]]>None</description></node></node></node><node access="read-write" name="sampRandOutOfN" type="case"><node access="read-write" name="sampRandOutOfN" type="container"><description><![CDATA[n-out-of-N packet Sampling.]]>None</description><node access="read-write" datatype="uint32" mandatory="true" name="size" type="leaf"><description><![CDATA[The number of elements taken from the parent
+population.
+This parameter corresponds to the Information Element
+samplingSize and to psampSampRandOutOfNSize in the PSAMP
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" mandatory="true" name="population" type="leaf"><description><![CDATA[The number of elements in the parent
+population.
+This parameter corresponds to the Information Element
+samplingPopulation and to psampSampRandOutOfNPopulation
+in the PSAMP MIB module.]]>None</description></node></node></node><node access="read-write" name="sampUniProb" type="case"><node access="read-write" name="sampUniProb" type="container"><description><![CDATA[Uniform probabilistic packet Sampling.]]>None</description><node access="read-write" datatype="decimal64" mandatory="true" name="probability" type="leaf"><description><![CDATA[Probability that a packet is sampled,
+expressed as a value between 0 and 1.  The probability
+is equal for every packet.
+This parameter corresponds to the Information Element
+samplingProbability and to psampSampUniProbProbability
+in the PSAMP MIB module.]]>None</description></node></node></node><node access="read-write" name="filterMatch" type="case"><node access="read-write" name="filterMatch" type="container"><description><![CDATA[Property match Filtering.]]>None</description><node access="read-write" name="nameOrId" type="choice"><description><![CDATA[The field to be matched is specified by
+either the name or the identifier of the Information
+Element.]]>None</description><node access="read-write" name="ieName" type="case"><node access="read-write" datatype="ieNameType" name="ieName" type="leaf"><description><![CDATA[Name of the Information Element.]]>None</description></node></node><node access="read-write" name="ieId" type="case"><node access="read-write" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[Identifier of the Information Element.]]>None</description></node></node></node><node access="read-write" datatype="uint32" default="0" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[If this parameter is zero, the Information
+Element is registered in the IANA registry of IPFIX
+Information Elements.
+If this parameter is configured with a non-zero private
+enterprise number, the Information Element is
+enterprise-specific.]]>None</description></node><node access="read-write" datatype="string" mandatory="true" name="value" type="leaf"><description><![CDATA[Matching value of the Information Element.]]>None</description></node></node></node><node access="read-write" name="filterHash" type="case"><node access="read-write" name="filterHash" type="container"><description><![CDATA[Hash-based Filtering.]]>None</description><node access="read-write" datatype="identityref:hashFunction" default="BOB" name="hashFunction" type="leaf" values="ipfix:BOB|ipfix:CRC|ipfix:IPSX"><description><![CDATA[Hash function to be applied.  According to
+RFC 5475, Section 6.2.4.1, 'BOB' must be used in order to
+be compliant with PSAMP.
+This parameter functionally corresponds to
+psampFiltHashFunction in the PSAMP MIB module.]]>None</description></node><node access="read-write" datatype="uint64" name="initializerValue" type="leaf"><description><![CDATA[Initializer value to the hash function.
+If not configured by the user, the Monitoring Device
+arbitrarily chooses an initializer value.
+This parameter corresponds to the Information Element
+hashInitialiserValue and to psampFiltHashInitializerValue
+in the PSAMP MIB module.]]>None</description></node><node access="read-write" datatype="uint64" default="0" name="ipPayloadOffset" type="leaf"><description><![CDATA[IP payload offset indicating the position of
+the first payload byte considered as input to the hash
+function.
+Default value 0 corresponds to the minimum offset that
+must be configurable according to RFC 5476, Section
+6.5.2.6.
+This parameter corresponds to the Information Element
+hashIPPayloadOffset and to psampFiltHashIpPayloadOffset
+in the PSAMP MIB module.]]>None</description></node><node access="read-write" datatype="uint64" default="8" name="ipPayloadSize" type="leaf"><description><![CDATA[Number of IP payload bytes used as input to
+the hash function, counted from the payload offset.
+If the IP payload is shorter than the payload range,
+all available payload octets are used as input.
+Default value 8 corresponds to the minimum IP payload
+size that must be configurable according to RFC 5476,
+Section 6.5.2.6.
+This parameter corresponds to the Information Element
+hashIPPayloadSize and to psampFiltHashIpPayloadSize
+in the PSAMP MIB module.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="digestOutput" type="leaf" values="true|false"><description><![CDATA[If true, the output from this Selector is
+included in the Packet Report as a packet digest.
+Therefore, the configured Cache Layout needs to contain
+a digestHashValue field.
+This parameter corresponds to the Information Element
+hashDigestOutput.]]>None</description></node><node access="read-only" datatype="uint64" name="outputRangeMin" type="leaf"><description><![CDATA[Beginning of the hash function's potential
+range.
+This parameter corresponds to the Information Element
+hashOutputRangeMin and to psampFiltHashOutputRangeMin
+in the PSAMP MIB module.]]>None</description></node><node access="read-only" datatype="uint64" name="outputRangeMax" type="leaf"><description><![CDATA[End of the hash function's potential range.
+This parameter corresponds to the Information Element
+hashOutputRangeMax and to psampFiltHashOutputRangeMax
+in the PSAMP MIB module.]]>None</description></node><node access="read-write" key="name" name="selectedRange" type="list"><description><![CDATA[List of hash function return ranges for
+which packets are selected.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" datatype="uint64" name="min" type="leaf"><description><![CDATA[Beginning of the hash function's selected
+range.
+This parameter corresponds to the Information Element
+hashSelectedRangeMin and to psampFiltHashSelectedRangeMin
+in the PSAMP MIB module.]]>None</description></node><node access="read-write" datatype="uint64" name="max" type="leaf"><description><![CDATA[End of the hash function's selected range.
+This parameter corresponds to the Information Element
+hashSelectedRangeMax and to psampFiltHashSelectedRangeMax
+in the PSAMP MIB module.]]>None</description></node></node></node></node></node><node access="read-only" datatype="yang:counter64" name="packetsObserved" type="leaf"><description><![CDATA[The number of packets observed at the input of
+the Selector.
+If this is the first Selector in the Selection Process,
+this counter corresponds to the total number of packets in
+all Observed Packet Streams at the input of the Selection
+Process.  Otherwise, the counter corresponds to the total
+number of packets at the output of the preceding Selector.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+selectorDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixSelectorStatsPacketsObserved in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="packetsDropped" type="leaf"><description><![CDATA[The total number of packets discarded by the
+Selector.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+selectorDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixSelectorStatsPacketsDropped in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="selectorDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more of the Selector counters suffered a
+discontinuity.
+Note that this parameter functionally corresponds to
+ipfixSelectionProcessStatsDiscontinuityTime in the IPFIX
+MIB module.  In contrast to
+ipfixSelectionProcessStatsDiscontinuityTime, the time is
+absolute and not relative to sysUpTime.]]>None</description></node></node><node access="read-only" name="selectionSequence" type="list"><description><![CDATA[This list contains the Selection Sequence IDs
+that are assigned by the Monitoring Device to distinguish
+different Selection Sequences passing through the
+Selection Process.
+As Selection Sequence IDs are unique per Observation
+Domain, the corresponding Observation Domain IDs are
+included as well.
+With this information, it is possible to associate
+Selection Sequence (Statistics) Report Interpretations
+exported according to the PSAMP protocol with a Selection
+Process in the configuration data.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[Observation Domain ID for which the
+Selection Sequence ID is assigned.]]>None</description></node><node access="read-only" datatype="uint64" name="selectionSequenceId" type="leaf"><description><![CDATA[Selection Sequence ID used in the Selection
+Sequence (Statistics) Report Interpretation.]]>None</description></node></node><node access="read-write" datatype="-&gt; /ipfix/cache/name" name="cache" type="leaf"><description><![CDATA[Cache that receives the output of the
+Selection Process.]]>None</description></node></node><node access="read-write" key="name" name="cache" type="list"><description><![CDATA[Cache of the Monitoring Device.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-only" datatype="uint32" name="meteringProcessId" type="leaf"><description><![CDATA[The identifier of the Metering Process this
+Cache belongs to.
+This parameter corresponds to the Information Element
+meteringProcessId.  Its occurrence helps to associate
+Cache parameters with Metering Process statistics
+exported by the Monitoring Device using the Metering
+Process (Reliability) Statistics Template as
+defined by the IPFIX protocol specification.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="dataRecords" type="leaf"><description><![CDATA[The number of Data Records generated by this
+Cache.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+cacheDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixMeteringProcessDataRecords in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="cacheDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter dataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixMeteringProcessDiscontinuityTime in the IPFIX MIB
+module.  In contrast to
+ipfixMeteringProcessDiscontinuityTime, the time is
+absolute and not relative to sysUpTime.]]>None</description></node><node access="read-write" name="CacheType" type="choice"><description><![CDATA[Type of Cache and specific parameters.]]>None</description><node access="read-write" name="immediateCache" type="case"><node access="read-write" name="immediateCache" type="container"><description><![CDATA[Flow expiration after the first packet;
+generation of Packet Records.]]>None</description><node access="read-write" name="cacheLayout" type="container"><description><![CDATA[Cache Layout parameters.]]>None</description><node access="read-write" key="name" name="cacheField" type="list"><description><![CDATA[Superset of fields that are included in the
+Packet Reports or Flow Records generated by the Cache.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" name="nameOrId" type="choice"><description><![CDATA[Name or identifier of the Information
+Element.]]>None</description><node access="read-write" name="ieName" type="case"><node access="read-write" datatype="ieNameType" name="ieName" type="leaf"><description><![CDATA[Name of the Information Element.]]>None</description></node></node><node access="read-write" name="ieId" type="case"><node access="read-write" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[Identifier of the Information Element.]]>None</description></node></node></node><node access="read-write" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[Length of the field in which the Information
+Element is encoded.  A value of 65535 specifies a
+variable-length Information Element.  For Information
+Elements of integer and float type, the field length MAY
+be set to a smaller value than the standard length of
+the abstract data type if the rules of reduced size
+encoding are fulfilled.
+If not configured by the user, this parameter is set by
+the Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" default="0" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[If this parameter is zero, the Information
+Element is registered in the IANA registry of IPFIX
+Information Elements.
+If this parameter is configured with a non-zero private
+enterprise number, the Information Element is
+enterprise-specific.
+If the enterprise number is set to 29305, this field
+contains a Reverse Information Element.  In this case,
+the Cache MUST generate Data Records in accordance to
+RFC 5103.]]>None</description></node><node access="read-write" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a flow key.]]>None</description></node></node></node></node></node><node access="read-write" name="timeoutCache" type="case"><node access="read-write" name="timeoutCache" type="container"><description><![CDATA[Flow expiration after active and idle
+timeout; generation of Flow Records.]]>None</description><node access="read-write" datatype="uint32" name="maxFlows" type="leaf"><description><![CDATA[This parameter configures the maximum number of
+Flows in the Cache, which is the maximum number of Flows
+that can be measured simultaneously.
+The Monitoring Device MUST ensure that sufficient resources
+are available to store the configured maximum number of
+Flows.
+If the maximum number of Flows is measured, an additional
+Flow can be measured only if an existing entry is removed.
+However, traffic that pertains to existing Flows can
+continue to be measured.]]>None</description></node><node access="read-write" datatype="uint32" name="activeTimeout" type="leaf"><description><![CDATA[This parameter configures the time in
+seconds after which a Flow is expired even though packets
+matching this Flow are still received by the Cache.
+The parameter value zero indicates infinity, meaning that
+there is no active timeout.
+If not configured by the user, the Monitoring Device sets
+this parameter.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheActiveTimeout in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="idleTimeout" type="leaf"><description><![CDATA[This parameter configures the time in
+seconds after which a Flow is expired if no more packets
+matching this Flow are received by the Cache.
+The parameter value zero indicates infinity, meaning that
+there is no idle timeout.
+If not configured by the user, the Monitoring Device sets
+this parameter.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheIdleTimeout in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="exportInterval" type="leaf"><description><![CDATA[This parameter configures the interval (in
+seconds) for periodical export of Flow Records.
+If not configured by the user, the Monitoring Device sets
+this parameter.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="activeFlows" type="leaf"><description><![CDATA[The number of Flows currently active in this
+Cache.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheActiveFlows in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="unusedCacheEntries" type="leaf"><description><![CDATA[The number of unused Cache entries in this
+Cache.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheUnusedCacheEntries in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" name="cacheLayout" type="container"><description><![CDATA[Cache Layout parameters.]]>None</description><node access="read-write" key="name" name="cacheField" type="list"><description><![CDATA[Superset of fields that are included in the
+Packet Reports or Flow Records generated by the Cache.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" name="nameOrId" type="choice"><description><![CDATA[Name or identifier of the Information
+Element.]]>None</description><node access="read-write" name="ieName" type="case"><node access="read-write" datatype="ieNameType" name="ieName" type="leaf"><description><![CDATA[Name of the Information Element.]]>None</description></node></node><node access="read-write" name="ieId" type="case"><node access="read-write" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[Identifier of the Information Element.]]>None</description></node></node></node><node access="read-write" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[Length of the field in which the Information
+Element is encoded.  A value of 65535 specifies a
+variable-length Information Element.  For Information
+Elements of integer and float type, the field length MAY
+be set to a smaller value than the standard length of
+the abstract data type if the rules of reduced size
+encoding are fulfilled.
+If not configured by the user, this parameter is set by
+the Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" default="0" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[If this parameter is zero, the Information
+Element is registered in the IANA registry of IPFIX
+Information Elements.
+If this parameter is configured with a non-zero private
+enterprise number, the Information Element is
+enterprise-specific.
+If the enterprise number is set to 29305, this field
+contains a Reverse Information Element.  In this case,
+the Cache MUST generate Data Records in accordance to
+RFC 5103.]]>None</description></node><node access="read-write" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a flow key.]]>None</description></node></node></node></node></node><node access="read-write" name="naturalCache" type="case"><node access="read-write" name="naturalCache" type="container"><description><![CDATA[Flow expiration after active and idle
+timeout, or on natural termination (e.g., TCP FIN or
+TCP RST) of the Flow; generation of Flow Records.]]>None</description><node access="read-write" datatype="uint32" name="maxFlows" type="leaf"><description><![CDATA[This parameter configures the maximum number of
+Flows in the Cache, which is the maximum number of Flows
+that can be measured simultaneously.
+The Monitoring Device MUST ensure that sufficient resources
+are available to store the configured maximum number of
+Flows.
+If the maximum number of Flows is measured, an additional
+Flow can be measured only if an existing entry is removed.
+However, traffic that pertains to existing Flows can
+continue to be measured.]]>None</description></node><node access="read-write" datatype="uint32" name="activeTimeout" type="leaf"><description><![CDATA[This parameter configures the time in
+seconds after which a Flow is expired even though packets
+matching this Flow are still received by the Cache.
+The parameter value zero indicates infinity, meaning that
+there is no active timeout.
+If not configured by the user, the Monitoring Device sets
+this parameter.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheActiveTimeout in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="idleTimeout" type="leaf"><description><![CDATA[This parameter configures the time in
+seconds after which a Flow is expired if no more packets
+matching this Flow are received by the Cache.
+The parameter value zero indicates infinity, meaning that
+there is no idle timeout.
+If not configured by the user, the Monitoring Device sets
+this parameter.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheIdleTimeout in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="exportInterval" type="leaf"><description><![CDATA[This parameter configures the interval (in
+seconds) for periodical export of Flow Records.
+If not configured by the user, the Monitoring Device sets
+this parameter.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="activeFlows" type="leaf"><description><![CDATA[The number of Flows currently active in this
+Cache.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheActiveFlows in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="unusedCacheEntries" type="leaf"><description><![CDATA[The number of unused Cache entries in this
+Cache.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheUnusedCacheEntries in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" name="cacheLayout" type="container"><description><![CDATA[Cache Layout parameters.]]>None</description><node access="read-write" key="name" name="cacheField" type="list"><description><![CDATA[Superset of fields that are included in the
+Packet Reports or Flow Records generated by the Cache.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" name="nameOrId" type="choice"><description><![CDATA[Name or identifier of the Information
+Element.]]>None</description><node access="read-write" name="ieName" type="case"><node access="read-write" datatype="ieNameType" name="ieName" type="leaf"><description><![CDATA[Name of the Information Element.]]>None</description></node></node><node access="read-write" name="ieId" type="case"><node access="read-write" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[Identifier of the Information Element.]]>None</description></node></node></node><node access="read-write" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[Length of the field in which the Information
+Element is encoded.  A value of 65535 specifies a
+variable-length Information Element.  For Information
+Elements of integer and float type, the field length MAY
+be set to a smaller value than the standard length of
+the abstract data type if the rules of reduced size
+encoding are fulfilled.
+If not configured by the user, this parameter is set by
+the Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" default="0" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[If this parameter is zero, the Information
+Element is registered in the IANA registry of IPFIX
+Information Elements.
+If this parameter is configured with a non-zero private
+enterprise number, the Information Element is
+enterprise-specific.
+If the enterprise number is set to 29305, this field
+contains a Reverse Information Element.  In this case,
+the Cache MUST generate Data Records in accordance to
+RFC 5103.]]>None</description></node><node access="read-write" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a flow key.]]>None</description></node></node></node></node></node><node access="read-write" name="permanentCache" type="case"><node access="read-write" name="permanentCache" type="container"><description><![CDATA[No flow expiration, periodical export with
+time interval exportInterval; generation of Flow
+Records.]]>None</description><node access="read-write" datatype="uint32" name="maxFlows" type="leaf"><description><![CDATA[This parameter configures the maximum number of
+Flows in the Cache, which is the maximum number of Flows
+that can be measured simultaneously.
+The Monitoring Device MUST ensure that sufficient resources
+are available to store the configured maximum number of
+Flows.
+If the maximum number of Flows is measured, an additional
+Flow can be measured only if an existing entry is removed.
+However, traffic that pertains to existing Flows can
+continue to be measured.]]>None</description></node><node access="read-write" datatype="uint32" name="activeTimeout" type="leaf"><description><![CDATA[This parameter configures the time in
+seconds after which a Flow is expired even though packets
+matching this Flow are still received by the Cache.
+The parameter value zero indicates infinity, meaning that
+there is no active timeout.
+If not configured by the user, the Monitoring Device sets
+this parameter.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheActiveTimeout in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="idleTimeout" type="leaf"><description><![CDATA[This parameter configures the time in
+seconds after which a Flow is expired if no more packets
+matching this Flow are received by the Cache.
+The parameter value zero indicates infinity, meaning that
+there is no idle timeout.
+If not configured by the user, the Monitoring Device sets
+this parameter.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheIdleTimeout in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="exportInterval" type="leaf"><description><![CDATA[This parameter configures the interval (in
+seconds) for periodical export of Flow Records.
+If not configured by the user, the Monitoring Device sets
+this parameter.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="activeFlows" type="leaf"><description><![CDATA[The number of Flows currently active in this
+Cache.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheActiveFlows in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="unusedCacheEntries" type="leaf"><description><![CDATA[The number of unused Cache entries in this
+Cache.
+Note that this parameter corresponds to
+ipfixMeteringProcessCacheUnusedCacheEntries in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" name="cacheLayout" type="container"><description><![CDATA[Cache Layout parameters.]]>None</description><node access="read-write" key="name" name="cacheField" type="list"><description><![CDATA[Superset of fields that are included in the
+Packet Reports or Flow Records generated by the Cache.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" name="nameOrId" type="choice"><description><![CDATA[Name or identifier of the Information
+Element.]]>None</description><node access="read-write" name="ieName" type="case"><node access="read-write" datatype="ieNameType" name="ieName" type="leaf"><description><![CDATA[Name of the Information Element.]]>None</description></node></node><node access="read-write" name="ieId" type="case"><node access="read-write" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[Identifier of the Information Element.]]>None</description></node></node></node><node access="read-write" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[Length of the field in which the Information
+Element is encoded.  A value of 65535 specifies a
+variable-length Information Element.  For Information
+Elements of integer and float type, the field length MAY
+be set to a smaller value than the standard length of
+the abstract data type if the rules of reduced size
+encoding are fulfilled.
+If not configured by the user, this parameter is set by
+the Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" default="0" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[If this parameter is zero, the Information
+Element is registered in the IANA registry of IPFIX
+Information Elements.
+If this parameter is configured with a non-zero private
+enterprise number, the Information Element is
+enterprise-specific.
+If the enterprise number is set to 29305, this field
+contains a Reverse Information Element.  In this case,
+the Cache MUST generate Data Records in accordance to
+RFC 5103.]]>None</description></node><node access="read-write" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a flow key.]]>None</description></node></node></node></node></node></node><node access="read-write" datatype="-&gt; /ipfix/exportingProcess/name" name="exportingProcess" type="leaf-list"><description><![CDATA[Records are exported by all Exporting Processes
+in the list.]]>None</description></node></node><node access="read-write" key="name" name="exportingProcess" type="list"><description><![CDATA[Exporting Process of the Monitoring Device.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-only" datatype="uint32" name="exportingProcessId" type="leaf"><description><![CDATA[The identifier of the Exporting Process.
+This parameter corresponds to the Information Element
+exportingProcessId.  Its occurrence helps to associate
+Exporting Process parameters with Exporing Process
+statistics exported by the Monitoring Device using the
+Exporting Process Reliability Statistics Template as
+defined by the IPFIX protocol specification.]]>None</description></node><node access="read-write" datatype="identityref:exportMode" default="parallel" name="exportMode" type="leaf" values="ipfix:fallback|ipfix:loadBalancing|ipfix:parallel"><description><![CDATA[This parameter determines to which configured
+destination(s) the incoming Data Records are exported.]]>None</description></node><node access="read-write" key="name" name="destination" type="list"><description><![CDATA[List of export destinations.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" name="DestinationParameters" type="choice"><description><![CDATA[Configuration parameters depend on whether
+SCTP, UDP, or TCP is used as transport protocol, and
+whether the destination is a file.]]>None</description><node access="read-write" name="sctpExporter" type="case"><node access="read-write" name="sctpExporter" type="container"><description><![CDATA[SCTP parameters.]]>None</description><node access="read-write" datatype="uint16" default="10" name="ipfixVersion" type="leaf"><description><![CDATA[IPFIX version number.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[If not configured by the user, the Monitoring
+Device uses the default port number for IPFIX, which is
+4739 without TLS or DTLS and 4740 if TLS or DTLS is
+activated.]]>None</description></node><node access="read-write" mandatory="true" name="indexOrName" type="choice"><description><![CDATA[Index or name of the interface as stored in the
+ifTable of IF-MIB.
+If configured, the Exporting Process MUST use the given
+interface to export IPFIX Messages to the export
+destination.
+If omitted, the Exporting Process selects the outgoing
+interface based on local routing decision and accepts
+return traffic, such as transport-layer acknowledgments,
+on all available interfaces.]]>None</description><node access="read-write" name="ifIndex" type="case"><node access="read-write" datatype="uint32" name="ifIndex" type="leaf"><description><![CDATA[Index of an interface as stored in the ifTable
+of IF-MIB.]]>None</description></node></node><node access="read-write" name="ifName" type="case"><node access="read-write" datatype="string" name="ifName" type="leaf"><description><![CDATA[Name of an interface as stored in the ifTable
+of IF-MIB.]]>None</description></node></node></node><node access="read-write" datatype="uint32" name="sendBufferSize" type="leaf"><description><![CDATA[Size of the socket send buffer.
+If not configured by the user, this parameter is set by
+the Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" name="rateLimit" type="leaf"><description><![CDATA[Maximum number of bytes per second the Exporting
+Process may export to the given destination.  The number of
+bytes is calculated from the lengths of the IPFIX Messages
+exported.  If not configured, no rate limiting is performed.]]>None</description></node><node access="read-write" name="transportLayerSecurity" presence="true" type="container"><description><![CDATA[TLS or DTLS configuration.]]>None</description><node access="read-write" datatype="string" name="localCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates may be used to identify the local
+endpoint.]]>None</description></node><node access="read-write" datatype="string" name="localSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names that may be used in the
+certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="localSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that may be used to
+in the certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="string" name="remoteCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates are accepted to authorize remote
+endpoints.]]>None</description></node><node access="read-write" datatype="string" name="remoteSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names which are accepted in
+certificates to authorize remote endpoints.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="remoteSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that are accepted in
+certificates to authorize remote endpoints.]]>None</description></node></node><node access="read-only" name="transportSession" type="container"><description><![CDATA[State parameters of the Transport Session
+directed to the given destination.]]>None</description><node access="read-only" datatype="uint16" name="ipfixVersion" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the version number of the IPFIX protocol that the
+Exporter uses to export its data in this Transport Session.
+Hence, it is identical to the value of the configuration
+parameter ipfixVersion of the outer SctpExporter,
+UdpExporter, or TcpExporter node.
+Used for Collecting Processes, this parameter contains the
+version number of the IPFIX protocol it receives for
+this Transport Session.  If IPFIX Messages of different
+IPFIX protocol versions are received, this parameter
+contains the maximum version number.
+Note that this parameter corresponds to
+ipfixTransportSessionIpfixVersion in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="sourceAddress" type="leaf"><description><![CDATA[The source address of the Exporter of the
+IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Exporter.
+Preferably, the source IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionSourceAddressType and
+ipfixTransportSessionSourceAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="destinationAddress" type="leaf"><description><![CDATA[The destination address of the Collector of
+the IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Collector.
+Preferably, the destination IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDestinationAddressType and
+ipfixTransportSessionDestinationAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="sourcePort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Exporter of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionSourcePort in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Collector of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionDestinationPort in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="sctpAssocId" type="leaf"><description><![CDATA[The association ID used for the SCTP session
+between the Exporter and the Collector of the IPFIX
+Transport Session.  It is equal to the sctpAssocId entry
+in the sctpAssocTable defined in the SCTP-MIB.
+This parameter is only available if the transport protocol
+is SCTP and if an SNMP agent on the same Monitoring Device
+enables access to the corresponding MIB objects in the
+sctpAssocTable.
+Note that this parameter corresponds to
+ipfixTransportSessionSctpAssocId in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="transportSessionStatus" name="status" type="leaf" values="inactive|active|unknown"><description><![CDATA[Status of the Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionStatus in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="rate" type="leaf"><description><![CDATA[The number of bytes per second transmitted by the
+Exporting Process or received by the Collecting Process.
+This parameter is updated every second.
+Note that this parameter corresponds to
+ipfixTransportSessionRate in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="bytes" type="leaf"><description><![CDATA[The number of bytes transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionBytes in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="messages" type="leaf"><description><![CDATA[The number of messages transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionMessages in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="discardedMessages" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+indicates the number of messages that could not be sent due
+to internal buffer overflows, network congestion, routing
+issues, etc.  Used for Collecting Process, this parameter
+indicates the number of received IPFIX Message that are
+malformed, cannot be decoded, are received in the wrong
+order or are missing according to the sequence number.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionDiscardedMessages in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="records" type="leaf"><description><![CDATA[The number of Data Records transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="templates" type="leaf"><description><![CDATA[The number of Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplates in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="optionsTemplates" type="leaf"><description><![CDATA[The number of Option Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplates in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionStartTime" type="leaf"><description><![CDATA[Timestamp of the start of the given Transport
+Session.
+This state parameter does not correspond to any object in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more of the Transport Session counters suffered a
+discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDiscontinuityTime in the IPFIX MIB
+module.  In contrast to
+ipfixTransportSessionDiscontinuityTime, the time is
+absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="template" type="list"><description><![CDATA[This list contains the Templates and Options
+Templates that are transmitted by the Exporting Process
+or received by the Collecting Process.
+Withdrawn or invalidated (Options) Templates MUST be removed
+from this list.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[The ID of the Observation Domain for which this
+Template is defined.
+Note that this parameter corresponds to
+ipfixTemplateObservationDomainId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="templateId" type="leaf"><description><![CDATA[This number indicates the Template ID in the IPFIX
+message.
+Note that this parameter corresponds to ipfixTemplateId in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="setId" type="leaf"><description><![CDATA[This number indicates the Set ID of the Template.
+Currently, there are two values defined.  The value 2 is used
+for Sets containing Template definitions.  The value 3 is
+used for Sets containing Options Template definitions.
+Note that this parameter corresponds to ipfixTemplateSetId
+in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="accessTime" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the time when this (Options) Template was last
+sent to the Collector(s) or written to the file.
+Used for Collecting Processes, this parameter contains the
+time when this (Options) Template was last received from the
+Exporter or read from the file.
+Note that this parameter corresponds to
+ipfixTemplateAccessTime in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="templateDataRecords" type="leaf"><description><![CDATA[The number of transmitted or received Data
+Records defined by this (Options) Template.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+templateDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTemplateDataRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="templateDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter templateDataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTemplateDiscontinuityTime in the IPFIX MIB module.
+In contrast to ipfixTemplateDiscontinuityTime, the time
+is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="field" type="list"><description><![CDATA[This list contains the (Options) Template
+fields of which the (Options) Template is defined.
+The order of the list corresponds to the order of the fields
+in the (Option) Template Record.]]>None</description><node access="read-only" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[This parameter indicates the Information
+Element identifier of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[This parameter indicates the length of the
+Information Element of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeLength in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[This parameter indicates the IANA enterprise
+number of the authority defining the Information Element
+identifier.
+If the Information Element is not enterprise-specific,
+this state parameter is zero.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeEnterpriseNumber in the IPFIX
+MIB module.]]>None</description></node><node access="read-only" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a Flow Key field.
+Note that this corresponds to flowKey(1) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node><node access="read-only" datatype="empty" name="isScope" type="leaf"><description><![CDATA[If present, this is a scope field.
+Note that this corresponds to scope(0) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node></node></node></node><node access="read-write" datatype="inet:ip-address" name="sourceIPAddress" type="leaf-list"><description><![CDATA[List of source IP addresses used by the
+Exporting Process.
+If configured, the specified addresses are eligible local
+IP addresses of the multihomed SCTP endpoint.
+If not configured, all locally assigned IP addresses are
+eligible local IP addresses.]]>None</description></node><node access="read-write" datatype="inet:ip-address" name="destinationIPAddress" type="leaf-list"><description><![CDATA[One or more IP addresses of the Collecting
+Process to which IPFIX Messages are sent.
+The user MUST ensure that all configured IP addresses
+belong to the same Collecting Process.
+The Exporting Process tries to establish an SCTP
+association to any of the configured destination IP
+addresses.]]>None</description></node><node access="read-write" datatype="uint32" default="0" name="timedReliability" type="leaf"><description><![CDATA[Lifetime in milliseconds until an IPFIX
+Message containing Data Sets only is 'abandoned' due to
+the timed reliability mechanism of PR-SCTP.
+If this parameter is set to zero, reliable SCTP
+transport is used for all Data Records.
+Regardless of the value of this parameter, the Exporting
+Process MAY use reliable SCTP transport for Data Sets
+associated with Options Templates.]]>None</description></node></node></node><node access="read-write" name="udpExporter" type="case"><node access="read-write" name="udpExporter" type="container"><description><![CDATA[UDP parameters.]]>None</description><node access="read-write" datatype="uint16" default="10" name="ipfixVersion" type="leaf"><description><![CDATA[IPFIX version number.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[If not configured by the user, the Monitoring
+Device uses the default port number for IPFIX, which is
+4739 without TLS or DTLS and 4740 if TLS or DTLS is
+activated.]]>None</description></node><node access="read-write" mandatory="true" name="indexOrName" type="choice"><description><![CDATA[Index or name of the interface as stored in the
+ifTable of IF-MIB.
+If configured, the Exporting Process MUST use the given
+interface to export IPFIX Messages to the export
+destination.
+If omitted, the Exporting Process selects the outgoing
+interface based on local routing decision and accepts
+return traffic, such as transport-layer acknowledgments,
+on all available interfaces.]]>None</description><node access="read-write" name="ifIndex" type="case"><node access="read-write" datatype="uint32" name="ifIndex" type="leaf"><description><![CDATA[Index of an interface as stored in the ifTable
+of IF-MIB.]]>None</description></node></node><node access="read-write" name="ifName" type="case"><node access="read-write" datatype="string" name="ifName" type="leaf"><description><![CDATA[Name of an interface as stored in the ifTable
+of IF-MIB.]]>None</description></node></node></node><node access="read-write" datatype="uint32" name="sendBufferSize" type="leaf"><description><![CDATA[Size of the socket send buffer.
+If not configured by the user, this parameter is set by
+the Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" name="rateLimit" type="leaf"><description><![CDATA[Maximum number of bytes per second the Exporting
+Process may export to the given destination.  The number of
+bytes is calculated from the lengths of the IPFIX Messages
+exported.  If not configured, no rate limiting is performed.]]>None</description></node><node access="read-write" name="transportLayerSecurity" presence="true" type="container"><description><![CDATA[TLS or DTLS configuration.]]>None</description><node access="read-write" datatype="string" name="localCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates may be used to identify the local
+endpoint.]]>None</description></node><node access="read-write" datatype="string" name="localSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names that may be used in the
+certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="localSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that may be used to
+in the certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="string" name="remoteCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates are accepted to authorize remote
+endpoints.]]>None</description></node><node access="read-write" datatype="string" name="remoteSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names which are accepted in
+certificates to authorize remote endpoints.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="remoteSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that are accepted in
+certificates to authorize remote endpoints.]]>None</description></node></node><node access="read-only" name="transportSession" type="container"><description><![CDATA[State parameters of the Transport Session
+directed to the given destination.]]>None</description><node access="read-only" datatype="uint16" name="ipfixVersion" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the version number of the IPFIX protocol that the
+Exporter uses to export its data in this Transport Session.
+Hence, it is identical to the value of the configuration
+parameter ipfixVersion of the outer SctpExporter,
+UdpExporter, or TcpExporter node.
+Used for Collecting Processes, this parameter contains the
+version number of the IPFIX protocol it receives for
+this Transport Session.  If IPFIX Messages of different
+IPFIX protocol versions are received, this parameter
+contains the maximum version number.
+Note that this parameter corresponds to
+ipfixTransportSessionIpfixVersion in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="sourceAddress" type="leaf"><description><![CDATA[The source address of the Exporter of the
+IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Exporter.
+Preferably, the source IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionSourceAddressType and
+ipfixTransportSessionSourceAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="destinationAddress" type="leaf"><description><![CDATA[The destination address of the Collector of
+the IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Collector.
+Preferably, the destination IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDestinationAddressType and
+ipfixTransportSessionDestinationAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="sourcePort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Exporter of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionSourcePort in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Collector of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionDestinationPort in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="sctpAssocId" type="leaf"><description><![CDATA[The association ID used for the SCTP session
+between the Exporter and the Collector of the IPFIX
+Transport Session.  It is equal to the sctpAssocId entry
+in the sctpAssocTable defined in the SCTP-MIB.
+This parameter is only available if the transport protocol
+is SCTP and if an SNMP agent on the same Monitoring Device
+enables access to the corresponding MIB objects in the
+sctpAssocTable.
+Note that this parameter corresponds to
+ipfixTransportSessionSctpAssocId in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="transportSessionStatus" name="status" type="leaf" values="inactive|active|unknown"><description><![CDATA[Status of the Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionStatus in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="rate" type="leaf"><description><![CDATA[The number of bytes per second transmitted by the
+Exporting Process or received by the Collecting Process.
+This parameter is updated every second.
+Note that this parameter corresponds to
+ipfixTransportSessionRate in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="bytes" type="leaf"><description><![CDATA[The number of bytes transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionBytes in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="messages" type="leaf"><description><![CDATA[The number of messages transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionMessages in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="discardedMessages" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+indicates the number of messages that could not be sent due
+to internal buffer overflows, network congestion, routing
+issues, etc.  Used for Collecting Process, this parameter
+indicates the number of received IPFIX Message that are
+malformed, cannot be decoded, are received in the wrong
+order or are missing according to the sequence number.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionDiscardedMessages in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="records" type="leaf"><description><![CDATA[The number of Data Records transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="templates" type="leaf"><description><![CDATA[The number of Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplates in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="optionsTemplates" type="leaf"><description><![CDATA[The number of Option Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplates in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionStartTime" type="leaf"><description><![CDATA[Timestamp of the start of the given Transport
+Session.
+This state parameter does not correspond to any object in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more of the Transport Session counters suffered a
+discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDiscontinuityTime in the IPFIX MIB
+module.  In contrast to
+ipfixTransportSessionDiscontinuityTime, the time is
+absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="template" type="list"><description><![CDATA[This list contains the Templates and Options
+Templates that are transmitted by the Exporting Process
+or received by the Collecting Process.
+Withdrawn or invalidated (Options) Templates MUST be removed
+from this list.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[The ID of the Observation Domain for which this
+Template is defined.
+Note that this parameter corresponds to
+ipfixTemplateObservationDomainId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="templateId" type="leaf"><description><![CDATA[This number indicates the Template ID in the IPFIX
+message.
+Note that this parameter corresponds to ipfixTemplateId in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="setId" type="leaf"><description><![CDATA[This number indicates the Set ID of the Template.
+Currently, there are two values defined.  The value 2 is used
+for Sets containing Template definitions.  The value 3 is
+used for Sets containing Options Template definitions.
+Note that this parameter corresponds to ipfixTemplateSetId
+in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="accessTime" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the time when this (Options) Template was last
+sent to the Collector(s) or written to the file.
+Used for Collecting Processes, this parameter contains the
+time when this (Options) Template was last received from the
+Exporter or read from the file.
+Note that this parameter corresponds to
+ipfixTemplateAccessTime in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="templateDataRecords" type="leaf"><description><![CDATA[The number of transmitted or received Data
+Records defined by this (Options) Template.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+templateDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTemplateDataRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="templateDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter templateDataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTemplateDiscontinuityTime in the IPFIX MIB module.
+In contrast to ipfixTemplateDiscontinuityTime, the time
+is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="field" type="list"><description><![CDATA[This list contains the (Options) Template
+fields of which the (Options) Template is defined.
+The order of the list corresponds to the order of the fields
+in the (Option) Template Record.]]>None</description><node access="read-only" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[This parameter indicates the Information
+Element identifier of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[This parameter indicates the length of the
+Information Element of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeLength in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[This parameter indicates the IANA enterprise
+number of the authority defining the Information Element
+identifier.
+If the Information Element is not enterprise-specific,
+this state parameter is zero.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeEnterpriseNumber in the IPFIX
+MIB module.]]>None</description></node><node access="read-only" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a Flow Key field.
+Note that this corresponds to flowKey(1) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node><node access="read-only" datatype="empty" name="isScope" type="leaf"><description><![CDATA[If present, this is a scope field.
+Note that this corresponds to scope(0) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node></node></node></node><node access="read-write" datatype="inet:ip-address" name="sourceIPAddress" type="leaf"><description><![CDATA[Source IP address used by the Exporting Process.
+If not configured, the IP address assigned to the outgoing
+interface is used as source IP address.]]>None</description></node><node access="read-write" datatype="inet:ip-address" mandatory="true" name="destinationIPAddress" type="leaf"><description><![CDATA[IP address of the Collection Process to which
+IPFIX Messages are sent.]]>None</description></node><node access="read-write" datatype="uint16" name="maxPacketSize" type="leaf"><description><![CDATA[This parameter specifies the maximum size of
+IP packets sent to the Collector.  If set to zero, the
+Exporting Device MUST derive the maximum packet size
+from path MTU discovery mechanisms.
+If not configured by the user, this parameter is set by
+the Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" default="600" name="templateRefreshTimeout" type="leaf"><description><![CDATA[Sets time after which Templates are resent in the
+UDP Transport Session.
+Note that the configured lifetime MUST be adapted to the
+templateLifeTime parameter value at the receiving Collecting
+Process.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplateRefreshTimeout in the IPFIX
+MIB module.]]>None</description></node><node access="read-write" datatype="uint32" default="600" name="optionsTemplateRefreshTimeout" type="leaf"><description><![CDATA[Sets time after which Options Templates are
+resent in the UDP Transport Session.
+Note that the configured lifetime MUST be adapted to the
+optionsTemplateLifeTime parameter value at the receiving
+Collecting Process.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplateRefreshTimeout in the
+IPFIX MIB module.]]>None</description></node><node access="read-write" datatype="uint32" name="templateRefreshPacket" type="leaf"><description><![CDATA[Sets number of IPFIX Messages after which
+Templates are resent in the UDP Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplateRefreshPacket in the IPFIX
+MIB module.
+If omitted, Templates are only resent after timeout.]]>None</description></node><node access="read-write" datatype="uint32" name="optionsTemplateRefreshPacket" type="leaf"><description><![CDATA[Sets number of IPFIX Messages after which
+Options Templates are resent in the UDP Transport Session
+protocol.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplateRefreshPacket in the
+IPFIX MIB module.
+If omitted, Templates are only resent after timeout.]]>None</description></node></node></node><node access="read-write" name="tcpExporter" type="case"><node access="read-write" name="tcpExporter" type="container"><description><![CDATA[TCP parameters.]]>None</description><node access="read-write" datatype="uint16" default="10" name="ipfixVersion" type="leaf"><description><![CDATA[IPFIX version number.]]>None</description></node><node access="read-write" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[If not configured by the user, the Monitoring
+Device uses the default port number for IPFIX, which is
+4739 without TLS or DTLS and 4740 if TLS or DTLS is
+activated.]]>None</description></node><node access="read-write" mandatory="true" name="indexOrName" type="choice"><description><![CDATA[Index or name of the interface as stored in the
+ifTable of IF-MIB.
+If configured, the Exporting Process MUST use the given
+interface to export IPFIX Messages to the export
+destination.
+If omitted, the Exporting Process selects the outgoing
+interface based on local routing decision and accepts
+return traffic, such as transport-layer acknowledgments,
+on all available interfaces.]]>None</description><node access="read-write" name="ifIndex" type="case"><node access="read-write" datatype="uint32" name="ifIndex" type="leaf"><description><![CDATA[Index of an interface as stored in the ifTable
+of IF-MIB.]]>None</description></node></node><node access="read-write" name="ifName" type="case"><node access="read-write" datatype="string" name="ifName" type="leaf"><description><![CDATA[Name of an interface as stored in the ifTable
+of IF-MIB.]]>None</description></node></node></node><node access="read-write" datatype="uint32" name="sendBufferSize" type="leaf"><description><![CDATA[Size of the socket send buffer.
+If not configured by the user, this parameter is set by
+the Monitoring Device.]]>None</description></node><node access="read-write" datatype="uint32" name="rateLimit" type="leaf"><description><![CDATA[Maximum number of bytes per second the Exporting
+Process may export to the given destination.  The number of
+bytes is calculated from the lengths of the IPFIX Messages
+exported.  If not configured, no rate limiting is performed.]]>None</description></node><node access="read-write" name="transportLayerSecurity" presence="true" type="container"><description><![CDATA[TLS or DTLS configuration.]]>None</description><node access="read-write" datatype="string" name="localCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates may be used to identify the local
+endpoint.]]>None</description></node><node access="read-write" datatype="string" name="localSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names that may be used in the
+certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="localSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that may be used to
+in the certificates to identify the local endpoint.]]>None</description></node><node access="read-write" datatype="string" name="remoteCertificationAuthorityDN" type="leaf-list"><description><![CDATA[Distinguished names of certification authorities
+whose certificates are accepted to authorize remote
+endpoints.]]>None</description></node><node access="read-write" datatype="string" name="remoteSubjectDN" type="leaf-list"><description><![CDATA[Distinguished names which are accepted in
+certificates to authorize remote endpoints.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="remoteSubjectFQDN" type="leaf-list"><description><![CDATA[Fully qualified domain names that are accepted in
+certificates to authorize remote endpoints.]]>None</description></node></node><node access="read-only" name="transportSession" type="container"><description><![CDATA[State parameters of the Transport Session
+directed to the given destination.]]>None</description><node access="read-only" datatype="uint16" name="ipfixVersion" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the version number of the IPFIX protocol that the
+Exporter uses to export its data in this Transport Session.
+Hence, it is identical to the value of the configuration
+parameter ipfixVersion of the outer SctpExporter,
+UdpExporter, or TcpExporter node.
+Used for Collecting Processes, this parameter contains the
+version number of the IPFIX protocol it receives for
+this Transport Session.  If IPFIX Messages of different
+IPFIX protocol versions are received, this parameter
+contains the maximum version number.
+Note that this parameter corresponds to
+ipfixTransportSessionIpfixVersion in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="sourceAddress" type="leaf"><description><![CDATA[The source address of the Exporter of the
+IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Exporter.
+Preferably, the source IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionSourceAddressType and
+ipfixTransportSessionSourceAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:ip-address" name="destinationAddress" type="leaf"><description><![CDATA[The destination address of the Collector of
+the IPFIX Transport Session.
+If the transport protocol is SCTP, this is one of the
+potentially many IP addresses of the Collector.
+Preferably, the destination IP address of the path that is
+usually selected by the Exporter to send IPFIX Messages to
+the Collector SHOULD be used.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDestinationAddressType and
+ipfixTransportSessionDestinationAddress in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="sourcePort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Exporter of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionSourcePort in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="inet:port-number" name="destinationPort" type="leaf"><description><![CDATA[The transport-protocol port number of the
+Collector of the IPFIX Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionDestinationPort in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="sctpAssocId" type="leaf"><description><![CDATA[The association ID used for the SCTP session
+between the Exporter and the Collector of the IPFIX
+Transport Session.  It is equal to the sctpAssocId entry
+in the sctpAssocTable defined in the SCTP-MIB.
+This parameter is only available if the transport protocol
+is SCTP and if an SNMP agent on the same Monitoring Device
+enables access to the corresponding MIB objects in the
+sctpAssocTable.
+Note that this parameter corresponds to
+ipfixTransportSessionSctpAssocId in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="transportSessionStatus" name="status" type="leaf" values="inactive|active|unknown"><description><![CDATA[Status of the Transport Session.
+Note that this parameter corresponds to
+ipfixTransportSessionStatus in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:gauge32" name="rate" type="leaf"><description><![CDATA[The number of bytes per second transmitted by the
+Exporting Process or received by the Collecting Process.
+This parameter is updated every second.
+Note that this parameter corresponds to
+ipfixTransportSessionRate in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="bytes" type="leaf"><description><![CDATA[The number of bytes transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionBytes in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="messages" type="leaf"><description><![CDATA[The number of messages transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionMessages in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="discardedMessages" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+indicates the number of messages that could not be sent due
+to internal buffer overflows, network congestion, routing
+issues, etc.  Used for Collecting Process, this parameter
+indicates the number of received IPFIX Message that are
+malformed, cannot be decoded, are received in the wrong
+order or are missing according to the sequence number.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionDiscardedMessages in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="records" type="leaf"><description><![CDATA[The number of Data Records transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="templates" type="leaf"><description><![CDATA[The number of Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionTemplates in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="optionsTemplates" type="leaf"><description><![CDATA[The number of Option Templates transmitted by the
+Exporting Process or received by the Collecting Process.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+transportSessionDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTransportSessionOptionsTemplates in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionStartTime" type="leaf"><description><![CDATA[Timestamp of the start of the given Transport
+Session.
+This state parameter does not correspond to any object in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="transportSessionDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more of the Transport Session counters suffered a
+discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTransportSessionDiscontinuityTime in the IPFIX MIB
+module.  In contrast to
+ipfixTransportSessionDiscontinuityTime, the time is
+absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="template" type="list"><description><![CDATA[This list contains the Templates and Options
+Templates that are transmitted by the Exporting Process
+or received by the Collecting Process.
+Withdrawn or invalidated (Options) Templates MUST be removed
+from this list.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[The ID of the Observation Domain for which this
+Template is defined.
+Note that this parameter corresponds to
+ipfixTemplateObservationDomainId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="templateId" type="leaf"><description><![CDATA[This number indicates the Template ID in the IPFIX
+message.
+Note that this parameter corresponds to ipfixTemplateId in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="setId" type="leaf"><description><![CDATA[This number indicates the Set ID of the Template.
+Currently, there are two values defined.  The value 2 is used
+for Sets containing Template definitions.  The value 3 is
+used for Sets containing Options Template definitions.
+Note that this parameter corresponds to ipfixTemplateSetId
+in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="accessTime" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the time when this (Options) Template was last
+sent to the Collector(s) or written to the file.
+Used for Collecting Processes, this parameter contains the
+time when this (Options) Template was last received from the
+Exporter or read from the file.
+Note that this parameter corresponds to
+ipfixTemplateAccessTime in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="templateDataRecords" type="leaf"><description><![CDATA[The number of transmitted or received Data
+Records defined by this (Options) Template.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+templateDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTemplateDataRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="templateDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter templateDataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTemplateDiscontinuityTime in the IPFIX MIB module.
+In contrast to ipfixTemplateDiscontinuityTime, the time
+is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="field" type="list"><description><![CDATA[This list contains the (Options) Template
+fields of which the (Options) Template is defined.
+The order of the list corresponds to the order of the fields
+in the (Option) Template Record.]]>None</description><node access="read-only" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[This parameter indicates the Information
+Element identifier of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[This parameter indicates the length of the
+Information Element of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeLength in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[This parameter indicates the IANA enterprise
+number of the authority defining the Information Element
+identifier.
+If the Information Element is not enterprise-specific,
+this state parameter is zero.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeEnterpriseNumber in the IPFIX
+MIB module.]]>None</description></node><node access="read-only" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a Flow Key field.
+Note that this corresponds to flowKey(1) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node><node access="read-only" datatype="empty" name="isScope" type="leaf"><description><![CDATA[If present, this is a scope field.
+Note that this corresponds to scope(0) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node></node></node></node><node access="read-write" datatype="inet:ip-address" name="sourceIPAddress" type="leaf"><description><![CDATA[Source IP address used by the Exporting Process.
+If not configured by the user, this parameter is set by
+the Monitoring Device to an IP address assigned to the
+outgoing interface.]]>None</description></node><node access="read-write" datatype="inet:ip-address" mandatory="true" name="destinationIPAddress" type="leaf"><description><![CDATA[IP address of the Collection Process to which
+IPFIX Messages are sent.]]>None</description></node></node></node><node access="read-write" name="fileWriter" type="case"><node access="read-write" name="fileWriter" type="container"><description><![CDATA[File Writer parameters.]]>None</description><node access="read-write" datatype="uint16" default="10" name="ipfixVersion" type="leaf"><description><![CDATA[IPFIX version number.]]>None</description></node><node access="read-write" datatype="inet:uri" mandatory="true" name="file" type="leaf"><description><![CDATA[URI specifying the location of the file.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="bytes" type="leaf"><description><![CDATA[The number of bytes written by the File Writer.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileWriterDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="messages" type="leaf"><description><![CDATA[The number of IPFIX Messages written by the File
+Writer.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileWriterDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="discardedMessages" type="leaf"><description><![CDATA[The number of IPFIX Messages that could not be
+written by the File Writer due to internal buffer
+overflows, limited storage capacity, etc.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileWriterDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="records" type="leaf"><description><![CDATA[The number of Data Records written by the File
+Writer.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileWriterDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="templates" type="leaf"><description><![CDATA[The number of Template Records (excluding
+Options Template Records) written by the File Writer.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileWriterDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:counter32" name="optionsTemplates" type="leaf"><description><![CDATA[The number of Options Template Records written
+by the File Writer.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+fileWriterDiscontinuityTime.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="fileWriterDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+one or more File Writer counters suffered a discontinuity.
+In contrast to discontinuity times in the IPFIX MIB module,
+the time is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="template" type="list"><description><![CDATA[This list contains the Templates and Options
+Templates that have been written by the File Reader.
+Withdrawn or invalidated (Options) Templates MUST be removed
+from this list.]]>None</description><node access="read-only" datatype="uint32" name="observationDomainId" type="leaf"><description><![CDATA[The ID of the Observation Domain for which this
+Template is defined.
+Note that this parameter corresponds to
+ipfixTemplateObservationDomainId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="templateId" type="leaf"><description><![CDATA[This number indicates the Template ID in the IPFIX
+message.
+Note that this parameter corresponds to ipfixTemplateId in
+the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="setId" type="leaf"><description><![CDATA[This number indicates the Set ID of the Template.
+Currently, there are two values defined.  The value 2 is used
+for Sets containing Template definitions.  The value 3 is
+used for Sets containing Options Template definitions.
+Note that this parameter corresponds to ipfixTemplateSetId
+in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="accessTime" type="leaf"><description><![CDATA[Used for Exporting Processes, this parameter
+contains the time when this (Options) Template was last
+sent to the Collector(s) or written to the file.
+Used for Collecting Processes, this parameter contains the
+time when this (Options) Template was last received from the
+Exporter or read from the file.
+Note that this parameter corresponds to
+ipfixTemplateAccessTime in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:counter64" name="templateDataRecords" type="leaf"><description><![CDATA[The number of transmitted or received Data
+Records defined by this (Options) Template.
+Discontinuities in the value of this counter can occur at
+re-initialization of the management system, and at other
+times as indicated by the value of
+templateDiscontinuityTime.
+Note that this parameter corresponds to
+ipfixTemplateDataRecords in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="templateDiscontinuityTime" type="leaf"><description><![CDATA[Timestamp of the most recent occasion at which
+the counter templateDataRecords suffered a discontinuity.
+Note that this parameter functionally corresponds to
+ipfixTemplateDiscontinuityTime in the IPFIX MIB module.
+In contrast to ipfixTemplateDiscontinuityTime, the time
+is absolute and not relative to sysUpTime.]]>None</description></node><node access="read-only" name="field" type="list"><description><![CDATA[This list contains the (Options) Template
+fields of which the (Options) Template is defined.
+The order of the list corresponds to the order of the fields
+in the (Option) Template Record.]]>None</description><node access="read-only" datatype="ieIdType" name="ieId" type="leaf"><description><![CDATA[This parameter indicates the Information
+Element identifier of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeId in the IPFIX MIB module.]]>None</description></node><node access="read-only" datatype="uint16" name="ieLength" type="leaf"><description><![CDATA[This parameter indicates the length of the
+Information Element of the field.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeLength in the IPFIX MIB
+module.]]>None</description></node><node access="read-only" datatype="uint32" name="ieEnterpriseNumber" type="leaf"><description><![CDATA[This parameter indicates the IANA enterprise
+number of the authority defining the Information Element
+identifier.
+If the Information Element is not enterprise-specific,
+this state parameter is zero.
+Note that this parameter corresponds to
+ipfixTemplateDefinitionIeEnterpriseNumber in the IPFIX
+MIB module.]]>None</description></node><node access="read-only" datatype="empty" name="isFlowKey" type="leaf"><description><![CDATA[If present, this is a Flow Key field.
+Note that this corresponds to flowKey(1) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node><node access="read-only" datatype="empty" name="isScope" type="leaf"><description><![CDATA[If present, this is a scope field.
+Note that this corresponds to scope(0) being set in
+ipfixTemplateDefinitionFlags.]]>None</description></node></node></node></node></node></node></node><node access="read-write" key="name" name="options" type="list"><description><![CDATA[List of options reported by the Exporting
+Process.]]>None</description><node access="read-write" datatype="nameType" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[Key of this list.]]>None</description></node><node access="read-write" datatype="identityref:optionsType" mandatory="true" name="optionsType" type="leaf" values="ipfix:accuracy|ipfix:exportingReliability|ipfix:extendedTypeInformation|ipfix:flowKeys|ipfix:meteringReliability|ipfix:meteringStatistics|ipfix:reducingRedundancy|ipfix:selectionSequence|ipfix:selectionStatistics"><description><![CDATA[Type of the exported options data.]]>None</description></node><node access="read-write" datatype="uint32" name="optionsTimeout" type="leaf"><description><![CDATA[Time interval for periodic export of the options
+data.  If set to zero, the export is triggered when the
+options data has changed.
+If not configured by the user, this parameter is set by the
+Monitoring Device.]]>None</description></node></node></node></node></node>

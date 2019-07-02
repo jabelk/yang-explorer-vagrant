@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2015, Cisco Systems, Inc
+    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+    
+    @author: Pravin Gohite, Cisco Systems, Inc.
+-->
+<mx:AdvancedDataGrid xmlns:fx="http://ns.adobe.com/mxml/2009" 
+                     xmlns:s="library://ns.adobe.com/flex/spark" 
+                     xmlns:mx="library://ns.adobe.com/flex/mx"
+                     defaultLeafIcon="@Embed(source='assets/leaf.png')"
+                     sortableColumns="false"
+                     variableRowHeight="true"
+                     fontFamily="Avenir"
+                     fontSize="14"
+                     width="100%" height="100%"
+                     creationComplete="creationCompleteHandler()"
+                     itemClick="itemClickHandler(event)"
+                     itemRollOver="lastRollOverIndex = event.rowIndex"
+                     cacheAsBitmap="true"
+                     scroll="adg_scrollHandler()"
+                     headerRenderer="itemrenderers.YangTreeHeaderRenderer"
+                     draggableColumns="false"
+                     styleFunction="myStyleFunc"
+                     >
+    <fx:Declarations>
+        <!-- Place non-visual elements (e.g., services, value objects) here -->
+        <s:HTTPService id="moduleService" fault="moduleService_faultHandler(event)"
+                       result="moduleService_resultHandler(event)"
+                       resultFormat="e4x" showBusyCursor="true"/>
+    </fx:Declarations>
+    <fx:Script>
+        <![CDATA[
+            import mx.collections.ArrayCollection;
+            import mx.collections.CursorBookmark;
+            import mx.collections.HierarchicalCollectionView;
+            import mx.collections.HierarchicalData;
+            import mx.collections.IHierarchicalCollectionViewCursor;
+            import mx.controls.Alert;
+            import mx.controls.advancedDataGridClasses.AdvancedDataGridColumn;
+            import mx.events.AdvancedDataGridEvent;
+            import mx.events.DataGridEventReason;
+            import mx.events.ListEvent;
+            import mx.events.ScrollEvent;
+            import mx.rpc.events.FaultEvent;
+            import mx.rpc.events.ResultEvent;
+            
+            import classes.YangUtil;
+            
+            /* Tree view icon bindings */
+            [Embed(source="assets/module.png")]
+            public static const module:Class;
+            
+            [Embed(source="assets/container.png")]
+            public static const container:Class;
+            
+            [Embed(source="assets/p-container.png")]
+            public static const pcontainer:Class;
+            
+            [Embed(source="assets/leaf.png")]
+            public static const leaf:Class;
+            
+            [Embed(source="assets/leaf-plus.png")]
+            public static const leaf_plus:Class;
+            
+            [Embed(source="assets/leaf-key.png")]
+            public static const leaf_key:Class;
+            
+            [Embed(source="assets/leaf-mandatory.png")]
+            public static const leaf_mandatory:Class;
+            
+            [Embed(source="assets/list.png")]
+            public static const list:Class;
+            
+            [Embed(source="assets/choice.png")]
+            public static const _choice:Class;
+            
+            [Embed(source="assets/case.png")]
+            public static const _case:Class;
+            
+            [Embed(source="assets/notification.png")]
+            public static const notification:Class;
+            
+            /*
+            * String to keep track of logs
+            */
+            [Bindable]
+            public var status:String;
+            
+            /*
+            * Base URL passed from MXML application, this URL is used to request module query
+            * from server.
+            */
+            [Bindable]
+            public var url:String;
+            
+            /*
+            * This XML instance holds data received from the server. It also acts as a data
+            * provider for Advance Datagrid.
+            */
+            [Bindable]
+            public var treeXml:XML;
+            
+            [Bindable]
+            public var dataProv:ArrayCollection = new ArrayCollection();
+
+            /* netconf xml processor */
+            private var yangUtil:YangUtil;
+            
+            /*
+            * Temporary node holder for which a request is pending with server. This node is
+            * just a reference to treeXML children
+            */
+            private var pendingNode:Object;
+            private var dataCursor:IHierarchicalCollectionViewCursor;
+            
+            override public function set dataProvider(value:Object):void
+            {
+                var vscoll : int = verticalScrollPosition;
+                
+                super.dataProvider = value;
+                
+                /* The dataProvider property has not been updated at this point, so call 
+                commitProperties() so that the HierarchicalData value is available.
+                */
+                super.commitProperties();
+                verticalScrollPosition = vscoll;
+                if (dataProvider is HierarchicalCollectionView)
+                    dataCursor = dataProvider.createCursor();
+            }
+            
+            
+            /**********************************************
+             *  PUBLIC FUNCTIONS
+             **********************************************/
+            
+            public function refresh(): void {
+                moduleService.url = url + 'node=root';
+                moduleService.send();
+                treeXml = null;
+                parentApplication.updateStatus('Sent module request ->' + url);
+            }
+            
+            public function reset():void {
+                treeXml = null;
+                this.dataProvider = null;
+            }
+            
+            public function update(tree : XML) : void
+            {
+                treeXml = tree;
+                dataProvider = new HierarchicalData(treeXml.node);
+                this.validateNow();
+            }
+
+            public function resetTree() : void {
+                if (treeXml != null) {
+                    yangUtil.resetXML(treeXml.children(), YangUtil.DEFAULT);
+                }
+            }
+
+            public function getMode() : int {
+                return yangUtil.getMode();
+            }
+            
+            public function processXML(kvpairs : ArrayCollection) : void {
+                yangUtil.processXML(treeXml, kvpairs)
+            }
+            
+            public function getModeString() : String {
+                return yangUtil.getModeString();
+            }
+
+            public function changeMode(mode : int) : void {
+                yangUtil.changeMode(treeXml.children(), mode);
+            }
+
+            /**********************************************
+             *  PRIVATE FUNCTIONS
+             **********************************************/
+
+            /*
+            * Component initializer
+            */
+            private function creationCompleteHandler():void {
+                yangUtil = new YangUtil();
+                url = parentApplication.TREE_URL;
+                pendingNode = new Object();
+                iconFunction = treeIconFunction;
+                labelFunction = treeLabelFunction;
+                addEventListener(AdvancedDataGridEvent.ITEM_OPEN, itemOpenHandler);
+                addEventListener(AdvancedDataGridEvent.ITEM_EDIT_BEGIN, itemEditBeginHandler);
+                addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END, itemEditEndHandler);
+            }
+            
+            private function requestNode(root : XML, deep : String = '') : void {
+                pendingNode.xml = root;
+                var child:XML = pendingNode.xml.child(0)[0];
+                if (child && child.@type == '__yang_placeholder') {
+                    pendingNode.vscroll = verticalScrollPosition;
+                    var path:String = pendingNode.xml.@path;
+                    moduleService.url = url
+                    moduleService.contentType = "";
+                    pendingNode.select_path = path;
+                    moduleService.send({node:path, deep:deep});
+                } else {
+                    pendingNode.xml = null;
+                }
+            }
+            
+            private function itemOpenHandler(event:AdvancedDataGridEvent):void {
+                if (pendingNode.xml != null) {
+                    expandItem(event.item, false, false, false, event);
+                    Alert.show('Waiting for current request to finish..',
+                               'Please Wait');
+                    return;
+                }
+                requestNode(event.item as XML);
+            }
+
+            private function treeLabelFunction(data:Object, column:AdvancedDataGridColumn):String {
+                if (column.dataField == '@name') {
+                    return data.attribute('name')
+                } if (column.dataField == '@value') {
+                    return data.@value == null ? '' : data.@value;
+                } else {
+                    return data.@ncop == null ? '' : data.@ncop;
+                }
+            }
+
+            private function treeIconFunction(item:Object):Class {
+                var iconClass:Class = leaf;
+                var node:XML = item as XML;
+                var temp:String = node.attribute('type');
+                
+                switch (temp) {
+                    case "container":
+                        if (node.attribute('presence') == 'true') {
+                            iconClass = pcontainer;
+                            break;
+                        }
+                    case "input":
+                    case "output":
+                    case "rpc":
+                        iconClass = container;
+                        break;
+                    case "list":
+                        iconClass = list;
+                        break;
+                    case 'leaf':
+                        if (node.attribute('is_key') == 'true') {
+                            iconClass =  leaf_key;
+                        } else if (node.attribute('mandatory') == 'true') {
+                            iconClass =  leaf_mandatory;
+                        } 
+                        break;
+                    case "leaf-list":
+                        iconClass =  leaf_plus;
+                        break;
+                    case "module":
+                        iconClass = module;
+                        break;
+                    case "choice":
+                        iconClass = _choice;
+                        break;
+                    case "case":
+                        iconClass = _case;
+                        break;
+                    case "notification":
+                        iconClass = notification;
+                        break;
+                }
+                return iconClass;
+            }
+
+            public function setOpenNodes(path : String):void
+            {
+                dataCursor.seek(CursorBookmark.FIRST);
+                
+                while (!dataCursor.afterLast)
+                {
+                    var node : XML = dataCursor.current as XML
+                    
+                    if (path != null && node.attribute('path') == path) {
+                        this.selectedItem = dataCursor.current;
+                        if (this.selectedIndex - 10 > 0) {
+                            dataProvider.openNode(dataCursor.current);
+                            this.scrollToIndex(this.selectedIndex - 10);
+                        }
+                    }
+
+                    if (node.hasOwnProperty('node') &&
+                        node.node.@type != '__yang_placeholder') {
+                        if (path == null || (node.hasOwnProperty('@path') && path.indexOf(node.@path + '/') == 0)) {
+                            dataProvider.openNode(dataCursor.current);
+                        }
+                    } else {
+                        dataProvider.closeNode(dataCursor.current);
+                    }
+                    dataCursor.moveNext();
+                }
+
+                dataCursor.seek(CursorBookmark.FIRST, verticalScrollPosition);
+                
+                // Refresh the data provider to properly display the newly opened nodes
+                dataProvider.refresh();
+            }
+
+            public function itemClickHandler(event:ListEvent) : void 
+            {
+                /* Get selected node from tree */
+                var selectedNode:XML = event.target.selectedItem as XML;
+                if (selectedNode) {
+                    if (selectedNode.attribute('type') == 'leaf-list' ||
+                        selectedNode.attribute('type') == 'list') {
+                        parentApplication.enableMultiInstance(true);
+                    } else {
+                        parentApplication.enableMultiInstance(false);
+                    }
+                    parentApplication.updateProperty(selectedNode)
+                    parentApplication.updateStatus('Tree node selected : ' + selectedNode.attribute('name'))
+                } else {
+                    parentApplication.enableMultiInstance(false);
+                    parentApplication.updateProperty(null)
+                    parentApplication.updateStatus('Tree node is not selected')
+                }
+            }
+
+            private function addNodeOptions(value : String) : void
+            {
+                if (dataProv.contains(value)) return;
+                dataProv.addItem(value);
+            }
+
+            /* Called when cell editing is completed in tree grid value field */
+            private var editEnded:Boolean = false;
+            private function itemEditBeginHandler(event:AdvancedDataGridEvent):void
+            {
+                var xml: XML = event.currentTarget.selectedItem;
+                var access:String = xml.@access;
+                var mode : int = yangUtil.getMode();
+                
+                editEnded = false;
+                dataProv.removeAll();
+                
+                if (xml.hasOwnProperty('@value')) {
+                    addNodeOptions(xml.@value)
+                }
+                
+                if (access == 'read-write') {
+                    switch (mode) {
+                    case YangUtil.GET:
+                        addNodeOptions('<get>');
+                        break;
+                    case YangUtil.GET_CONFIG:
+                        addNodeOptions('<get-config>');
+                        break;
+                    case YangUtil.EDIT_CONFIG:
+                        addNodeOptions('');
+                        break;
+                    default:
+                        addNodeOptions('');
+                        addNodeOptions('<get>');
+                        addNodeOptions('<get-config>');
+                    }
+                } else if (access == 'read-only') {
+                    addNodeOptions('<get>');
+                    return;
+                } else if (access == 'write') {
+                    var type:String = xml.@type;
+                    if (type == 'rpc') {
+                        addNodeOptions('<rpc>');
+                    }
+                }
+                
+                if (yangUtil.isEmpty(xml) || yangUtil.isPresence(xml)) {
+                    addNodeOptions('<empty>');
+                } else {
+                    if (xml.@type == 'leaf' && (access == 'read-write' || yangUtil.isKey(xml))) {
+                        var values: String = xml.@values;
+                        var arr:Array = values.split('|');
+                        for each (var item:String in arr) {
+                            addNodeOptions(item);
+                        }
+                    }
+                }
+                dataProv.refresh()
+            }
+            
+            /* Called when grid cell editing starts */
+            private function itemEditEndHandler(event:AdvancedDataGridEvent):void
+            {
+                var editor:ComboBoxEditor;
+                /* Escape is pressed */
+                if (event.reason == DataGridEventReason.CANCELLED || editEnded) {
+                    editEnded = true;
+                    event.preventDefault();
+                    return;
+                }
+                
+                editEnded = true;
+                /* Proceed only if value field is being edited */
+                if (event.dataField == "@value") {
+                    editor = itemEditorInstance as ComboBoxEditor;
+                    if (editor == null) {
+                        event.preventDefault();
+                        return;
+                    }
+                    
+                    var newvalue : String = editor._selectedItem;
+                    if (newvalue == null) {
+                        event.preventDefault();
+                        return;
+                    }
+                    
+                    var node: XML = event.currentTarget.selectedItem;
+                    if (!yangUtil.validateInput(node, newvalue)) {
+                        Alert.show('Invalid value "' + newvalue + '" for node ' + node.attribute('name'),
+                            'Validation Error!!');
+                        event.preventDefault();
+                        return;
+                    }
+                    
+                    yangUtil.updateNetConfMode(node, newvalue);
+                    parentApplication.updateForm();
+                } 
+            }
+            
+            private function moduleService_resultHandler(event:ResultEvent):void {
+                var nodes:XML = event.result as XML;
+                var root:String;
+                trace('Received HTTP Result');
+                if (nodes == null) {
+                    parentApplication.updateStatus('Received Null HTTP Result for module request ');
+                    pendingNode.xml = null;
+                    return;
+                }
+                
+                root = nodes.localName();
+                if (root != 'module') {
+                    parentApplication.updateStatus('Received Invalid HTTP Result for module request');
+                    pendingNode.xml = null;
+                    return;
+                }
+                
+                parentApplication.updateStatus('Received HTTP Result for module request');
+                
+                if (treeXml == null) {
+                    treeXml = nodes;
+                    dataProvider = new HierarchicalData(treeXml.node);
+                } else if (pendingNode.xml != null) {
+                    delete pendingNode.xml.node;
+                    pendingNode.xml.appendChild(nodes.node);
+                    scrollToIndex(pendingNode.row);
+                    verticalScrollPosition = pendingNode.vscroll;
+                    setOpenNodes(pendingNode.select_path);
+                }
+                pendingNode.xml = null;
+                pendingNode.vscroll = 0;
+                pendingNode.select_path = null;
+                this.validateNow();
+                this.invalidateDisplayList();
+            }
+
+            private function moduleService_faultHandler(event:FaultEvent):void {
+                trace('Received HTTP Fault');
+                parentApplication.updateStatus('Error: Received HTTP Fault for module request');
+                pendingNode.xml = null;
+                pendingNode.vscroll = 0;
+                pendingNode.select_path = null;
+            }
+            
+            [Bindable]
+            private var cm:ContextMenu;
+            private var lastRollOverIndex:int;
+
+            private function contextMenu_menuSelect(evt:ContextMenuEvent):void {
+                this.selectedIndex = lastRollOverIndex;
+            }
+            
+            public function addInstance():void {
+                var obj:XML = this.selectedItem as XML;
+                
+                if (obj == null) {
+                    return;
+                }
+                if (obj.hasOwnProperty('@type')) {
+                    var type : String = obj.@type;
+                    if (type == 'list' || type == 'leaf-list') {
+                        var parent : XML = obj.parent();
+                        var child : XML = obj.copy();
+                        child.@ncop = '';
+                        child.@value = '';
+                        child.@dynamic = 'true';
+                        if (type == 'list') {
+                            yangUtil.resetXML(child.children(), -1);
+                        }
+                        parent.insertChildAfter(obj, child);
+                        this.validateNow();
+                    }
+                }
+            }
+            
+            public function deleteInstance():void {
+                var obj:XML = this.selectedItem as XML;
+                
+                if (obj == null) {
+                    return;
+                }
+                if (obj.hasOwnProperty('@dynamic')) {
+                    delete obj.parent().children()[obj.childIndex()];
+                    this.validateNow();
+                }
+            }
+            
+            protected function adg_scrollHandler():void
+            {
+                this.invalidateDisplayList();
+            }
+
+            public function loadXpath(xpath : String): void {
+                var names:Array = xpath.split('/');
+                var root : XML = treeXml;
+                var found : Boolean = true;
+                for (var i:int = 0; i < names.length; i++) {
+                    found = false;
+                    for each (var child:XML in root.node) {
+                        if (child.@name == names[i]) {
+                            root = child;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        var unresolved : String = '';
+                        for (; i < names.length; i++) {
+                            unresolved += '/' + names[i];
+                        }
+                        requestNode(root, unresolved);
+                        pendingNode.select_path = xpath;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    setOpenNodes(xpath);
+                }
+            }
+
+            public function myStyleFunc(node:Object, col:AdvancedDataGridColumn):Object {
+                if (col.dataField == '@name' && node.hasOwnProperty('@color')) {
+                    return {color:int(node.attribute('color')), fontWeight: 'bold'};
+                }
+                return null;
+            }
+        ]]>
+    </fx:Script>
+</mx:AdvancedDataGrid>

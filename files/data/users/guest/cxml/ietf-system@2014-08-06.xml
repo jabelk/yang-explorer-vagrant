@@ -1,0 +1,112 @@
+<node name="ietf-system" prefix="sys" type="module"><namespace import="true" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="true" module="ietf-netconf-acm" prefix="nacm">urn:ietf:params:xml:ns:yang:ietf-netconf-acm</namespace><namespace import="true" module="iana-crypt-hash" prefix="ianach">urn:ietf:params:xml:ns:yang:iana-crypt-hash</namespace><namespace import="false" module="ietf-system" prefix="sys">urn:ietf:params:xml:ns:yang:ietf-system</namespace><node access="read-write" name="system" type="container"><description><![CDATA[System group configuration.]]>None</description><node access="read-write" datatype="string" name="contact" type="leaf"><description><![CDATA[The administrator contact information for the system.
+
+A server implementation MAY map this leaf to the sysContact
+MIB object.  Such an implementation needs to use some
+mechanism to handle the differences in size and characters
+allowed between this leaf and sysContact.  The definition of
+such a mechanism is outside the scope of this document.]]>None</description></node><node access="read-write" datatype="inet:domain-name" name="hostname" type="leaf"><description><![CDATA[The name of the host.  This name can be a single domain
+label or the fully qualified domain name of the host.]]>None</description></node><node access="read-write" datatype="string" name="location" type="leaf"><description><![CDATA[The system location.
+
+A server implementation MAY map this leaf to the sysLocation
+MIB object.  Such an implementation needs to use some
+mechanism to handle the differences in size and characters
+allowed between this leaf and sysLocation.  The definition
+of such a mechanism is outside the scope of this document.]]>None</description></node><node access="read-write" name="clock" type="container"><description><![CDATA[Configuration of the system date and time properties.]]>None</description><node access="read-write" mandatory="true" name="timezone" type="choice" values="timezone-name|timezone-utc-offset"><description><![CDATA[The system time zone information.]]>None</description><node access="read-write" name="timezone-name" type="case"><node access="read-write" datatype="timezone-name" name="timezone-name" type="leaf"><description><![CDATA[The TZ database name to use for the system, such
+as 'Europe/Stockholm'.]]>None</description></node></node><node access="read-write" name="timezone-utc-offset" type="case"><node access="read-write" datatype="int16" name="timezone-utc-offset" type="leaf"><description><![CDATA[The number of minutes to add to UTC time to
+identify the time zone for this system.  For example,
+'UTC - 8:00 hours' would be represented as '-480'.
+Note that automatic daylight saving time adjustment
+is not provided if this object is used.]]>None</description></node></node></node></node><node access="read-write" name="ntp" presence="true" type="container"><description><![CDATA[Configuration of the NTP client.]]>None</description><node access="read-write" datatype="boolean" default="true" name="enabled" type="leaf" values="true|false"><description><![CDATA[Indicates that the system should attempt to
+synchronize the system clock with an NTP server
+from the 'ntp/server' list.]]>None</description></node><node access="read-write" key="name" name="server" type="list"><description><![CDATA[List of NTP servers to use for system clock
+synchronization.  If '/system/ntp/enabled'
+is 'true', then the system will attempt to
+contact and utilize the specified NTP servers.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[An arbitrary name for the NTP server.]]>None</description></node><node access="read-write" name="transport" type="choice" values="udp"><description><![CDATA[The transport-protocol-specific parameters for this
+server.]]>None</description><node access="read-write" name="udp" type="case"><node access="read-write" name="udp" type="container"><description><![CDATA[Contains UDP-specific configuration parameters
+for NTP.]]>None</description><node access="read-write" datatype="inet:host" mandatory="true" name="address" type="leaf"><description><![CDATA[The address of the NTP server.]]>None</description></node><node access="read-write" datatype="inet:port-number" default="123" name="port" type="leaf"><description><![CDATA[The port number of the NTP server.]]>None</description></node></node></node></node><node access="read-write" datatype="enumeration" default="server" name="association-type" type="leaf" values="server|peer|pool"><description><![CDATA[The desired association type for this NTP server.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="iburst" type="leaf" values="true|false"><description><![CDATA[Indicates whether this server should enable burst
+synchronization or not.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="prefer" type="leaf" values="true|false"><description><![CDATA[Indicates whether this server should be preferred
+or not.]]>None</description></node></node></node><node access="read-write" name="dns-resolver" type="container"><description><![CDATA[Configuration of the DNS resolver.]]>None</description><node access="read-write" datatype="inet:domain-name" name="search" type="leaf-list"><description><![CDATA[An ordered list of domains to search when resolving
+a host name.]]>None</description></node><node access="read-write" key="name" name="server" type="list"><description><![CDATA[List of the DNS servers that the resolver should query.
+
+When the resolver is invoked by a calling application, it
+sends the query to the first name server in this list.  If
+no response has been received within 'timeout' seconds,
+the resolver continues with the next server in the list.
+If no response is received from any server, the resolver
+continues with the first server again.  When the resolver
+has traversed the list 'attempts' times without receiving
+any response, it gives up and returns an error to the
+calling application.
+
+Implementations MAY limit the number of entries in this
+list.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[An arbitrary name for the DNS server.]]>None</description></node><node access="read-write" name="transport" type="choice" values="udp-and-tcp"><description><![CDATA[The transport-protocol-specific parameters for this
+server.]]>None</description><node access="read-write" name="udp-and-tcp" type="case"><node access="read-write" name="udp-and-tcp" type="container"><description><![CDATA[Contains UDP- and TCP-specific configuration
+parameters for DNS.]]>None</description><node access="read-write" datatype="inet:ip-address" mandatory="true" name="address" type="leaf"><description><![CDATA[The address of the DNS server.]]>None</description></node><node access="read-write" datatype="inet:port-number" default="53" name="port" type="leaf"><description><![CDATA[The UDP and TCP port number of the DNS server.]]>None</description></node></node></node></node></node><node access="read-write" name="options" type="container"><description><![CDATA[Resolver options.  The set of available options has been
+limited to those that are generally available across
+different resolver implementations and generally useful.]]>None</description><node access="read-write" datatype="uint8" default="5" name="timeout" type="leaf"><description><![CDATA[The amount of time the resolver will wait for a
+response from each remote name server before
+retrying the query via a different name server.]]>None</description></node><node access="read-write" datatype="uint8" default="2" name="attempts" type="leaf"><description><![CDATA[The number of times the resolver will send a query to
+all of its name servers before giving up and returning
+an error to the calling application.]]>None</description></node></node></node><node access="read-write" name="radius" type="container"><description><![CDATA[Configuration of the RADIUS client.]]>None</description><node access="read-write" key="name" name="server" type="list"><description><![CDATA[List of RADIUS servers used by the device.
+
+When the RADIUS client is invoked by a calling
+application, it sends the query to the first server in
+this list.  If no response has been received within
+'timeout' seconds, the client continues with the next
+server in the list.  If no response is received from any
+server, the client continues with the first server again.
+When the client has traversed the list 'attempts' times
+without receiving any response, it gives up and returns an
+error to the calling application.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[An arbitrary name for the RADIUS server.]]>None</description></node><node access="read-write" name="transport" type="choice" values="udp"><description><![CDATA[The transport-protocol-specific parameters for this
+server.]]>None</description><node access="read-write" name="udp" type="case"><node access="read-write" name="udp" type="container"><description><![CDATA[Contains UDP-specific configuration parameters
+for RADIUS.]]>None</description><node access="read-write" datatype="inet:host" mandatory="true" name="address" type="leaf"><description><![CDATA[The address of the RADIUS server.]]>None</description></node><node access="read-write" datatype="inet:port-number" default="1812" name="authentication-port" type="leaf"><description><![CDATA[The port number of the RADIUS server.]]>None</description></node><node access="read-write" datatype="string" mandatory="true" name="shared-secret" type="leaf"><description><![CDATA[The shared secret, which is known to both the
+RADIUS client and server.]]>None</description></node></node></node></node><node access="read-write" datatype="identityref:radius-authentication-type" default="radius-pap" name="authentication-type" type="leaf" values="sys:radius-chap|sys:radius-pap"><description><![CDATA[The authentication type requested from the RADIUS
+server.]]>None</description></node></node><node access="read-write" name="options" type="container"><description><![CDATA[RADIUS client options.]]>None</description><node access="read-write" datatype="uint8" default="5" name="timeout" type="leaf"><description><![CDATA[The number of seconds the device will wait for a
+response from each RADIUS server before trying with a
+different server.]]>None</description></node><node access="read-write" datatype="uint8" default="2" name="attempts" type="leaf"><description><![CDATA[The number of times the device will send a query to
+all of its RADIUS servers before giving up.]]>None</description></node></node></node><node access="read-write" name="authentication" type="container"><description><![CDATA[The authentication configuration subtree.]]>None</description><node access="read-write" datatype="identityref:authentication-method" name="user-authentication-order" type="leaf-list" values="sys:local-users|sys:radius"><description><![CDATA[When the device authenticates a user with a password,
+it tries the authentication methods in this leaf-list in
+order.  If authentication with one method fails, the next
+method is used.  If no method succeeds, the user is
+denied access.
+
+An empty user-authentication-order leaf-list still allows
+authentication of users using mechanisms that do not
+involve a password.
+
+If the 'radius-authentication' feature is advertised by
+the NETCONF server, the 'radius' identity can be added to
+this list.
+
+If the 'local-users' feature is advertised by the
+NETCONF server, the 'local-users' identity can be
+added to this list.]]>None</description></node><node access="read-write" key="name" name="user" type="list"><description><![CDATA[The list of local users configured on this device.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The user name string identifying this entry.]]>None</description></node><node access="read-write" datatype="ianach:crypt-hash" name="password" type="leaf"><description><![CDATA[The password for this entry.]]>None</description></node><node access="read-write" key="name" name="authorized-key" type="list"><description><![CDATA[A list of public SSH keys for this user.  These keys
+are allowed for SSH authentication, as described in
+RFC 4253.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[An arbitrary name for the SSH key.]]>None</description></node><node access="read-write" datatype="string" mandatory="true" name="algorithm" type="leaf"><description><![CDATA[The public key algorithm name for this SSH key.
+
+Valid values are the values in the IANA 'Secure Shell
+(SSH) Protocol Parameters' registry, Public Key
+Algorithm Names.]]>None</description></node><node access="read-write" datatype="binary" mandatory="true" name="key-data" type="leaf"><description><![CDATA[The binary public key data for this SSH key, as
+specified by RFC 4253, Section 6.6, i.e.:
+
+  string    certificate or public key format
+            identifier
+  byte[n]   key/certificate data.]]>None</description></node></node></node></node></node><node access="read-only" name="system-state" type="container"><description><![CDATA[System group operational state.]]>None</description><node access="read-only" name="platform" type="container"><description><![CDATA[Contains vendor-specific information for
+identifying the system platform and operating system.]]>None</description><node access="read-only" datatype="string" name="os-name" type="leaf"><description><![CDATA[The name of the operating system in use -
+for example, 'Linux'.]]>None</description></node><node access="read-only" datatype="string" name="os-release" type="leaf"><description><![CDATA[The current release level of the operating
+system in use.  This string MAY indicate
+the OS source code revision.]]>None</description></node><node access="read-only" datatype="string" name="os-version" type="leaf"><description><![CDATA[The current version level of the operating
+system in use.  This string MAY indicate
+the specific OS build date and target variant
+information.]]>None</description></node><node access="read-only" datatype="string" name="machine" type="leaf"><description><![CDATA[A vendor-specific identifier string representing
+the hardware in use.]]>None</description></node></node><node access="read-only" name="clock" type="container"><description><![CDATA[Monitoring of the system date and time properties.]]>None</description><node access="read-only" datatype="yang:date-and-time" name="current-datetime" type="leaf"><description><![CDATA[The current system date and time.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="boot-datetime" type="leaf"><description><![CDATA[The system date and time when the system last restarted.]]>None</description></node></node></node><node access="write" name="set-current-datetime" type="rpc"><description><![CDATA[Set the /system-state/clock/current-datetime leaf
+to the specified value.
+
+If the system is using NTP (i.e., /system/ntp/enabled
+is set to 'true'), then this operation will fail with
+error-tag 'operation-failed' and error-app-tag value of
+'ntp-active'.]]>None</description><node access="write" name="input" type="input"><node access="write" datatype="yang:date-and-time" mandatory="true" name="current-datetime" type="leaf"><description><![CDATA[The current system date and time.]]>None</description></node></node></node><node access="write" name="system-restart" type="rpc"><description><![CDATA[Request that the entire system be restarted immediately.
+A server SHOULD send an rpc reply to the client before
+restarting the system.]]>None</description></node><node access="write" name="system-shutdown" type="rpc"><description><![CDATA[Request that the entire system be shut down immediately.
+A server SHOULD send an rpc reply to the client before
+shutting down the system.]]>None</description></node></node>

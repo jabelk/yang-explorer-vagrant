@@ -1,0 +1,11 @@
+---
+- hosts: all
+  connection: paramiko
+  become: yes
+
+  vars:
+    user: vagrant
+
+  tasks:
+    - import_tasks: tasks/linux_packs.yml
+    - import_tasks: tasks/install_yang_explorer.yml

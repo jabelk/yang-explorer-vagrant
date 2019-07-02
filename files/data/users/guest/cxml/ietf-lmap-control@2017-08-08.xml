@@ -1,0 +1,170 @@
+<node name="ietf-lmap-control" prefix="lmapc" type="module"><namespace import="false" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><namespace import="true" module="ietf-netconf-acm" prefix="nacm">urn:ietf:params:xml:ns:yang:ietf-netconf-acm</namespace><namespace import="false" module="ietf-lmap-control" prefix="lmapc">urn:ietf:params:xml:ns:yang:ietf-lmap-control</namespace><namespace import="true" module="ietf-lmap-common" prefix="lmap">urn:ietf:params:xml:ns:yang:ietf-lmap-common</namespace><node access="read-write" name="lmap" type="container"><description><![CDATA[Configuration and control of a Measurement Agent.]]>None</description><node access="read-only" name="capabilities" type="container"><description><![CDATA[Agent capabilities including a list of supported Tasks.]]>None</description><node access="read-only" datatype="string" mandatory="true" name="version" type="leaf"><description><![CDATA[A short description of the software implementing the
+Measurement Agent.  This should include the version
+number of the Measurement Agent software.]]>None</description></node><node access="read-only" datatype="lmap:tag" name="tag" type="leaf-list"><description><![CDATA[An optional unordered set of tags that provide
+additional information about the capabilities of
+the Measurement Agent.]]>None</description></node><node access="read-only" name="tasks" type="container"><description><![CDATA[A list of Tasks that the Measurement Agent supports.]]>None</description><node access="read-only" key="name" name="task" type="list"><description><![CDATA[The list of Tasks supported by the Measurement Agent.]]>None</description><node access="read-only" datatype="lmap:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The unique name of a Task capability.]]>None</description></node><node access="read-only" key="uri" name="function" type="list"><description><![CDATA[A list of entries in a registry identifying functions.]]>None</description><node access="read-only" datatype="inet:uri" is_key="true" mandatory="true" name="uri" type="leaf"><description><![CDATA[A URI identifying an entry in a registry.]]>None</description></node><node access="read-only" datatype="string" name="role" type="leaf-list"><description><![CDATA[A set of roles for the identified registry entry.]]>None</description></node></node><node access="read-only" datatype="string" name="version" type="leaf"><description><![CDATA[A short description of the software implementing
+the Task.  This should include the version
+number of the Measurement Task software.]]>None</description></node><node access="read-only" datatype="string" name="program" type="leaf"><description><![CDATA[The (local) program to invoke in order to execute
+the Task.]]>None</description></node></node></node></node><node access="read-write" name="agent" type="container"><description><![CDATA[Configuration of parameters affecting the whole
+Measurement Agent.]]>None</description><node access="read-write" datatype="yang:uuid" name="agent-id" type="leaf"><description><![CDATA[The agent-id identifies a Measurement Agent with
+a very low probability of collision.  In certain
+deployments, the agent-id may be considered
+sensitive, and hence this object is optional.]]>None</description></node><node access="read-write" datatype="string" name="group-id" type="leaf"><description><![CDATA[The group-id identifies a group of Measurement
+Agents.  In certain deployments, the group-id
+may be considered less sensitive than the
+agent-id.]]>None</description></node><node access="read-write" datatype="string" name="measurement-point" type="leaf"><description><![CDATA[The measurement point indicating where the
+ Measurement Agent is located on a path.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="report-agent-id" type="leaf" values="true|false"><description><![CDATA[The 'report-agent-id' controls whether the
+'agent-id' is reported to Collectors.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="report-group-id" type="leaf" values="true|false"><description><![CDATA[The 'report-group-id' controls whether the
+'group-id' is reported to Collectors.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="report-measurement-point" type="leaf" values="true|false"><description><![CDATA[The 'report-measurement-point' controls whether
+the 'measurement-point' is reported to Collectors.]]>None</description></node><node access="read-write" datatype="uint32" name="controller-timeout" type="leaf"><description><![CDATA[A timer is started after each successful contact
+with a Controller.  When the timer reaches the
+controller-timeout, an event (controller-lost) is
+raised indicating that connectivity to the Controller
+has been lost.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="last-started" type="leaf"><description><![CDATA[The date and time the Measurement Agent last started.]]>None</description></node></node><node access="read-write" name="tasks" type="container"><description><![CDATA[Configuration of LMAP Tasks.]]>None</description><node access="read-write" key="name" name="task" type="list"><description><![CDATA[The list of Tasks configured on the Measurement
+Agent.  Note that a configured Task MUST resolve to a
+Task listed in the capabilities.  Attempts to execute
+a configured Task that is not listed in the capabilities
+result in a runtime execution error.]]>None</description><node access="read-write" datatype="lmap:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The unique name of a Task.]]>None</description></node><node access="read-write" key="uri" name="function" type="list"><description><![CDATA[A list of entries in a registry identifying functions.]]>None</description><node access="read-write" datatype="inet:uri" is_key="true" mandatory="true" name="uri" type="leaf"><description><![CDATA[A URI identifying an entry in a registry.]]>None</description></node><node access="read-write" datatype="string" name="role" type="leaf-list"><description><![CDATA[A set of roles for the identified registry entry.]]>None</description></node></node><node access="read-write" datatype="string" name="program" type="leaf"><description><![CDATA[The (local) program to invoke in order to execute
+the Task.  If this leaf is not set, then the system
+will try to identify a suitable program based on
+the registry information present.]]>None</description></node><node access="read-write" key="id" name="option" type="list"><description><![CDATA[A list of options passed to the Task.  It is a list of
+key/value pairs and may be used to model options.
+Options may be used to identify the role of a Task
+or to pass a Channel name to a Task.]]>None</description><node access="read-write" datatype="lmap:identifier" is_key="true" mandatory="true" name="id" type="leaf"><description><![CDATA[An identifier uniquely identifying an option.  This
+identifier is required by YANG to uniquely identify
+a name/value pair, but it otherwise has no semantic
+value]]>None</description></node><node access="read-write" datatype="string" name="name" type="leaf"><description><![CDATA[The name of the option.]]>None</description></node><node access="read-write" datatype="string" name="value" type="leaf"><description><![CDATA[The value of the option.]]>None</description></node></node><node access="read-write" datatype="lmap:identifier" name="tag" type="leaf-list"><description><![CDATA[A set of Task-specific tags that are reported
+together with the measurement results to a Collector.
+A tag can be used, for example, to carry the
+Measurement Cycle ID.]]>None</description></node></node></node><node access="read-write" name="schedules" type="container"><description><![CDATA[Configuration of LMAP Schedules.  Schedules control
+which Tasks are executed by the LMAP implementation.]]>None</description><node access="read-write" key="name" name="schedule" type="list"><description><![CDATA[Configuration of a particular Schedule.]]>None</description><node access="read-write" datatype="lmap:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The locally unique, administratively assigned name
+for this Schedule.]]>None</description></node><node access="read-write" datatype="event-ref" mandatory="true" name="start" type="leaf"><description><![CDATA[The event source controlling the start of the
+scheduled Actions.]]>None</description></node><node access="read-write" mandatory="true" name="stop" type="choice"><description><![CDATA[This choice contains optional leafs that control the
+graceful forced termination of scheduled Actions.
+When the end has been reached, the scheduled Actions
+should be forced to terminate the measurements.
+This may involve being active some additional time in
+order to properly finish the Action's activity (e.g.,
+waiting for any messages that are still outstanding).]]>None</description><node access="read-write" name="end" type="case"><node access="read-write" datatype="event-ref" name="end" type="leaf"><description><![CDATA[The event source controlling the graceful
+forced termination of the scheduled Actions.]]>None</description></node></node><node access="read-write" name="duration" type="case"><node access="read-write" datatype="uint32" name="duration" type="leaf"><description><![CDATA[The duration controlling the graceful forced
+termination of the scheduled Actions.]]>None</description></node></node></node><node access="read-write" datatype="enumeration" default="pipelined" name="execution-mode" type="leaf" values="sequential|parallel|pipelined"><description><![CDATA[The execution mode of this Schedule determines in
+which order the Actions of the Schedule are executed.]]>None</description></node><node access="read-write" datatype="lmap:tag" name="tag" type="leaf-list"><description><![CDATA[A set of Schedule-specific tags that are reported
+together with the measurement results to a Collector.]]>None</description></node><node access="read-write" datatype="lmap:tag" name="suppression-tag" type="leaf-list"><description><![CDATA[A set of Suppression tags that are used to select
+Schedules to be suppressed.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="state" type="leaf" values="enabled|disabled|running|suppressed"><description><![CDATA[The current state of the Schedule.]]>None</description></node><node access="read-only" datatype="yang:gauge64" mandatory="true" name="storage" type="leaf"><description><![CDATA[The amount of secondary storage (e.g., allocated in a
+file system) holding temporary data allocated to the
+Schedule in bytes.  This object reports the amount of
+allocated physical storage and not the storage used
+by logical data records.]]>None</description></node><node access="read-only" datatype="yang:counter32" mandatory="true" name="invocations" type="leaf"><description><![CDATA[Number of invocations of this Schedule.  This counter
+does not include suppressed invocations or invocations
+that were prevented due to an overlap with a previous
+invocation of this Schedule.]]>None</description></node><node access="read-only" datatype="yang:counter32" mandatory="true" name="suppressions" type="leaf"><description><![CDATA[Number of suppressed executions of this Schedule.]]>None</description></node><node access="read-only" datatype="yang:counter32" mandatory="true" name="overlaps" type="leaf"><description><![CDATA[Number of executions prevented due to overlaps with
+a previous invocation of this Schedule.]]>None</description></node><node access="read-only" datatype="yang:counter32" mandatory="true" name="failures" type="leaf"><description><![CDATA[Number of failed executions of this Schedule.  A
+failed execution is an execution where at least
+one Action failed.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-invocation" type="leaf"><description><![CDATA[The date and time of the last invocation of
+this Schedule.]]>None</description></node><node access="read-write" key="name" name="action" type="list"><description><![CDATA[An Action describes a Task that is invoked by the
+Schedule.  Multiple Actions are invoked according to
+the execution-mode of the Schedule.]]>None</description><node access="read-write" datatype="lmap:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The unique identifier for this Action.]]>None</description></node><node access="read-write" datatype="task-ref" mandatory="true" name="task" type="leaf"><description><![CDATA[The Task invoked by this Action.]]>None</description></node><node access="read-write" name="parameters" type="container"><description><![CDATA[This container is a placeholder for runtime
+parameters defined in Task-specific data models
+augmenting the base LMAP control data model.]]>None</description><node access="read-write" mandatory="true" name="extension" type="choice"><description><![CDATA[This choice is provided to augment in different
+sets of parameters.]]>None</description></node></node><node access="read-write" key="id" name="option" type="list"><description><![CDATA[A list of options passed to the Task.  It is a list of
+key/value pairs and may be used to model options.
+Options may be used to identify the role of a Task
+or to pass a Channel name to a Task.]]>None</description><node access="read-write" datatype="lmap:identifier" is_key="true" mandatory="true" name="id" type="leaf"><description><![CDATA[An identifier uniquely identifying an option.  This
+identifier is required by YANG to uniquely identify
+a name/value pair, but it otherwise has no semantic
+value]]>None</description></node><node access="read-write" datatype="string" name="name" type="leaf"><description><![CDATA[The name of the option.]]>None</description></node><node access="read-write" datatype="string" name="value" type="leaf"><description><![CDATA[The value of the option.]]>None</description></node></node><node access="read-write" datatype="schedule-ref" name="destination" type="leaf-list"><description><![CDATA[A set of Schedules receiving the output produced
+by this Action.  The output is stored temporarily
+since the Destination Schedules will in general
+not be running when output is passed to them.  The
+behavior of an Action passing data to its own
+Schedule is implementation specific.
+
+Data passed to a sequential or pipelined Schedule
+is received by the Schedule's first Action.  Data
+passed to a parallel Schedule is received by all
+Actions of the Schedule.]]>None</description></node><node access="read-write" datatype="lmap:tag" name="tag" type="leaf-list"><description><![CDATA[A set of Action-specific tags that are reported
+together with the measurement results to a
+Collector.]]>None</description></node><node access="read-write" datatype="lmap:tag" name="suppression-tag" type="leaf-list"><description><![CDATA[A set of Suppression tags that are used to select
+Actions to be suppressed.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="state" type="leaf" values="enabled|disabled|running|suppressed"><description><![CDATA[The current state of the Action.]]>None</description></node><node access="read-only" datatype="yang:gauge64" mandatory="true" name="storage" type="leaf"><description><![CDATA[The amount of secondary storage (e.g., allocated in a
+file system) holding temporary data allocated to the
+Schedule in bytes.  This object reports the amount of
+allocated physical storage and not the storage used
+by logical data records.]]>None</description></node><node access="read-only" datatype="yang:counter32" mandatory="true" name="invocations" type="leaf"><description><![CDATA[Number of invocations of this Action.  This counter
+does not include suppressed invocations or invocations
+that were prevented due to an overlap with a previous
+invocation of this Action.]]>None</description></node><node access="read-only" datatype="yang:counter32" mandatory="true" name="suppressions" type="leaf"><description><![CDATA[Number of suppressed executions of this Action.]]>None</description></node><node access="read-only" datatype="yang:counter32" mandatory="true" name="overlaps" type="leaf"><description><![CDATA[Number of executions prevented due to overlaps with
+a previous invocation of this Action.]]>None</description></node><node access="read-only" datatype="yang:counter32" mandatory="true" name="failures" type="leaf"><description><![CDATA[Number of failed executions of this Action.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="last-invocation" type="leaf"><description><![CDATA[The date and time of the last invocation of
+this Action.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="last-completion" type="leaf"><description><![CDATA[The date and time of the last completion of
+this Action.]]>None</description></node><node access="read-only" datatype="lmap:status-code" mandatory="true" name="last-status" type="leaf"><description><![CDATA[The status code returned by the last execution of
+this Action.]]>None</description></node><node access="read-only" datatype="string" mandatory="true" name="last-message" type="leaf"><description><![CDATA[The status message produced by the last execution
+of this Action.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" mandatory="true" name="last-failed-completion" type="leaf"><description><![CDATA[The date and time of the last failed completion
+of this Action.]]>None</description></node><node access="read-only" datatype="lmap:status-code" mandatory="true" name="last-failed-status" type="leaf"><description><![CDATA[The status code returned by the last failed
+execution of this Action.]]>None</description></node><node access="read-only" datatype="string" mandatory="true" name="last-failed-message" type="leaf"><description><![CDATA[The status message produced by the last failed
+execution of this Action.]]>None</description></node></node></node></node><node access="read-write" name="suppressions" type="container"><description><![CDATA[Suppression information to prevent Schedules or
+certain Actions from starting.]]>None</description><node access="read-write" key="name" name="suppression" type="list"><description><![CDATA[Configuration of a particular Suppression.]]>None</description><node access="read-write" datatype="lmap:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The locally unique, administratively assigned name
+for this Suppression.]]>None</description></node><node access="read-write" datatype="event-ref" name="start" type="leaf"><description><![CDATA[The event source controlling the start of the
+Suppression period.]]>None</description></node><node access="read-write" datatype="event-ref" name="end" type="leaf"><description><![CDATA[The event source controlling the end of the
+Suppression period.  If not present, Suppression
+continues indefinitely.]]>None</description></node><node access="read-write" datatype="lmap:glob-pattern" name="match" type="leaf-list"><description><![CDATA[A set of Suppression match patterns.  The Suppression
+will apply to all Schedules (and their Actions) that
+have a matching value in their suppression-tags
+and to all Actions that have a matching value in
+their suppression-tags.]]>None</description></node><node access="read-write" datatype="boolean" default="false" name="stop-running" type="leaf" values="true|false"><description><![CDATA[If 'stop-running' is true, running Schedules and
+Actions matching the Suppression will be terminated
+when Suppression is activated.  If 'stop-running' is
+false, running Schedules and Actions will not be
+affected if Suppression is activated.]]>None</description></node><node access="read-only" datatype="enumeration" mandatory="true" name="state" type="leaf" values="enabled|disabled|active"><description><![CDATA[The current state of the Suppression.]]>None</description></node></node></node><node access="read-write" name="events" type="container"><description><![CDATA[Configuration of LMAP events.
+
+Implementations may be forced to delay acting
+upon the occurrence of events in the face of local
+constraints.  An Action triggered by an event
+therefore should not rely on the accuracy
+provided by the scheduler implementation.]]>None</description><node access="read-write" key="name" name="event" type="list"><description><![CDATA[The list of event sources configured on the
+Measurement Agent.]]>None</description><node access="read-write" datatype="lmap:identifier" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The unique name of an event source.]]>None</description></node><node access="read-write" datatype="uint32" name="random-spread" type="leaf"><description><![CDATA[This optional leaf adds a random spread to the
+computation of the event's trigger time.  The
+random spread is a uniformly distributed random
+number taken from the interval [0:random-spread].]]>None</description></node><node access="read-write" datatype="uint32" name="cycle-interval" type="leaf"><description><![CDATA[The optional cycle-interval defines the duration
+of the time interval in seconds that is used to
+calculate cycle numbers.  No cycle number is
+calculated if the optional cycle-interval does
+not exist.]]>None</description></node><node access="read-write" mandatory="true" name="event-type" type="choice" values="periodic|calendar|one-off|immediate|startup|controller-lost|controller-connected"><description><![CDATA[Different types of events are handled by
+different branches of this choice.  Note that
+this choice can be extended via augmentations.]]>None</description><node access="read-write" name="periodic" type="case"><node access="read-write" name="periodic" type="container"><description><![CDATA[A periodic timing object triggers periodically
+according to a regular interval.]]>None</description><node access="read-write" datatype="uint32" mandatory="true" name="interval" type="leaf"><description><![CDATA[The number of seconds between two triggers
+generated by this periodic timing object.]]>None</description></node><node access="read-write" datatype="yang:date-and-time" name="start" type="leaf"><description><![CDATA[The date and time when the Event object
+starts to create triggers.]]>None</description></node><node access="read-write" datatype="yang:date-and-time" name="end" type="leaf"><description><![CDATA[The date and time when the Event object
+stops to create triggers.
+
+It is generally a good idea to always configure
+an end time and to refresh the end time as needed
+to ensure that agents that lose connectivity to
+their Controller do not continue executing Schedules
+forever.]]>None</description></node></node></node><node access="read-write" name="calendar" type="case"><node access="read-write" name="calendar" type="container"><description><![CDATA[A calendar timing object triggers based on the
+current calendar date and time.]]>None</description><node access="read-write" datatype="lmap:month-or-all" name="month" type="leaf-list" values="january|february|march|april|may|june|july|august|september|october|november|december"><description><![CDATA[A set of months at which this calendar timing
+will trigger.  The wildcard means all months.]]>None</description></node><node access="read-write" datatype="lmap:day-of-months-or-all" name="day-of-month" type="leaf-list"><description><![CDATA[A set of days of the month at which this
+calendar timing will trigger.  The wildcard means
+all days of a month.]]>None</description></node><node access="read-write" datatype="lmap:weekday-or-all" name="day-of-week" type="leaf-list" values="monday|tuesday|wednesday|thursday|friday|saturday|sunday"><description><![CDATA[A set of weekdays at which this calendar timing
+will trigger.  The wildcard means all weekdays.]]>None</description></node><node access="read-write" datatype="lmap:hour-or-all" name="hour" type="leaf-list"><description><![CDATA[A set of hours at which this calendar timing will
+trigger.  The wildcard means all hours of a day.]]>None</description></node><node access="read-write" datatype="lmap:minute-or-all" name="minute" type="leaf-list"><description><![CDATA[A set of minutes at which this calendar timing
+will trigger.  The wildcard means all minutes of
+an hour.]]>None</description></node><node access="read-write" datatype="lmap:second-or-all" name="second" type="leaf-list"><description><![CDATA[A set of seconds at which this calendar timing
+will trigger.  The wildcard means all seconds of
+a minute.]]>None</description></node><node access="read-write" datatype="lmap:timezone-offset" name="timezone-offset" type="leaf"><description><![CDATA[The time zone in which this calendar timing
+object will be evaluated.  If not present,
+the system's local time zone will be used.]]>None</description></node><node access="read-write" datatype="yang:date-and-time" name="start" type="leaf"><description><![CDATA[The date and time when the Event object
+starts to create triggers.]]>None</description></node><node access="read-write" datatype="yang:date-and-time" name="end" type="leaf"><description><![CDATA[The date and time when the Event object
+stops to create triggers.
+
+It is generally a good idea to always configure
+an end time and to refresh the end time as needed
+to ensure that agents that lose connectivity to
+their Controller do not continue executing Schedules
+forever.]]>None</description></node></node></node><node access="read-write" name="one-off" type="case"><node access="read-write" name="one-off" type="container"><description><![CDATA[A one-off timing object triggers exactly once.]]>None</description><node access="read-write" datatype="yang:date-and-time" mandatory="true" name="time" type="leaf"><description><![CDATA[This one-off timing object triggers once at
+the configured date and time.]]>None</description></node></node></node><node access="read-write" name="immediate" type="case"><node access="read-write" datatype="empty" mandatory="true" name="immediate" type="leaf"><description><![CDATA[This immediate Event object triggers immediately
+when it is configured.]]>None</description></node></node><node access="read-write" name="startup" type="case"><node access="read-write" datatype="empty" mandatory="true" name="startup" type="leaf"><description><![CDATA[This startup Event object triggers whenever the
+Measurement Agent (re)starts.]]>None</description></node></node><node access="read-write" name="controller-lost" type="case"><node access="read-write" datatype="empty" mandatory="true" name="controller-lost" type="leaf"><description><![CDATA[The controller-lost Event object triggers when
+the connectivity to the Controller has been lost
+for at least 'controller-timeout' seconds.]]>None</description></node></node><node access="read-write" name="controller-connected" type="case"><node access="read-write" datatype="empty" mandatory="true" name="controller-connected" type="leaf"><description><![CDATA[The controller-connected Event object triggers
+when the connectivity to the Controller has been
+restored after it was lost for at least
+'controller-timeout' seconds.]]>None</description></node></node></node></node></node></node></node>

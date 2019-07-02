@@ -1,0 +1,92 @@
+<node name="ietf-routing" prefix="rt" type="module"><namespace import="false" module="ietf-ip" prefix="ip">urn:ietf:params:xml:ns:yang:ietf-ip</namespace><namespace import="false" module="ietf-ipv6-unicast-routing" prefix="v6ur">urn:ietf:params:xml:ns:yang:ietf-ipv6-unicast-routing</namespace><namespace import="true" module="ietf-interfaces" prefix="if">urn:ietf:params:xml:ns:yang:ietf-interfaces</namespace><namespace import="false" module="ietf-inet-types" prefix="inet">urn:ietf:params:xml:ns:yang:ietf-inet-types</namespace><namespace import="false" module="ietf-routing" prefix="rt">urn:ietf:params:xml:ns:yang:ietf-routing</namespace><namespace import="false" module="ietf-ipv4-unicast-routing" prefix="v4ur">urn:ietf:params:xml:ns:yang:ietf-ipv4-unicast-routing</namespace><namespace import="true" module="ietf-yang-types" prefix="yang">urn:ietf:params:xml:ns:yang:ietf-yang-types</namespace><node access="read-only" name="routing-state" type="container"><description><![CDATA[State data of the routing subsystem.]]>None</description><node access="read-only" datatype="yang:dotted-quad" name="router-id" type="leaf"><description><![CDATA[A 32-bit number in the form of a dotted quad that is used by
+some routing protocols identifying a router.]]>None</description></node><node access="read-only" name="interfaces" type="container"><description><![CDATA[Network-layer interfaces used for routing.]]>None</description><node access="read-only" datatype="if:interface-state-ref" name="interface" type="leaf-list"><description><![CDATA[Each entry is a reference to the name of a configured
+network-layer interface.]]>None</description></node></node><node access="read-only" name="control-plane-protocols" type="container"><description><![CDATA[Container for the list of routing protocol instances.]]>None</description><node access="read-only" key="type name" name="control-plane-protocol" type="list"><description><![CDATA[State data of a control-plane protocol instance.
+
+An implementation MUST provide exactly one
+system-controlled instance of the 'direct'
+pseudo-protocol.  Instances of other control-plane
+protocols MAY be created by configuration.]]>None</description><node access="read-only" datatype="identityref:control-plane-protocol" is_key="true" mandatory="true" name="type" type="leaf" values="rt:routing-protocol|rt:routing-protocol"><description><![CDATA[Type of the control-plane protocol.]]>None</description></node><node access="read-only" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of the control-plane protocol instance.
+
+For system-controlled instances this name is persistent,
+i.e., it SHOULD NOT change across reboots.]]>None</description></node></node></node><node access="read-only" name="ribs" type="container"><description><![CDATA[Container for RIBs.]]>None</description><node access="read-only" key="name" name="rib" type="list"><description><![CDATA[Each entry represents a RIB identified by the 'name' key.
+All routes in a RIB MUST belong to the same address
+family.
+
+An implementation SHOULD provide one system-controlled
+default RIB for each supported address family.]]>None</description><node access="read-only" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of the RIB.]]>None</description></node><node access="read-only" datatype="identityref:address-family" mandatory="true" name="address-family" type="leaf" values="rt:ipv4|rt:ipv4|rt:ipv6|rt:ipv6"><description><![CDATA[Address family.]]>None</description></node><node access="read-only" datatype="boolean" default="true" name="default-rib" type="leaf" values="true|false"><description><![CDATA[This flag has the value of 'true' if and only if the RIB
+is the default RIB for the given address family.
+
+By default, control-plane protocols place their routes
+in the default RIBs.]]>None</description></node><node access="read-only" name="routes" type="container"><description><![CDATA[Current content of the RIB.]]>None</description><node access="read-only" name="route" type="list"><description><![CDATA[A RIB route entry.  This data node MUST be augmented
+with information specific for routes of each address
+family.]]>None</description><node access="read-only" datatype="route-preference" name="route-preference" type="leaf"><description><![CDATA[This route attribute, also known as administrative
+distance, allows for selecting the preferred route
+among routes with the same destination prefix.  A
+smaller value means a more preferred route.]]>None</description></node><node access="read-only" name="next-hop" type="container"><description><![CDATA[Route's next-hop attribute.]]>None</description><node access="read-only" name="next-hop-options" type="choice" values="simple-next-hop|special-next-hop|next-hop-list"><description><![CDATA[Options for next hops in state data.
+
+It is expected that further cases will be added through
+augments from other modules, e.g., for recursive
+next hops.]]>None</description><node access="read-only" name="simple-next-hop" type="case"><description><![CDATA[This case represents a simple next hop consisting of the
+next-hop address and/or outgoing interface.
+
+Modules for address families MUST augment this case with a
+leaf containing a next-hop address of that address
+family.]]>None</description><node access="read-only" datatype="if:interface-state-ref" name="outgoing-interface" type="leaf"><description><![CDATA[Name of the outgoing interface.]]>None</description></node></node><node access="read-only" name="special-next-hop" type="case"><node access="read-only" datatype="enumeration" name="special-next-hop" type="leaf" values="blackhole|unreachable|prohibit|receive"><description><![CDATA[Options for special next hops.]]>None</description></node></node><node access="read-only" name="next-hop-list" type="case"><node access="read-only" name="next-hop-list" type="container"><description><![CDATA[Container for multiple next hops.]]>None</description><node access="read-only" name="next-hop" type="list"><description><![CDATA[An entry of a next-hop list.
+
+Modules for address families MUST augment this list
+with a leaf containing a next-hop address of that
+address family.]]>None</description><node access="read-only" datatype="if:interface-state-ref" name="outgoing-interface" type="leaf"><description><![CDATA[Name of the outgoing interface.]]>None</description></node></node></node></node></node></node><node access="read-only" datatype="identityref:routing-protocol" mandatory="true" name="source-protocol" type="leaf" values="rt:direct|rt:direct|rt:static|rt:static"><description><![CDATA[Type of the routing protocol from which the route
+originated.]]>None</description></node><node access="read-only" datatype="empty" name="active" type="leaf"><description><![CDATA[Presence of this leaf indicates that the route is preferred
+among all routes in the same RIB that have the same
+destination prefix.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-updated" type="leaf"><description><![CDATA[Time stamp of the last modification of the route.  If the
+route was never modified, it is the time when the route was
+inserted into the RIB.]]>None</description></node></node></node><node access="read-only" name="active-route" type="action"><description><![CDATA[Return the active RIB route that is used for the
+destination address.
+
+Address-family-specific modules MUST augment input
+parameters with a leaf named 'destination-address'.]]>None</description><node access="read-only" name="output" type="output"><node access="read-only" name="route" type="container"><description><![CDATA[The active RIB route for the specified destination.
+
+If no route exists in the RIB for the destination
+address, no output is returned.
+
+Address-family-specific modules MUST augment this
+container with appropriate route contents.]]>None</description><node access="read-only" name="next-hop" type="container"><description><![CDATA[Route's next-hop attribute.]]>None</description><node access="read-only" name="next-hop-options" type="choice" values="simple-next-hop|special-next-hop|next-hop-list"><description><![CDATA[Options for next hops in state data.
+
+It is expected that further cases will be added through
+augments from other modules, e.g., for recursive
+next hops.]]>None</description><node access="read-only" name="simple-next-hop" type="case"><description><![CDATA[This case represents a simple next hop consisting of the
+next-hop address and/or outgoing interface.
+
+Modules for address families MUST augment this case with a
+leaf containing a next-hop address of that address
+family.]]>None</description><node access="read-only" datatype="if:interface-state-ref" name="outgoing-interface" type="leaf"><description><![CDATA[Name of the outgoing interface.]]>None</description></node></node><node access="read-only" name="special-next-hop" type="case"><node access="read-only" datatype="enumeration" name="special-next-hop" type="leaf" values="blackhole|unreachable|prohibit|receive"><description><![CDATA[Options for special next hops.]]>None</description></node></node><node access="read-only" name="next-hop-list" type="case"><node access="read-only" name="next-hop-list" type="container"><description><![CDATA[Container for multiple next hops.]]>None</description><node access="read-only" name="next-hop" type="list"><description><![CDATA[An entry of a next-hop list.
+
+Modules for address families MUST augment this list
+with a leaf containing a next-hop address of that
+address family.]]>None</description><node access="read-only" datatype="if:interface-state-ref" name="outgoing-interface" type="leaf"><description><![CDATA[Name of the outgoing interface.]]>None</description></node></node></node></node></node></node><node access="read-only" datatype="identityref:routing-protocol" mandatory="true" name="source-protocol" type="leaf" values="rt:direct|rt:direct|rt:static|rt:static"><description><![CDATA[Type of the routing protocol from which the route
+originated.]]>None</description></node><node access="read-only" datatype="empty" name="active" type="leaf"><description><![CDATA[Presence of this leaf indicates that the route is preferred
+among all routes in the same RIB that have the same
+destination prefix.]]>None</description></node><node access="read-only" datatype="yang:date-and-time" name="last-updated" type="leaf"><description><![CDATA[Time stamp of the last modification of the route.  If the
+route was never modified, it is the time when the route was
+inserted into the RIB.]]>None</description></node></node></node></node></node></node></node><node access="read-write" name="routing" type="container"><description><![CDATA[Configuration parameters for the routing subsystem.]]>None</description><node access="read-write" datatype="yang:dotted-quad" name="router-id" type="leaf"><description><![CDATA[A 32-bit number in the form of a dotted quad that is used by
+some routing protocols identifying a router.]]>None</description></node><node access="read-write" name="control-plane-protocols" type="container"><description><![CDATA[Configuration of control-plane protocol instances.]]>None</description><node access="read-write" key="type name" name="control-plane-protocol" type="list"><description><![CDATA[Each entry contains configuration of a control-plane
+protocol instance.]]>None</description><node access="read-write" datatype="identityref:control-plane-protocol" is_key="true" mandatory="true" name="type" type="leaf" values="rt:routing-protocol|rt:routing-protocol"><description><![CDATA[Type of the control-plane protocol - an identity derived
+from the 'control-plane-protocol' base identity.]]>None</description></node><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[An arbitrary name of the control-plane protocol
+instance.]]>None</description></node><node access="read-write" datatype="string" name="description" type="leaf"><description><![CDATA[Textual description of the control-plane protocol
+instance.]]>None</description></node><node access="read-write" name="static-routes" type="container"><description><![CDATA[Configuration of the 'static' pseudo-protocol.
+
+Address-family-specific modules augment this node with
+their lists of routes.]]>None</description></node></node></node><node access="read-write" name="ribs" type="container"><description><![CDATA[Configuration of RIBs.]]>None</description><node access="read-write" key="name" name="rib" type="list"><description><![CDATA[Each entry contains configuration for a RIB identified by
+the 'name' key.
+
+Entries having the same key as a system-controlled entry
+of the list /routing-state/ribs/rib are used for
+configuring parameters of that entry.  Other entries
+define additional user-controlled RIBs.]]>None</description><node access="read-write" datatype="string" is_key="true" mandatory="true" name="name" type="leaf"><description><![CDATA[The name of the RIB.
+
+For system-controlled entries, the value of this leaf
+must be the same as the name of the corresponding entry
+in state data.
+
+For user-controlled entries, an arbitrary name can be
+used.]]>None</description></node><node access="read-write" datatype="identityref:address-family" name="address-family" type="leaf" values="rt:ipv4|rt:ipv4|rt:ipv6|rt:ipv6"><description><![CDATA[Address family.]]>None</description></node><node access="read-write" datatype="string" name="description" type="leaf"><description><![CDATA[Textual description of the RIB.]]>None</description></node></node></node></node></node>
