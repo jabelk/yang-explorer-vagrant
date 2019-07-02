@@ -1,6 +1,6 @@
 # Steps to Set up
 ```
-git clone
+git clone https://github.com/jabelk/yang-explorer-vagrant.git
 vagrant up
 vagrant ssh
 
