@@ -1,5 +1,5 @@
 # Steps to Set up
-
+```
 git clone
 vagrant up
 vagrant ssh
@@ -10,5 +10,5 @@ rm -rf server/data/
 cp -R /ntc-data/data server/data
 sh setup.sh
 sh start.sh
-
-open chrome on http://192.168.56.200:8088/static/YangExplorer.html
+```
+## open chrome on http://192.168.56.200:8088/static/YangExplorer.html
